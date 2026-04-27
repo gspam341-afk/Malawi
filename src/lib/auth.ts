@@ -44,3 +44,7 @@ export async function requireRole(roles: Tables['profiles']['Row']['role'][]) {
   if (!hasRole(profile, roles)) redirect('/dashboard')
   return profile
 }
+
+export async function requireAdmin() {
+  return requireRole(['admin'])
+}

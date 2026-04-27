@@ -42,13 +42,13 @@ export default async function DashboardPage() {
       <section className="grid gap-3">
         {profile.role === 'admin' ? (
           <div className="grid gap-3 md:grid-cols-2">
-            <DashboardLink href="/dashboard" label="User management" />
-            <DashboardLink href="/dashboard" label="Invite teacher" />
-            <DashboardLink href="/dashboard/resources" label="Manage resources" />
-            <DashboardLink href="/dashboard" label="Manage blog posts" />
-            <DashboardLink href="/dashboard" label="Manage submissions" />
-            <DashboardLink href="/dashboard" label="Manage subjects" />
-            <DashboardLink href="/dashboard" label="Manage grade levels" />
+            <DashboardLink href="/dashboard/users" label="User management" />
+            <DashboardLink href="/dashboard/users/invite-teacher" label="Invite teacher" />
+            <DashboardLink href="/dashboard/resources/manage" label="Manage resources" />
+            <DashboardLink href="/dashboard/blog-posts" label="Manage blog posts" />
+            <DashboardLink href="/dashboard/submissions" label="Manage submissions" />
+            <DashboardLink href="/dashboard/subjects" label="Manage subjects" />
+            <DashboardLink href="/dashboard/grade-levels" label="Manage grade levels" />
           </div>
         ) : null}
 
@@ -56,16 +56,16 @@ export default async function DashboardPage() {
           <div className="grid gap-3 md:grid-cols-2">
             <DashboardLink href="/dashboard/resources" label="My resources" />
             <DashboardLink href="/dashboard/resources/new" label="Create new resource" />
-            <DashboardLink href="/dashboard" label="My blog posts" />
-            <DashboardLink href="/dashboard" label="My submissions" />
+            <DashboardLink href="/dashboard/blog-posts" label="My blog posts" />
+            <DashboardLink href="/dashboard/submissions" label="My submissions" />
           </div>
         ) : null}
 
         {profile.role === 'alumni' || profile.role === 'donor' ? (
           <div className="grid gap-3 md:grid-cols-2">
-            <DashboardLink href="/dashboard" label="My blog posts" />
+            <DashboardLink href="/dashboard/blog-posts" label="My blog posts" />
             <DashboardLink href="/dashboard" label="Submit activity idea" />
-            <DashboardLink href="/dashboard" label="My submissions" />
+            <DashboardLink href="/dashboard/submissions" label="My submissions" />
           </div>
         ) : null}
 
