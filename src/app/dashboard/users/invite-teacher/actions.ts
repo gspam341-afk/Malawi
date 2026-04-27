@@ -4,6 +4,16 @@ import { redirect } from 'next/navigation'
 import { requireAdmin } from '@/lib/auth'
 import { createSupabaseAdminClient } from '@/lib/supabase/admin'
 
+function getAppOrigin() {
+  const explicit = process.env.NEXT_PUBLIC_SITE_URL
+  if (explicit) return explicit.replace(/\/$/, '')
+
+  const vercelUrl = process.env.VERCEL_URL
+  if (vercelUrl) return `https://${vercelUrl}`
+
+  return ''
+}
+
 export async function inviteTeacherAction(formData: FormData) {
   await requireAdmin()
 
@@ -16,9 +26,12 @@ export async function inviteTeacherAction(formData: FormData) {
   }
 
   const admin = createSupabaseAdminClient()
+  const origin = getAppOrigin()
+  const redirectTo = origin ? `${origin}/auth/confirm` : undefined
 
   try {
     const { data, error } = await admin.auth.admin.inviteUserByEmail(email, {
+      redirectTo,
       data: {
         name: name || null,
         role,
