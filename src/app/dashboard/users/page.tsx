@@ -20,7 +20,7 @@ function OptionList<T extends string>(props: { options: readonly T[]; value: T }
 export default async function AdminUsersPage(props: {
   searchParams?: Promise<{ q?: string; role?: string; status?: string }>
 }) {
-  await requireAdmin()
+  const currentAdmin = await requireAdmin()
 
   const { q = '', role = '', status = '' } = (await props.searchParams) ?? {}
   const supabase = await createSupabaseServerClient()
@@ -40,7 +40,7 @@ export default async function AdminUsersPage(props: {
   const { data, error } = await query
   if (error) throw error
 
-  const rows = data ?? []
+  const rows = (data ?? []).filter((u) => u.id !== currentAdmin.id)
 
   const roles: readonly ProfileRole[] = ['admin', 'teacher', 'alumni', 'donor', 'student_optional']
   const statuses: readonly ProfileStatus[] = ['active', 'pending', 'inactive', 'banned']

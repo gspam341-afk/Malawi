@@ -60,6 +60,11 @@ export async function inviteTeacherAction(formData: FormData) {
 
     redirect('/dashboard/users/invite-teacher?success=1')
   } catch (e) {
+    const digest = (e as { digest?: string } | null)?.digest
+    if (digest && digest.startsWith('NEXT_REDIRECT')) {
+      throw e
+    }
+
     const msg = e instanceof Error ? e.message : 'Invite failed'
     redirect(`/dashboard/users/invite-teacher?error=${encodeURIComponent(msg)}`)
   }
