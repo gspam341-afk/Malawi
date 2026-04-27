@@ -1,14 +1,21 @@
-import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { requireProfile } from '@/lib/auth'
 import { createSupabaseServerClient } from '@/lib/supabase/server'
 import { updateSubmissionContentAction, updateSubmissionStatusAction } from '@/app/dashboard/submissions/actions'
+import { AdminPageHeader } from '@/components/dashboard/AdminPageHeader'
+import { ActionButton } from '@/components/dashboard/ActionButton'
+import { FieldLabel } from '@/components/dashboard/FieldLabel'
+import { FormSection } from '@/components/dashboard/FormSection'
+import { SubmissionStatusBadge, SubmissionTypeBadge } from '@/components/dashboard/DashboardStatusBadge'
+import { dashInput, dashPanelSolid, dashTextarea } from '@/components/dashboard/classes'
 
 export default async function SubmissionDetailPage(props: { params: Promise<{ id: string }> }) {
   const profile = await requireProfile()
   if (profile.role === 'student_optional') {
     return (
-      <div className="rounded-2xl border bg-white p-6 text-sm text-zinc-700">This page is not available for students.</div>
+      <div className="rounded-2xl border border-amber-100 bg-amber-50/70 p-8 text-center text-sm text-slate-700">
+        Submissions are not available for optional student accounts.
+      </div>
     )
   }
 
@@ -44,45 +51,62 @@ export default async function SubmissionDetailPage(props: { params: Promise<{ id
   const canCreatorEdit = isCreator && (submission.status === 'pending' || submission.status === 'changes_requested')
 
   return (
-    <div className="grid gap-6">
-      <div className="flex items-end justify-between gap-4">
-        <div>
-          <h1 className="text-2xl font-semibold tracking-tight">Submission</h1>
-          <p className="mt-1 text-sm text-zinc-700">
-            {isAdmin ? 'Review and update status.' : 'Your submission details.'}
-          </p>
-        </div>
-        <Link href="/dashboard/submissions" className="text-sm text-zinc-700 hover:text-zinc-950">
-          ← Back
-        </Link>
-      </div>
+    <div className="grid gap-10">
+      <AdminPageHeader
+        eyebrow="Submission"
+        title={submission.title}
+        description={
+          isAdmin
+            ? 'Review details, respond with a status, and leave guidance when something needs another pass.'
+            : 'Track how your idea is progressing through review.'
+        }
+        backHref="/dashboard/submissions"
+        backLabel="Submissions"
+      />
 
-      <section className="rounded-2xl border bg-white p-6">
-        <div className="grid gap-2">
-          <div className="text-lg font-semibold text-zinc-950">{submission.title}</div>
-          <div className="text-sm text-zinc-700">Type: {submission.submission_type}</div>
-          <div className="text-sm text-zinc-700">Submitted by: {submitterLabel}</div>
-          <div className="text-sm text-zinc-700">Status: {submission.status}</div>
-          <div className="text-sm text-zinc-700">Created: {new Date(submission.created_at).toLocaleString()}</div>
+      <section className={`${dashPanelSolid} p-6 md:p-8`}>
+        <div className="flex flex-wrap gap-2">
+          <SubmissionTypeBadge type={submission.submission_type} />
+          <SubmissionStatusBadge status={submission.status} />
         </div>
+        <dl className="mt-6 grid gap-4 text-sm sm:grid-cols-2">
+          <div>
+            <dt className="text-xs font-semibold uppercase tracking-wide text-slate-500">Submitted by</dt>
+            <dd className="mt-1 font-medium text-slate-900">{submitterLabel}</dd>
+          </div>
+          <div>
+            <dt className="text-xs font-semibold uppercase tracking-wide text-slate-500">Created</dt>
+            <dd className="mt-1 text-slate-800">{new Date(submission.created_at).toLocaleString()}</dd>
+          </div>
+        </dl>
 
         {submission.description ? (
-          <div className="mt-4 text-sm text-zinc-800 whitespace-pre-wrap">{submission.description}</div>
-        ) : null}
+          <div className="mt-8 border-t border-slate-100 pt-8">
+            <h2 className="text-sm font-semibold text-slate-900">Description</h2>
+            <p className="mt-3 whitespace-pre-wrap text-sm leading-relaxed text-slate-700">{submission.description}</p>
+          </div>
+        ) : (
+          <p className="mt-6 text-sm text-slate-500">No description provided.</p>
+        )}
 
-        <div className="mt-4 grid gap-2 text-sm">
+        <div className="mt-8 grid gap-3 text-sm">
           {submission.file_url ? (
             <div>
-              <span className="font-medium text-zinc-900">File:</span>{' '}
-              <a className="text-zinc-900 underline" href={submission.file_url} target="_blank" rel="noreferrer">
-                {submission.file_url}
+              <span className="font-semibold text-slate-900">File</span>{' '}
+              <a className="font-medium text-teal-800 underline-offset-4 hover:underline" href={submission.file_url} target="_blank" rel="noreferrer">
+                Open link
               </a>
             </div>
           ) : null}
           {submission.external_link ? (
             <div>
-              <span className="font-medium text-zinc-900">External link:</span>{' '}
-              <a className="text-zinc-900 underline" href={submission.external_link} target="_blank" rel="noreferrer">
+              <span className="font-semibold text-slate-900">External link</span>{' '}
+              <a
+                className="font-medium text-teal-800 underline-offset-4 hover:underline"
+                href={submission.external_link}
+                target="_blank"
+                rel="noreferrer"
+              >
                 {submission.external_link}
               </a>
             </div>
@@ -90,44 +114,40 @@ export default async function SubmissionDetailPage(props: { params: Promise<{ id
         </div>
 
         {submission.rejection_reason && (submission.status === 'rejected' || submission.status === 'changes_requested') ? (
-          <div className="mt-4 rounded-lg border border-zinc-200 bg-zinc-50 p-3 text-sm text-zinc-800">
-            <span className="font-medium text-zinc-900">Feedback: </span>
+          <div className="mt-8 rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-950">
+            <span className="font-semibold">Reviewer note: </span>
             {submission.rejection_reason}
           </div>
         ) : null}
       </section>
 
       {canCreatorEdit ? (
-        <form action={updateSubmissionContentAction.bind(null, id)} className="rounded-2xl border bg-white p-6">
-          <h2 className="text-base font-semibold">Edit submission</h2>
-          <p className="mt-1 text-sm text-zinc-700">Update your submission while it is pending or changes are requested.</p>
-          <div className="mt-4 grid gap-4">
-            <div className="grid gap-1">
-              <label className="text-sm font-medium">Title</label>
-              <input
-                name="title"
-                required
-                defaultValue={submission.title}
-                className="rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm shadow-sm outline-none transition focus:border-zinc-900 focus:ring-4 focus:ring-zinc-900/10"
-              />
+        <FormSection
+          title="Update your submission"
+          description="You can edit while the status is pending or changes are requested."
+        >
+          <form action={updateSubmissionContentAction.bind(null, id)} className="grid max-w-xl gap-5">
+            <div>
+              <FieldLabel htmlFor="ed-title">Title</FieldLabel>
+              <input id="ed-title" name="title" required defaultValue={submission.title} className={`${dashInput} mt-2`} />
             </div>
-
-            <div className="grid gap-1">
-              <label className="text-sm font-medium">Description</label>
+            <div>
+              <FieldLabel htmlFor="ed-desc">Description</FieldLabel>
               <textarea
+                id="ed-desc"
                 name="description"
                 rows={5}
                 defaultValue={submission.description ?? ''}
-                className="rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm shadow-sm outline-none transition focus:border-zinc-900 focus:ring-4 focus:ring-zinc-900/10"
+                className={`${dashTextarea} mt-2`}
               />
             </div>
-
-            <div className="grid gap-1">
-              <label className="text-sm font-medium">Submission type</label>
+            <div>
+              <FieldLabel htmlFor="ed-type">Submission type</FieldLabel>
               <select
+                id="ed-type"
                 name="submission_type"
                 defaultValue={submission.submission_type}
-                className="rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm shadow-sm outline-none transition focus:border-zinc-900 focus:ring-4 focus:ring-zinc-900/10"
+                className={`${dashInput} mt-2`}
               >
                 <option value="blog_post">blog_post</option>
                 <option value="activity_idea">activity_idea</option>
@@ -135,76 +155,59 @@ export default async function SubmissionDetailPage(props: { params: Promise<{ id
                 <option value="printable_template">printable_template</option>
               </select>
             </div>
-
-            <div className="grid gap-1">
-              <label className="text-sm font-medium">File URL</label>
-              <input
-                name="file_url"
-                defaultValue={submission.file_url ?? ''}
-                className="rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm shadow-sm outline-none transition focus:border-zinc-900 focus:ring-4 focus:ring-zinc-900/10"
-              />
+            <div>
+              <FieldLabel htmlFor="ed-file">File URL</FieldLabel>
+              <input id="ed-file" name="file_url" defaultValue={submission.file_url ?? ''} className={`${dashInput} mt-2`} />
             </div>
-
-            <div className="grid gap-1">
-              <label className="text-sm font-medium">External link</label>
+            <div>
+              <FieldLabel htmlFor="ed-link">External link</FieldLabel>
               <input
+                id="ed-link"
                 name="external_link"
                 defaultValue={submission.external_link ?? ''}
-                className="rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm shadow-sm outline-none transition focus:border-zinc-900 focus:ring-4 focus:ring-zinc-900/10"
+                className={`${dashInput} mt-2`}
               />
             </div>
-
-            <div className="flex items-center justify-end gap-3">
-              <button
-                type="submit"
-                className="rounded-lg bg-zinc-900 px-4 py-2 text-sm font-medium text-white shadow-sm transition hover:bg-zinc-800 focus:outline-none focus:ring-4 focus:ring-zinc-900/20"
-              >
-                Save changes
-              </button>
+            <div className="flex justify-end pt-2">
+              <ActionButton type="submit">Save updates</ActionButton>
             </div>
-          </div>
-        </form>
+          </form>
+        </FormSection>
       ) : null}
 
       {isAdmin ? (
-        <form action={updateSubmissionStatusAction.bind(null, id)} className="rounded-2xl border bg-white p-6">
-          <h2 className="text-base font-semibold">Admin actions</h2>
-          <div className="mt-4 grid gap-4">
-            <div className="grid gap-1">
-              <label className="text-sm font-medium">Status</label>
-              <select
-                name="status"
-                defaultValue={submission.status}
-                className="rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm shadow-sm outline-none transition focus:border-zinc-900 focus:ring-4 focus:ring-zinc-900/10"
-              >
+        <section className="rounded-2xl border-l-4 border-violet-400 bg-gradient-to-br from-violet-50/80 to-white p-6 shadow-md shadow-slate-200/40 md:p-8">
+          <h2 className="text-lg font-semibold text-slate-900">Platform review</h2>
+          <p className="mt-1 text-sm text-slate-600">
+            Change status for everyone involved. Pair rejections or change requests with clear feedback.
+          </p>
+          <form action={updateSubmissionStatusAction.bind(null, id)} className="mt-6 grid max-w-xl gap-5">
+            <div>
+              <FieldLabel htmlFor="adm-status">Status</FieldLabel>
+              <select id="adm-status" name="status" defaultValue={submission.status} className={`${dashInput} mt-2`}>
                 <option value="pending">pending</option>
                 <option value="approved">approved</option>
                 <option value="rejected">rejected</option>
                 <option value="changes_requested">changes_requested</option>
               </select>
             </div>
-
-            <div className="grid gap-1">
-              <label className="text-sm font-medium">Rejection / changes reason</label>
+            <div>
+              <FieldLabel htmlFor="adm-note" hint="Shown to the submitter when you reject or request edits.">
+                Feedback for submitter
+              </FieldLabel>
               <textarea
+                id="adm-note"
                 name="rejection_reason"
+                rows={4}
                 defaultValue={submission.rejection_reason ?? ''}
-                rows={3}
-                className="rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm shadow-sm outline-none transition focus:border-zinc-900 focus:ring-4 focus:ring-zinc-900/10"
+                className={`${dashTextarea} mt-2`}
               />
-              <div className="text-xs text-zinc-600">Used when status is rejected or changes_requested.</div>
             </div>
-
-            <div className="flex items-center justify-end gap-3">
-              <button
-                type="submit"
-                className="rounded-lg bg-zinc-900 px-4 py-2 text-sm font-medium text-white shadow-sm transition hover:bg-zinc-800 focus:outline-none focus:ring-4 focus:ring-zinc-900/20"
-              >
-                Save
-              </button>
+            <div className="flex justify-end">
+              <ActionButton type="submit">Save decision</ActionButton>
             </div>
-          </div>
-        </form>
+          </form>
+        </section>
       ) : null}
     </div>
   )

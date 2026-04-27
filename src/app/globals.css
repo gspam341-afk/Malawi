@@ -1,7 +1,7 @@
 @import "tailwindcss";
 
 :root {
-  --background: #f1f5f3;
+  --background: #eef6f4;
   --foreground: #0f172a;
 }
 
@@ -12,6 +12,20 @@
   --font-mono: var(--font-geist-mono);
 }
 
+html {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
 body {
   font-family: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
+  color: var(--foreground);
+}
+
+::selection {
+  background-color: rgb(20 184 166 / 0.25);
+}
+
+:focus-visible {
+  outline: none;
 }

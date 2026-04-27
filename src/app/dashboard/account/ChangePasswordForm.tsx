@@ -4,6 +4,9 @@ import type React from 'react'
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { createSupabaseBrowserClient } from '@/lib/supabase/client'
+import { ActionButton } from '@/components/dashboard/ActionButton'
+import { FieldLabel } from '@/components/dashboard/FieldLabel'
+import { dashInput } from '@/components/dashboard/classes'
 
 export function ChangePasswordForm() {
   const router = useRouter()
@@ -38,8 +41,6 @@ export function ChangePasswordForm() {
         )
       }
 
-      // Optional: verify current password by re-authing (Supabase requires email for signInWithPassword)
-      // We can only do this if the session has an email.
       const { data: sessionData, error: sessionError } = await supabase.auth.getSession()
       if (sessionError) throw sessionError
 
@@ -58,7 +59,7 @@ export function ChangePasswordForm() {
       setCurrentPassword('')
       setPassword('')
       setConfirm('')
-      setSuccess('Password updated.')
+      setSuccess('Your password was updated successfully.')
       router.refresh()
     } catch (e) {
       setError(e instanceof Error ? e.message : 'Failed to update password')
@@ -68,55 +69,62 @@ export function ChangePasswordForm() {
   }
 
   return (
-    <form onSubmit={onSubmit} className="mt-4 grid gap-4">
-      <div className="grid gap-1">
-        <label className="text-sm font-medium">Current password (optional)</label>
+    <form onSubmit={onSubmit} className="grid max-w-xl gap-5">
+      <div>
+        <FieldLabel htmlFor="current-pw" hint="Helps verify it is really you when your session supports re-auth.">
+          Current password (optional)
+        </FieldLabel>
         <input
+          id="current-pw"
           type="password"
           value={currentPassword}
           onChange={(e) => setCurrentPassword(e.target.value)}
-          className="rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm shadow-sm outline-none transition focus:border-zinc-900 focus:ring-4 focus:ring-zinc-900/10"
+          className={`${dashInput} mt-2`}
           autoComplete="current-password"
         />
       </div>
 
-      <div className="grid gap-1">
-        <label className="text-sm font-medium">New password</label>
+      <div>
+        <FieldLabel htmlFor="new-pw">New password</FieldLabel>
         <input
+          id="new-pw"
           type="password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
-          className="rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm shadow-sm outline-none transition focus:border-zinc-900 focus:ring-4 focus:ring-zinc-900/10"
+          className={`${dashInput} mt-2`}
           autoComplete="new-password"
           required
         />
       </div>
 
-      <div className="grid gap-1">
-        <label className="text-sm font-medium">Confirm new password</label>
+      <div>
+        <FieldLabel htmlFor="confirm-pw">Confirm new password</FieldLabel>
         <input
+          id="confirm-pw"
           type="password"
           value={confirm}
           onChange={(e) => setConfirm(e.target.value)}
-          className="rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm shadow-sm outline-none transition focus:border-zinc-900 focus:ring-4 focus:ring-zinc-900/10"
+          className={`${dashInput} mt-2`}
           autoComplete="new-password"
           required
         />
       </div>
 
-      {error ? <div className="rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-800">{error}</div> : null}
+      {error ? (
+        <div className="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-900" role="alert">
+          {error}
+        </div>
+      ) : null}
       {success ? (
-        <div className="rounded-lg border border-emerald-200 bg-emerald-50 px-3 py-2 text-sm text-emerald-900">{success}</div>
+        <div className="rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-900">
+          {success}
+        </div>
       ) : null}
 
-      <div className="flex items-center justify-end">
-        <button
-          type="submit"
-          disabled={loading}
-          className="rounded-lg bg-zinc-900 px-4 py-2 text-sm font-medium text-white shadow-sm transition hover:bg-zinc-800 focus:outline-none focus:ring-4 focus:ring-zinc-900/20 disabled:cursor-not-allowed disabled:opacity-50"
-        >
+      <div className="flex justify-end pt-2">
+        <ActionButton type="submit" disabled={loading}>
           {loading ? 'Saving…' : 'Update password'}
-        </button>
+        </ActionButton>
       </div>
     </form>
   )

@@ -1,6 +1,11 @@
 import Link from 'next/link'
 import { requireProfile } from '@/lib/auth'
 import { createBlogPostAction } from '@/app/dashboard/blog-posts/actions'
+import { AdminPageHeader } from '@/components/dashboard/AdminPageHeader'
+import { ActionButton } from '@/components/dashboard/ActionButton'
+import { FieldLabel } from '@/components/dashboard/FieldLabel'
+import { FormSection } from '@/components/dashboard/FormSection'
+import { dashInput, dashSelect, dashTextarea } from '@/components/dashboard/classes'
 import type { Tables } from '@/types/db'
 
 type BlogStatus = Tables['blog_posts']['Row']['status']
@@ -16,105 +21,86 @@ export default async function NewBlogPostPage() {
   const profile = await requireProfile()
   if (profile.role === 'student_optional') {
     return (
-      <div className="rounded-2xl border bg-white p-6 text-sm text-zinc-700">This page is not available for students.</div>
+      <div className="rounded-2xl border border-amber-100 bg-amber-50/70 p-8 text-center text-sm text-slate-700">
+        Blog authoring is not available for optional student accounts.
+      </div>
     )
   }
 
   const allowedStatuses = allowedBlogStatusesForRole(profile.role)
   if (!allowedStatuses.length) {
     return (
-      <div className="rounded-2xl border bg-white p-6 text-sm text-zinc-700">You do not have access to create blog posts.</div>
+      <div className="rounded-2xl border border-slate-200 bg-white p-8 text-center text-sm text-slate-700">
+        You do not have access to create blog posts.
+      </div>
     )
   }
 
   return (
-    <div className="grid gap-6">
-      <div className="flex items-end justify-between gap-4">
-        <div>
-          <h1 className="text-2xl font-semibold tracking-tight">New blog post</h1>
-          <p className="mt-1 text-sm text-zinc-700">Create a new post.</p>
-        </div>
-        <Link href="/dashboard/blog-posts" className="text-sm text-zinc-700 hover:text-zinc-950">
-          ← Back
-        </Link>
-      </div>
+    <div className="grid gap-10">
+      <AdminPageHeader
+        eyebrow="Editor"
+        title="New blog post"
+        description="Share classroom stories, printable tips, or reflections. Save as draft until you are ready."
+        backHref="/dashboard/blog-posts"
+        backLabel="Blog posts"
+      />
 
-      <form action={createBlogPostAction} className="grid gap-6">
-        <section className="rounded-2xl border border-zinc-200 bg-white p-6 shadow-sm">
-          <h2 className="text-base font-semibold">Post</h2>
-          <div className="mt-4 grid gap-4">
-            <div className="grid gap-1">
-              <label className="text-sm font-medium">Title</label>
-              <input
-                name="title"
-                required
-                className="rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm shadow-sm outline-none transition focus:border-zinc-900 focus:ring-4 focus:ring-zinc-900/10"
-              />
+      <form action={createBlogPostAction} className="grid gap-8">
+        <FormSection title="Post basics" description="Titles and URLs show up on the public blog listing.">
+          <div className="grid gap-5">
+            <div>
+              <FieldLabel htmlFor="bp-title">Title</FieldLabel>
+              <input id="bp-title" name="title" required className={`${dashInput} mt-2`} />
             </div>
-
-            <div className="grid gap-1">
-              <label className="text-sm font-medium">Slug</label>
-              <input
-                name="slug"
-                placeholder="optional"
-                className="rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm shadow-sm outline-none transition focus:border-zinc-900 focus:ring-4 focus:ring-zinc-900/10"
-              />
+            <div>
+              <FieldLabel htmlFor="bp-slug" hint="Leave blank to auto-generate later if your stack supports it.">
+                Slug (optional)
+              </FieldLabel>
+              <input id="bp-slug" name="slug" placeholder="my-post-url" className={`${dashInput} mt-2`} />
             </div>
-
-            <div className="grid gap-1">
-              <label className="text-sm font-medium">Excerpt</label>
-              <textarea
-                name="excerpt"
-                rows={2}
-                className="rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm shadow-sm outline-none transition focus:border-zinc-900 focus:ring-4 focus:ring-zinc-900/10"
-              />
-            </div>
-
-            <div className="grid gap-1">
-              <label className="text-sm font-medium">Content</label>
-              <textarea
-                name="content"
-                rows={10}
-                className="rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm shadow-sm outline-none transition focus:border-zinc-900 focus:ring-4 focus:ring-zinc-900/10"
-              />
-            </div>
-
-            <div className="grid gap-1">
-              <label className="text-sm font-medium">Cover image URL</label>
-              <input
-                name="cover_image_url"
-                placeholder="optional"
-                className="rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm shadow-sm outline-none transition focus:border-zinc-900 focus:ring-4 focus:ring-zinc-900/10"
-              />
-            </div>
-
-            <div className="grid gap-1">
-              <label className="text-sm font-medium">Status</label>
-              <select
-                name="status"
-                defaultValue={allowedStatuses[0]}
-                className="rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm shadow-sm outline-none transition focus:border-zinc-900 focus:ring-4 focus:ring-zinc-900/10"
-              >
-                {allowedStatuses.map((s) => (
-                  <option key={s} value={s}>
-                    {s}
-                  </option>
-                ))}
-              </select>
+            <div>
+              <FieldLabel htmlFor="bp-excerpt">Short excerpt</FieldLabel>
+              <textarea id="bp-excerpt" name="excerpt" rows={3} className={`${dashTextarea} mt-2 leading-relaxed`} />
             </div>
           </div>
-        </section>
+        </FormSection>
 
-        <div className="flex items-center justify-end gap-3">
-          <Link href="/dashboard/blog-posts" className="text-sm text-zinc-700 hover:text-zinc-950">
+        <FormSection title="Content" description="Long-form writing — readers scan headings and bold text first.">
+          <div>
+            <FieldLabel htmlFor="bp-body">Article body</FieldLabel>
+            <textarea
+              id="bp-body"
+              name="content"
+              rows={14}
+              className={`${dashTextarea} mt-2 font-[family-name:var(--font-geist-sans)] text-base leading-relaxed`}
+              placeholder="Start with why this matters for classrooms…"
+            />
+          </div>
+          <div className="mt-6">
+            <FieldLabel htmlFor="bp-cover">Cover image URL (optional)</FieldLabel>
+            <input id="bp-cover" name="cover_image_url" placeholder="https://..." className={`${dashInput} mt-2`} />
+          </div>
+        </FormSection>
+
+        <FormSection title="Publishing" description="Choose whether this stays private, waits for review, or goes live.">
+          <div className="max-w-md">
+            <FieldLabel htmlFor="bp-status">Status</FieldLabel>
+            <select id="bp-status" name="status" defaultValue={allowedStatuses[0]} className={`${dashSelect} mt-2`}>
+              {allowedStatuses.map((s) => (
+                <option key={s} value={s}>
+                  {s}
+                </option>
+              ))}
+            </select>
+          </div>
+        </FormSection>
+
+        <div className="flex flex-wrap justify-end gap-3 border-t border-slate-100 pt-8">
+          <Link href="/dashboard/blog-posts" className="rounded-xl px-4 py-2.5 text-sm font-semibold text-slate-700 hover:bg-slate-100">
             Cancel
           </Link>
-          <button
-            type="submit"
-            className="rounded-lg bg-zinc-900 px-4 py-2 text-sm font-medium text-white shadow-sm transition hover:bg-zinc-800 focus:outline-none focus:ring-4 focus:ring-zinc-900/20"
-          >
-            Create
-          </button>
+          <ActionButton type="submit">Create draft</ActionButton>
         </div>
       </form>
     </div>

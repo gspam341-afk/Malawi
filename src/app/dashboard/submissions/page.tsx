@@ -1,6 +1,12 @@
 import Link from 'next/link'
 import { requireProfile } from '@/lib/auth'
 import { createSupabaseServerClient } from '@/lib/supabase/server'
+import { AdminPageHeader } from '@/components/dashboard/AdminPageHeader'
+import { ActionButton } from '@/components/dashboard/ActionButton'
+import { dashInput, dashMuted, dashPanelSolid } from '@/components/dashboard/classes'
+import { SubmissionStatusBadge, SubmissionTypeBadge } from '@/components/dashboard/DashboardStatusBadge'
+import { TableShell } from '@/components/dashboard/TableShell'
+import { EmptyState } from '@/components/ui/EmptyState'
 
 export default async function SubmissionsPage(props: {
   searchParams?: Promise<{ q?: string; status?: string; type?: string }>
@@ -8,7 +14,9 @@ export default async function SubmissionsPage(props: {
   const profile = await requireProfile()
   if (profile.role === 'student_optional') {
     return (
-      <div className="rounded-2xl border bg-white p-6 text-sm text-zinc-700">This page is not available for students.</div>
+      <div className="rounded-2xl border border-amber-100 bg-amber-50/70 p-8 text-center text-sm text-slate-700">
+        Optional student accounts cannot submit ideas through this workflow.
+      </div>
     )
   }
 
@@ -42,110 +50,102 @@ export default async function SubmissionsPage(props: {
   const canCreate =
     profile.role === 'admin' || profile.role === 'teacher' || profile.role === 'alumni' || profile.role === 'donor'
 
+  const isAdmin = profile.role === 'admin'
+
   return (
-    <div className="grid gap-6">
-      <div className="flex items-end justify-between gap-4">
-        <div>
-          <h1 className="text-2xl font-semibold tracking-tight">
-            {profile.role === 'admin' ? 'Manage submissions' : 'My submissions'}
-          </h1>
-          <p className="mt-1 text-sm text-zinc-700">
-            {profile.role === 'admin' ? 'Review submitted content and set a status.' : 'Track items you have submitted.'}
-          </p>
-        </div>
-        <div className="flex flex-wrap items-center justify-end gap-3">
-          {canCreate ? (
-            <Link
-              href="/dashboard/submissions/new"
-              className="rounded-md bg-zinc-900 px-4 py-2 text-sm font-medium text-white hover:bg-zinc-800"
-            >
-              New submission
-            </Link>
-          ) : null}
-          <Link href="/dashboard" className="text-sm text-zinc-700 hover:text-zinc-950">
-            Dashboard
-          </Link>
-        </div>
-      </div>
+    <div className="grid gap-10">
+      <AdminPageHeader
+        eyebrow="Ideas inbox"
+        title={isAdmin ? 'Submissions (platform)' : 'My submissions'}
+        description={
+          isAdmin
+            ? 'Teachers, alumni and donors send printable ideas or materials — triage here before they become formal resources.'
+            : 'Ideas stay pending until reviewed. You will see feedback if changes are requested.'
+        }
+        actions={
+          <>
+            {canCreate ? (
+              <Link
+                href="/dashboard/submissions/new"
+                className="inline-flex rounded-xl bg-gradient-to-r from-teal-600 to-teal-700 px-4 py-2.5 text-sm font-semibold text-white shadow-sm hover:from-teal-700 hover:to-teal-800"
+              >
+                New submission
+              </Link>
+            ) : null}
+          </>
+        }
+      />
 
-      <form className="grid gap-3 rounded-2xl border bg-white p-4 sm:grid-cols-4" method="get">
-        <div className="grid gap-1 sm:col-span-2">
-          <label className="text-xs font-medium uppercase tracking-wide text-zinc-600">Search</label>
-          <input
-            name="q"
-            defaultValue={q}
-            placeholder="Search by title"
-            className="rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm shadow-sm outline-none transition focus:border-zinc-900 focus:ring-4 focus:ring-zinc-900/10"
-          />
-        </div>
-
-        <div className="grid gap-1">
-          <label className="text-xs font-medium uppercase tracking-wide text-zinc-600">Status</label>
-          <select
-            name="status"
-            defaultValue={status}
-            className="rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm shadow-sm outline-none transition focus:border-zinc-900 focus:ring-4 focus:ring-zinc-900/10"
-          >
-            <option value="">all</option>
-            <option value="pending">pending</option>
-            <option value="approved">approved</option>
-            <option value="rejected">rejected</option>
-            <option value="changes_requested">changes_requested</option>
-          </select>
-        </div>
-
-        <div className="grid gap-1">
-          <label className="text-xs font-medium uppercase tracking-wide text-zinc-600">Type</label>
-          <select
-            name="type"
-            defaultValue={type}
-            className="rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm shadow-sm outline-none transition focus:border-zinc-900 focus:ring-4 focus:ring-zinc-900/10"
-          >
-            <option value="">all</option>
-            <option value="blog_post">blog_post</option>
-            <option value="activity_idea">activity_idea</option>
-            <option value="teaching_material">teaching_material</option>
-            <option value="printable_template">printable_template</option>
-          </select>
-        </div>
-
-        <div className="sm:col-span-4 flex items-center justify-end">
-          <button
-            type="submit"
-            className="rounded-lg bg-zinc-900 px-4 py-2 text-sm font-medium text-white shadow-sm transition hover:bg-zinc-800 focus:outline-none focus:ring-4 focus:ring-zinc-900/20"
-          >
-            Apply filters
-          </button>
-        </div>
-      </form>
+      <section className={`${dashPanelSolid} p-5 md:p-6`}>
+        <h2 className="text-sm font-semibold text-slate-900">Filters</h2>
+        <p className={`mt-1 ${dashMuted}`}>Find a submission by title or narrow the queue.</p>
+        <form className="mt-6 grid gap-4 md:grid-cols-12" method="get">
+          <div className="md:col-span-5">
+            <label className="text-xs font-semibold uppercase tracking-wide text-slate-500">Search</label>
+            <input name="q" defaultValue={q} placeholder="Title…" className={`${dashInput} mt-2`} />
+          </div>
+          <div className="md:col-span-3">
+            <label className="text-xs font-semibold uppercase tracking-wide text-slate-500">Status</label>
+            <select name="status" defaultValue={status} className={`${dashInput} mt-2`}>
+              <option value="">All</option>
+              <option value="pending">pending</option>
+              <option value="approved">approved</option>
+              <option value="rejected">rejected</option>
+              <option value="changes_requested">changes_requested</option>
+            </select>
+          </div>
+          <div className="md:col-span-3">
+            <label className="text-xs font-semibold uppercase tracking-wide text-slate-500">Type</label>
+            <select name="type" defaultValue={type} className={`${dashInput} mt-2`}>
+              <option value="">All</option>
+              <option value="blog_post">blog_post</option>
+              <option value="activity_idea">activity_idea</option>
+              <option value="teaching_material">teaching_material</option>
+              <option value="printable_template">printable_template</option>
+            </select>
+          </div>
+          <div className="flex items-end md:col-span-1">
+            <ActionButton type="submit" className="w-full md:w-auto">
+              Apply
+            </ActionButton>
+          </div>
+        </form>
+      </section>
 
       {submissions?.length ? (
-        <div className="overflow-hidden rounded-2xl border bg-white">
-          <table className="w-full text-left text-sm">
-            <thead className="bg-zinc-50 text-xs font-medium uppercase tracking-wide text-zinc-600">
-              <tr>
-                <th className="px-4 py-3">Title</th>
-                <th className="px-4 py-3">Type</th>
-                <th className="px-4 py-3">Status</th>
-                <th className="px-4 py-3">Submitted by</th>
-                <th className="px-4 py-3">Created</th>
-                <th className="px-4 py-3">Actions</th>
+        <TableShell>
+          <table className="w-full min-w-[720px] text-left text-sm">
+            <thead className="border-b border-slate-100 bg-gradient-to-r from-teal-50/90 via-white to-amber-50/40">
+              <tr className="text-xs font-semibold uppercase tracking-wide text-slate-600">
+                <th className="px-4 py-4">Title</th>
+                <th className="px-4 py-4">Type</th>
+                <th className="px-4 py-4">Status</th>
+                <th className="hidden px-4 py-4 lg:table-cell">Submitted by</th>
+                <th className="px-4 py-4">Created</th>
+                <th className="px-4 py-4"> </th>
               </tr>
             </thead>
-            <tbody className="divide-y">
+            <tbody className="divide-y divide-slate-100">
               {submissions.map((s) => {
                 const submitter = s.submitted_by ? submitterMap.get(s.submitted_by) : null
                 const submitterLabel = submitter?.name ?? submitter?.email ?? '—'
 
                 return (
-                  <tr key={s.id} className="hover:bg-zinc-50">
-                    <td className="px-4 py-3 font-medium text-zinc-950">{s.title}</td>
-                    <td className="px-4 py-3 text-zinc-700">{s.submission_type}</td>
-                    <td className="px-4 py-3 text-zinc-700">{s.status}</td>
-                    <td className="px-4 py-3 text-zinc-700">{submitterLabel}</td>
-                    <td className="px-4 py-3 text-zinc-700">{new Date(s.created_at).toLocaleDateString()}</td>
-                    <td className="px-4 py-3">
-                      <Link href={`/dashboard/submissions/${s.id}`} className="text-sm font-medium text-zinc-900 hover:underline">
+                  <tr key={s.id} className="hover:bg-teal-50/20">
+                    <td className="px-4 py-4 font-medium text-slate-900">{s.title}</td>
+                    <td className="px-4 py-4">
+                      <SubmissionTypeBadge type={s.submission_type} />
+                    </td>
+                    <td className="px-4 py-4">
+                      <SubmissionStatusBadge status={s.status} />
+                    </td>
+                    <td className="hidden px-4 py-4 text-slate-700 lg:table-cell">{submitterLabel}</td>
+                    <td className="px-4 py-4 text-slate-600">{new Date(s.created_at).toLocaleDateString()}</td>
+                    <td className="px-4 py-4">
+                      <Link
+                        href={`/dashboard/submissions/${s.id}`}
+                        className="font-semibold text-teal-800 hover:text-teal-950 hover:underline"
+                      >
                         View
                       </Link>
                     </td>
@@ -154,9 +154,18 @@ export default async function SubmissionsPage(props: {
               })}
             </tbody>
           </table>
-        </div>
+        </TableShell>
       ) : (
-        <div className="rounded-2xl border bg-white p-6 text-sm text-zinc-700">No submissions found.</div>
+        <EmptyState
+          title="Nothing in this queue yet"
+          description="Submissions are informal ideas or files waiting for review — share something when you are ready."
+        >
+          {canCreate ? (
+            <Link href="/dashboard/submissions/new" className="inline-flex rounded-xl bg-teal-600 px-4 py-2 text-sm font-semibold text-white hover:bg-teal-700">
+              Submit an idea
+            </Link>
+          ) : null}
+        </EmptyState>
       )}
     </div>
   )

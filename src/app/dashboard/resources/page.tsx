@@ -7,20 +7,20 @@ import {
   bulkSetPublishedResourcesAction,
 } from '@/app/dashboard/resources/actions'
 import { BulkResourcesTable } from '@/app/dashboard/resources/BulkResourcesTable'
+import { AdminPageHeader } from '@/components/dashboard/AdminPageHeader'
+import { EmptyState } from '@/components/ui/EmptyState'
 
 export default async function DashboardResourcesPage() {
   const profile = await requireProfile()
 
   if (profile.role !== 'admin' && profile.role !== 'teacher') {
     return (
-      <div className="rounded-2xl border bg-white p-6">
-        <h1 className="text-xl font-semibold tracking-tight">Resources</h1>
-        <p className="mt-2 text-sm text-zinc-700">Access denied.</p>
-        <div className="mt-4">
-          <Link href="/dashboard" className="text-sm text-zinc-700 hover:text-zinc-950">
-            Back to dashboard
-          </Link>
-        </div>
+      <div className="rounded-2xl border border-amber-100 bg-amber-50/50 p-8 text-center">
+        <h1 className="text-lg font-semibold text-slate-900">Restricted</h1>
+        <p className="mt-2 text-sm text-slate-600">This library is only for teachers and admins.</p>
+        <Link href="/dashboard" className="mt-6 inline-flex font-medium text-teal-800 hover:underline">
+          ← Dashboard home
+        </Link>
       </div>
     )
   }
@@ -42,30 +42,24 @@ export default async function DashboardResourcesPage() {
   const resources = data ?? []
 
   return (
-    <div className="grid gap-6">
-      <div className="flex items-end justify-between gap-4">
-        <div>
-          <h1 className="text-2xl font-semibold tracking-tight">
-            {profile.role === 'admin' ? 'All resources' : 'My resources'}
-          </h1>
-          <p className="mt-1 text-sm text-zinc-700">
-            {profile.role === 'admin'
-              ? 'View and manage resources.'
-              : 'Resources you created.'}
-          </p>
-        </div>
-        <div className="flex items-center gap-3">
+    <div className="grid gap-10">
+      <AdminPageHeader
+        eyebrow="Activities"
+        title={profile.role === 'admin' ? 'All resources' : 'My resources'}
+        description={
+          profile.role === 'admin'
+            ? 'Browse every draft and published activity on the platform. Bulk actions affect only what you select.'
+            : 'Everything you have created lives here — polish drafts until you are ready to publish.'
+        }
+        actions={
           <Link
             href="/dashboard/resources/new"
-            className="rounded-md bg-zinc-900 px-4 py-2 text-sm font-medium text-white hover:bg-zinc-800"
+            className="inline-flex items-center justify-center rounded-xl bg-gradient-to-r from-teal-600 to-teal-700 px-4 py-2.5 text-sm font-semibold text-white shadow-sm hover:from-teal-700 hover:to-teal-800"
           >
-            Create new
+            Create resource
           </Link>
-          <Link href="/dashboard" className="text-sm text-zinc-700 hover:text-zinc-950">
-            Dashboard
-          </Link>
-        </div>
-      </div>
+        }
+      />
 
       {resources.length ? (
         <BulkResourcesTable
@@ -75,9 +69,17 @@ export default async function DashboardResourcesPage() {
           bulkSetPublishedAction={bulkSetPublishedResourcesAction}
         />
       ) : (
-        <div className="rounded-2xl border bg-white p-6 text-sm text-zinc-700">
-          No resources yet.
-        </div>
+        <EmptyState
+          title="No resources yet"
+          description="Create your first printable or classroom activity — you can save as draft and refine before publishing."
+        >
+          <Link
+            href="/dashboard/resources/new"
+            className="inline-flex rounded-xl bg-teal-600 px-4 py-2 text-sm font-semibold text-white hover:bg-teal-700"
+          >
+            Create your first resource
+          </Link>
+        </EmptyState>
       )}
     </div>
   )

@@ -1,12 +1,19 @@
 import Link from 'next/link'
 import { requireProfile } from '@/lib/auth'
 import { createSubmissionAction } from '@/app/dashboard/submissions/actions'
+import { AdminPageHeader } from '@/components/dashboard/AdminPageHeader'
+import { ActionButton } from '@/components/dashboard/ActionButton'
+import { FieldLabel } from '@/components/dashboard/FieldLabel'
+import { FormSection } from '@/components/dashboard/FormSection'
+import { dashInput, dashTextarea } from '@/components/dashboard/classes'
 
 export default async function NewSubmissionPage() {
   const profile = await requireProfile()
   if (profile.role === 'student_optional') {
     return (
-      <div className="rounded-2xl border bg-white p-6 text-sm text-zinc-700">This page is not available for students.</div>
+      <div className="rounded-2xl border border-amber-100 bg-amber-50/70 p-8 text-center text-sm text-slate-700">
+        Optional student accounts cannot create submissions here.
+      </div>
     )
   }
 
@@ -14,88 +21,60 @@ export default async function NewSubmissionPage() {
     profile.role === 'admin' || profile.role === 'teacher' || profile.role === 'alumni' || profile.role === 'donor'
   if (!allowed) {
     return (
-      <div className="rounded-2xl border bg-white p-6 text-sm text-zinc-700">You do not have access to create submissions.</div>
+      <div className="rounded-2xl border border-slate-200 bg-white p-8 text-center text-sm text-slate-700">
+        You do not have access to create submissions.
+      </div>
     )
   }
 
   return (
-    <div className="grid gap-6">
-      <div className="flex items-end justify-between gap-4">
-        <div>
-          <h1 className="text-2xl font-semibold tracking-tight">New submission</h1>
-          <p className="mt-1 text-sm text-zinc-700">Submit an activity idea or other content for review.</p>
-        </div>
-        <Link href="/dashboard/submissions" className="text-sm text-zinc-700 hover:text-zinc-950">
-          ← Back
-        </Link>
-      </div>
+    <div className="grid gap-10">
+      <AdminPageHeader
+        eyebrow="Submit"
+        title="Share an activity idea"
+        description="Tell us what you tried in class or what teachers could adapt. Attach a link or file URL — the team reviews before anything goes public."
+        backHref="/dashboard/submissions"
+        backLabel="Submissions"
+      />
 
-      <form action={createSubmissionAction} className="grid gap-6">
-        <section className="rounded-2xl border border-zinc-200 bg-white p-6 shadow-sm">
-          <h2 className="text-base font-semibold">Submission</h2>
-          <div className="mt-4 grid gap-4">
-            <div className="grid gap-1">
-              <label className="text-sm font-medium">Title</label>
-              <input
-                name="title"
-                required
-                className="rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm shadow-sm outline-none transition focus:border-zinc-900 focus:ring-4 focus:ring-zinc-900/10"
-              />
+      <form action={createSubmissionAction} className="grid gap-8">
+        <FormSection title="Details">
+          <div className="grid gap-5">
+            <div>
+              <FieldLabel htmlFor="sub-title">Title</FieldLabel>
+              <input id="sub-title" name="title" required className={`${dashInput} mt-2`} />
             </div>
-
-            <div className="grid gap-1">
-              <label className="text-sm font-medium">Description</label>
-              <textarea
-                name="description"
-                rows={5}
-                className="rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm shadow-sm outline-none transition focus:border-zinc-900 focus:ring-4 focus:ring-zinc-900/10"
-              />
+            <div>
+              <FieldLabel htmlFor="sub-desc">Description</FieldLabel>
+              <textarea id="sub-desc" name="description" rows={6} className={`${dashTextarea} mt-2 leading-relaxed`} />
             </div>
-
-            <div className="grid gap-1">
-              <label className="text-sm font-medium">Submission type</label>
-              <select
-                name="submission_type"
-                defaultValue="activity_idea"
-                className="rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm shadow-sm outline-none transition focus:border-zinc-900 focus:ring-4 focus:ring-zinc-900/10"
-              >
+            <div>
+              <FieldLabel htmlFor="sub-type">Submission type</FieldLabel>
+              <select id="sub-type" name="submission_type" defaultValue="activity_idea" className={`${dashInput} mt-2`}>
                 <option value="blog_post">blog_post</option>
                 <option value="activity_idea">activity_idea</option>
                 <option value="teaching_material">teaching_material</option>
                 <option value="printable_template">printable_template</option>
               </select>
             </div>
-
-            <div className="grid gap-1">
-              <label className="text-sm font-medium">File URL</label>
-              <input
-                name="file_url"
-                placeholder="optional"
-                className="rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm shadow-sm outline-none transition focus:border-zinc-900 focus:ring-4 focus:ring-zinc-900/10"
-              />
+            <div>
+              <FieldLabel htmlFor="sub-file" hint="Paste a hosted file URL if you already uploaded somewhere.">
+                File URL (optional)
+              </FieldLabel>
+              <input id="sub-file" name="file_url" placeholder="https://" className={`${dashInput} mt-2`} />
             </div>
-
-            <div className="grid gap-1">
-              <label className="text-sm font-medium">External link</label>
-              <input
-                name="external_link"
-                placeholder="optional"
-                className="rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm shadow-sm outline-none transition focus:border-zinc-900 focus:ring-4 focus:ring-zinc-900/10"
-              />
+            <div>
+              <FieldLabel htmlFor="sub-ext">External link (optional)</FieldLabel>
+              <input id="sub-ext" name="external_link" placeholder="https://" className={`${dashInput} mt-2`} />
             </div>
           </div>
-        </section>
+        </FormSection>
 
-        <div className="flex items-center justify-end gap-3">
-          <Link href="/dashboard/submissions" className="text-sm text-zinc-700 hover:text-zinc-950">
+        <div className="flex flex-wrap justify-end gap-3 border-t border-slate-100 pt-8">
+          <Link href="/dashboard/submissions" className="rounded-xl px-4 py-2.5 text-sm font-semibold text-slate-700 hover:bg-slate-100">
             Cancel
           </Link>
-          <button
-            type="submit"
-            className="rounded-lg bg-zinc-900 px-4 py-2 text-sm font-medium text-white shadow-sm transition hover:bg-zinc-800 focus:outline-none focus:ring-4 focus:ring-zinc-900/20"
-          >
-            Submit
-          </button>
+          <ActionButton type="submit">Submit for review</ActionButton>
         </div>
       </form>
     </div>

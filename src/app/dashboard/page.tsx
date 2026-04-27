@@ -1,85 +1,180 @@
-import Link from 'next/link'
 import { requireProfile } from '@/lib/auth'
-import { Card } from '@/components/ui/Card'
+import type { ProfileRole } from '@/types/db'
+import { DashboardGrid } from '@/components/dashboard/DashboardGrid'
+import { DashboardNavCard } from '@/components/dashboard/DashboardNavCard'
+import { RoleBadge } from '@/components/dashboard/RoleBadge'
+import { dashMuted, dashPanel, dashTitle } from '@/components/dashboard/classes'
 
-function DashboardLink({ href, label }: { href: string; label: string }) {
-  return (
-    <Link
-      href={href}
-      className="rounded-2xl border border-slate-200/90 bg-white px-4 py-3.5 text-sm font-medium text-slate-900 shadow-sm transition hover:border-emerald-200/80 hover:shadow-md"
-    >
-      {label}
-    </Link>
-  )
+function roleExplanation(role: ProfileRole): string {
+  switch (role) {
+    case 'admin':
+      return 'You manage users, invitations, subjects, grade levels, and platform-wide review of resources and submissions.'
+    case 'teacher':
+      return 'Create physical learning activities, publish to the public catalog, and share blog posts or ideas for review.'
+    case 'alumni':
+    case 'donor':
+      return 'Contribute blog posts and submit activity ideas; the team may review submissions before they appear publicly.'
+    case 'student_optional':
+      return 'Student accounts are optional and lightweight—saved resources and extras can arrive in a future update.'
+    default:
+      return ''
+  }
 }
 
 export default async function DashboardPage() {
   const profile = await requireProfile()
 
-  const nameOrEmail = profile.name ?? profile.email ?? 'Account'
-  const roleLabel =
-    profile.role === 'teacher'
-      ? 'content creator'
-      : profile.role === 'admin'
-        ? 'platform manager'
-        : profile.role
+  const nameOrEmail = profile.name ?? profile.email ?? 'there'
 
   return (
-    <div className="grid gap-8">
-      <Card padding="p-6 md:p-8">
-        <h1 className="text-2xl font-semibold tracking-tight text-slate-900">
-          {profile.role === 'admin' ? 'Admin Panel' : 'Dashboard'}
-        </h1>
-        <div className="mt-4 grid gap-2 text-sm text-slate-600">
-          <div>
-            <span className="font-medium text-slate-900">User:</span> {nameOrEmail}
+    <div className="grid gap-10">
+      <section
+        className={`relative overflow-hidden ${dashPanel} bg-gradient-to-br from-teal-50/90 via-[#fdfcfa] to-amber-50/60 p-8 md:p-10`}
+      >
+        <div className="pointer-events-none absolute -right-16 -top-16 h-48 w-48 rounded-full bg-teal-200/40 blur-3xl" />
+        <div className="pointer-events-none absolute -bottom-12 -left-12 h-40 w-40 rounded-full bg-amber-200/40 blur-3xl" />
+        <div className="relative">
+          <p className="text-sm font-medium text-teal-800">Welcome back</p>
+          <h1 className={`mt-2 ${dashTitle}`}>{nameOrEmail}</h1>
+          <div className="mt-4 flex flex-wrap items-center gap-3">
+            <RoleBadge role={profile.role} />
           </div>
-          <div>
-            <span className="font-medium text-slate-900">Role:</span> {roleLabel}
-          </div>
+          <p className={`mt-6 max-w-2xl ${dashMuted}`}>{roleExplanation(profile.role)}</p>
         </div>
-      </Card>
+      </section>
 
-      <section className="grid gap-3">
-        <div className="grid gap-3 md:grid-cols-2">
-          <DashboardLink href="/dashboard/account" label="Account settings" />
+      <section className="grid gap-6">
+        <div>
+          <h2 className="text-lg font-semibold text-slate-900">Quick actions</h2>
+          <p className={`mt-1 ${dashMuted}`}>Jump to the tools you use most — everything stays in one place.</p>
         </div>
 
         {profile.role === 'admin' ? (
-          <div className="grid gap-3 md:grid-cols-2">
-            <DashboardLink href="/dashboard/users" label="User management" />
-            <DashboardLink href="/dashboard/users/invite-teacher" label="Invite teacher" />
-            <DashboardLink href="/dashboard/resources/manage" label="Manage resources" />
-            <DashboardLink href="/dashboard/blog-posts" label="Manage blog posts" />
-            <DashboardLink href="/dashboard/submissions" label="Manage submissions" />
-            <DashboardLink href="/dashboard/subjects" label="Manage subjects" />
-            <DashboardLink href="/dashboard/grade-levels" label="Manage grade levels" />
-          </div>
+          <DashboardGrid>
+            <DashboardNavCard
+              href="/dashboard/users"
+              marker="👥"
+              title="User management"
+              description="Manage profiles, roles and access."
+            />
+            <DashboardNavCard
+              href="/dashboard/users/invite-teacher"
+              marker="✉️"
+              title="Invite teacher"
+              description="Invite new teachers to publish activities."
+            />
+            <DashboardNavCard
+              href="/dashboard/resources/manage"
+              marker="📚"
+              title="Manage resources"
+              description="Review, edit and organize learning activities."
+            />
+            <DashboardNavCard
+              href="/dashboard/blog-posts"
+              marker="📝"
+              title="Manage blog posts"
+              description="Create and manage stories and updates."
+            />
+            <DashboardNavCard
+              href="/dashboard/submissions"
+              marker="📬"
+              title="Manage submissions"
+              description="Handle ideas and contributions."
+            />
+            <DashboardNavCard
+              href="/dashboard/subjects"
+              marker="🔬"
+              title="Manage subjects"
+              description="Edit available STEM subjects."
+            />
+            <DashboardNavCard
+              href="/dashboard/grade-levels"
+              marker="📊"
+              title="Manage grade levels"
+              description="Maintain grade levels from Grade 6 to Grade 14."
+            />
+            <DashboardNavCard
+              href="/dashboard/account"
+              marker="⚙️"
+              title="Account settings"
+              description="Update your password and account details."
+            />
+          </DashboardGrid>
         ) : null}
 
         {profile.role === 'teacher' ? (
-          <div className="grid gap-3 md:grid-cols-2">
-            <DashboardLink href="/dashboard/resources" label="My resources" />
-            <DashboardLink href="/dashboard/resources/new" label="Create new resource" />
-            <DashboardLink href="/dashboard/blog-posts" label="My blog posts" />
-            <DashboardLink href="/dashboard/submissions" label="My submissions" />
-          </div>
+          <DashboardGrid>
+            <DashboardNavCard
+              href="/dashboard/resources"
+              marker="📂"
+              title="My resources"
+              description="Create and manage your physical learning activities."
+            />
+            <DashboardNavCard
+              href="/dashboard/resources/new"
+              marker="➕"
+              title="Create new resource"
+              description="Add a new printable or hands-on activity."
+            />
+            <DashboardNavCard
+              href="/dashboard/blog-posts"
+              marker="✍️"
+              title="My blog posts"
+              description="Write stories, guides or teaching reflections."
+            />
+            <DashboardNavCard
+              href="/dashboard/submissions"
+              marker="📮"
+              title="My submissions"
+              description="Track your submitted ideas and materials."
+            />
+            <DashboardNavCard
+              href="/dashboard/account"
+              marker="⚙️"
+              title="Account settings"
+              description="Password and profile security."
+            />
+          </DashboardGrid>
         ) : null}
 
-        {profile.role === 'alumni' || profile.role === 'donor' ? (
-          <div className="grid gap-3 md:grid-cols-2">
-            <DashboardLink href="/dashboard/blog-posts" label="My blog posts" />
-            <DashboardLink href="/dashboard/submissions/new" label="Submit activity idea" />
-            <DashboardLink href="/dashboard/submissions" label="My submissions" />
-          </div>
-        ) : null}
+        {(profile.role === 'alumni' || profile.role === 'donor') && (
+          <DashboardGrid>
+            <DashboardNavCard
+              href="/dashboard/blog-posts"
+              marker="✍️"
+              title="My blog posts"
+              description="Drafts and posts tied to your account."
+            />
+            <DashboardNavCard
+              href="/dashboard/submissions/new"
+              marker="💡"
+              title="Submit activity idea"
+              description="Send an idea or material for the team to review."
+            />
+            <DashboardNavCard
+              href="/dashboard/submissions"
+              marker="📮"
+              title="My submissions"
+              description="See status and feedback on what you submitted."
+            />
+            <DashboardNavCard
+              href="/dashboard/account"
+              marker="⚙️"
+              title="Account settings"
+              description="Password and profile security."
+            />
+          </DashboardGrid>
+        )}
 
         {profile.role === 'student_optional' ? (
-          <Card className="border-dashed border-slate-200 bg-slate-50/50" padding="p-6">
-            <p className="text-sm text-slate-600">
-              Student accounts are optional. Saved resources will be available later.
+          <div
+            className={`rounded-2xl border border-dashed border-amber-200/80 bg-amber-50/40 p-8 text-center`}
+          >
+            <p className="font-medium text-slate-900">Optional student account</p>
+            <p className={`mt-2 ${dashMuted}`}>
+              Browsing stays open on the public site. Saved collections and extras can land here later.
             </p>
-          </Card>
+          </div>
         ) : null}
       </section>
     </div>

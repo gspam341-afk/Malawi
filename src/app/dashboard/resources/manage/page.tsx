@@ -2,6 +2,15 @@ import Link from 'next/link'
 import { requireAdmin } from '@/lib/auth'
 import { createSupabaseServerClient } from '@/lib/supabase/server'
 import { adminArchiveResourceAction, adminSetResourceStatusAction } from '@/app/dashboard/resources/manage/actions'
+import { AdminPageHeader } from '@/components/dashboard/AdminPageHeader'
+import {
+  ResourceStatusBadge,
+  VisibilityBadge,
+} from '@/components/dashboard/DashboardStatusBadge'
+import { ActionButton, SecondaryButton } from '@/components/dashboard/ActionButton'
+import { dashInput, dashMuted, dashPanelSolid } from '@/components/dashboard/classes'
+import { TableShell } from '@/components/dashboard/TableShell'
+import { EmptyState } from '@/components/ui/EmptyState'
 
 export default async function AdminManageResourcesPage(props: {
   searchParams?: Promise<{ q?: string; status?: string; visibility?: string }>
@@ -31,137 +40,110 @@ export default async function AdminManageResourcesPage(props: {
   const creatorMap = new Map((creators ?? []).map((p) => [p.id, p]))
 
   return (
-    <div className="grid gap-6">
-      <div className="flex items-end justify-between gap-4">
-        <div>
-          <h1 className="text-2xl font-semibold tracking-tight">Manage resources</h1>
-          <p className="mt-1 text-sm text-zinc-700">Platform-wide resource management (admin).</p>
-        </div>
-        <div className="flex items-center gap-3">
-          <Link href="/dashboard/resources" className="text-sm text-zinc-700 hover:text-zinc-950">
-            My resources
+    <div className="grid gap-10">
+      <AdminPageHeader
+        eyebrow="Platform"
+        title="Manage resources"
+        description="Moderate status and visibility for any activity on the site. Prefer dialogue with teachers before archiving their work."
+        actions={
+          <Link href="/dashboard/resources" className="text-sm font-medium text-teal-800 hover:underline">
+            Teacher view →
           </Link>
-          <Link href="/dashboard" className="text-sm text-zinc-700 hover:text-zinc-950">
-            Dashboard
-          </Link>
-        </div>
-      </div>
+        }
+      />
 
-      <form className="grid gap-3 rounded-2xl border bg-white p-4 sm:grid-cols-4" method="get">
-        <div className="grid gap-1 sm:col-span-2">
-          <label className="text-xs font-medium uppercase tracking-wide text-zinc-600">Search</label>
-          <input
-            name="q"
-            defaultValue={q}
-            placeholder="Search by title"
-            className="rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm shadow-sm outline-none transition focus:border-zinc-900 focus:ring-4 focus:ring-zinc-900/10"
-          />
-        </div>
-
-        <div className="grid gap-1">
-          <label className="text-xs font-medium uppercase tracking-wide text-zinc-600">Status</label>
-          <select
-            name="status"
-            defaultValue={status}
-            className="rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm shadow-sm outline-none transition focus:border-zinc-900 focus:ring-4 focus:ring-zinc-900/10"
-          >
-            <option value="">all</option>
-            <option value="draft">draft</option>
-            <option value="pending">pending</option>
-            <option value="published">published</option>
-            <option value="rejected">rejected</option>
-            <option value="archived">archived</option>
-          </select>
-        </div>
-
-        <div className="grid gap-1">
-          <label className="text-xs font-medium uppercase tracking-wide text-zinc-600">Visibility</label>
-          <select
-            name="visibility"
-            defaultValue={visibility}
-            className="rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm shadow-sm outline-none transition focus:border-zinc-900 focus:ring-4 focus:ring-zinc-900/10"
-          >
-            <option value="">all</option>
-            <option value="public">public</option>
-            <option value="teacher_only">teacher_only</option>
-            <option value="logged_in_only">logged_in_only</option>
-            <option value="private">private</option>
-          </select>
-        </div>
-
-        <div className="sm:col-span-4 flex items-center justify-end">
-          <button
-            type="submit"
-            className="rounded-lg bg-zinc-900 px-4 py-2 text-sm font-medium text-white shadow-sm transition hover:bg-zinc-800 focus:outline-none focus:ring-4 focus:ring-zinc-900/20"
-          >
-            Apply filters
-          </button>
-        </div>
-      </form>
+      <section className={`${dashPanelSolid} p-5 md:p-6`}>
+        <h2 className="text-sm font-semibold text-slate-900">Filters</h2>
+        <p className={`mt-1 ${dashMuted}`}>Search by title or narrow by workflow state.</p>
+        <form className="mt-6 grid gap-4 md:grid-cols-12" method="get">
+          <div className="md:col-span-5">
+            <label className="text-xs font-semibold uppercase tracking-wide text-slate-500">Search</label>
+            <input name="q" defaultValue={q} placeholder="Title contains…" className={`${dashInput} mt-2`} />
+          </div>
+          <div className="md:col-span-3">
+            <label className="text-xs font-semibold uppercase tracking-wide text-slate-500">Status</label>
+            <select name="status" defaultValue={status} className={`${dashInput} mt-2`}>
+              <option value="">All</option>
+              <option value="draft">draft</option>
+              <option value="pending">pending</option>
+              <option value="published">published</option>
+              <option value="rejected">rejected</option>
+              <option value="archived">archived</option>
+            </select>
+          </div>
+          <div className="md:col-span-3">
+            <label className="text-xs font-semibold uppercase tracking-wide text-slate-500">Visibility</label>
+            <select name="visibility" defaultValue={visibility} className={`${dashInput} mt-2`}>
+              <option value="">All</option>
+              <option value="public">public</option>
+              <option value="teacher_only">teacher_only</option>
+              <option value="logged_in_only">logged_in_only</option>
+              <option value="private">private</option>
+            </select>
+          </div>
+          <div className="flex items-end md:col-span-1">
+            <ActionButton type="submit" className="w-full md:w-auto">
+              Apply
+            </ActionButton>
+          </div>
+        </form>
+      </section>
 
       {resources?.length ? (
-        <div className="overflow-hidden rounded-2xl border bg-white">
-          <table className="w-full text-left text-sm">
-            <thead className="bg-zinc-50 text-xs font-medium uppercase tracking-wide text-zinc-600">
-              <tr>
-                <th className="px-4 py-3">Title</th>
-                <th className="px-4 py-3">Creator</th>
-                <th className="px-4 py-3">Status</th>
-                <th className="px-4 py-3">Visibility</th>
-                <th className="px-4 py-3">Updated</th>
-                <th className="px-4 py-3">Actions</th>
+        <TableShell>
+          <table className="w-full min-w-[900px] text-left text-sm">
+            <thead className="border-b border-slate-100 bg-gradient-to-r from-teal-50/90 via-white to-amber-50/40">
+              <tr className="text-xs font-semibold uppercase tracking-wide text-slate-600">
+                <th className="px-4 py-4">Activity</th>
+                <th className="px-4 py-4">Creator</th>
+                <th className="px-4 py-4">Status</th>
+                <th className="px-4 py-4">Visibility</th>
+                <th className="px-4 py-4">Updated</th>
+                <th className="px-4 py-4">Moderation</th>
               </tr>
             </thead>
-            <tbody className="divide-y">
+            <tbody className="divide-y divide-slate-100">
               {resources.map((r) => {
                 const creator = r.created_by ? creatorMap.get(r.created_by) : null
                 const creatorLabel = creator?.name ?? creator?.email ?? (r.created_by ? r.created_by.slice(0, 8) : '—')
 
                 return (
-                  <tr key={r.id} className="hover:bg-zinc-50">
-                    <td className="px-4 py-3 font-medium text-zinc-950">
-                      <Link href={`/dashboard/resources/${r.id}`} className="hover:underline">
+                  <tr key={r.id} className="align-top hover:bg-teal-50/20">
+                    <td className="px-4 py-4">
+                      <Link href={`/dashboard/resources/${r.id}`} className="font-semibold text-slate-900 hover:text-teal-800 hover:underline">
                         {r.title}
                       </Link>
-                      <div className="mt-1 text-xs text-zinc-600">
-                        <Link href={`/dashboard/resources/${r.id}/edit`} className="hover:underline">
-                          Edit resource
+                      <div className="mt-1 text-xs">
+                        <Link href={`/dashboard/resources/${r.id}/edit`} className="font-medium text-teal-800 hover:underline">
+                          Edit resource →
                         </Link>
                       </div>
                     </td>
-                    <td className="px-4 py-3 text-zinc-700">{creatorLabel}</td>
-                    <td className="px-4 py-3 text-zinc-700">{r.status}</td>
-                    <td className="px-4 py-3 text-zinc-700">{r.visibility}</td>
-                    <td className="px-4 py-3 text-zinc-700">{new Date(r.updated_at).toLocaleDateString()}</td>
-                    <td className="px-4 py-3">
-                      <div className="flex flex-wrap items-center gap-2">
+                    <td className="px-4 py-4 text-slate-700">{creatorLabel}</td>
+                    <td className="px-4 py-4">
+                      <ResourceStatusBadge status={r.status} />
+                    </td>
+                    <td className="px-4 py-4">
+                      <VisibilityBadge visibility={r.visibility} />
+                    </td>
+                    <td className="px-4 py-4 text-slate-600">{new Date(r.updated_at).toLocaleDateString()}</td>
+                    <td className="px-4 py-4">
+                      <div className="flex flex-col gap-2 sm:flex-row sm:flex-wrap">
                         <form action={adminSetResourceStatusAction}>
                           <input type="hidden" name="resource_id" value={r.id} />
                           <input type="hidden" name="status" value="draft" />
-                          <button
-                            type="submit"
-                            className="rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm font-medium text-zinc-900 shadow-sm transition hover:bg-zinc-50 focus:outline-none focus:ring-4 focus:ring-zinc-900/10"
-                          >
-                            Set draft
-                          </button>
+                          <SecondaryButton type="submit">Draft</SecondaryButton>
                         </form>
-
                         <form action={adminSetResourceStatusAction}>
                           <input type="hidden" name="resource_id" value={r.id} />
                           <input type="hidden" name="status" value="published" />
-                          <button
-                            type="submit"
-                            className="rounded-lg bg-zinc-900 px-3 py-2 text-sm font-medium text-white shadow-sm transition hover:bg-zinc-800 focus:outline-none focus:ring-4 focus:ring-zinc-900/20"
-                          >
-                            Publish
-                          </button>
+                          <ActionButton type="submit">Publish</ActionButton>
                         </form>
-
                         <form action={adminArchiveResourceAction}>
                           <input type="hidden" name="resource_id" value={r.id} />
                           <button
                             type="submit"
-                            className="rounded-lg border border-amber-300 bg-amber-50 px-3 py-2 text-sm font-medium text-amber-900 shadow-sm transition hover:bg-amber-100 focus:outline-none focus:ring-4 focus:ring-amber-500/20"
+                            className="inline-flex rounded-xl border border-amber-200 bg-amber-50 px-4 py-2.5 text-sm font-semibold text-amber-950 hover:bg-amber-100"
                           >
                             Archive
                           </button>
@@ -173,9 +155,9 @@ export default async function AdminManageResourcesPage(props: {
               })}
             </tbody>
           </table>
-        </div>
+        </TableShell>
       ) : (
-        <div className="rounded-2xl border bg-white p-6 text-sm text-zinc-700">No resources found.</div>
+        <EmptyState title="No resources match" description="Try clearing filters or check another status." />
       )}
     </div>
   )

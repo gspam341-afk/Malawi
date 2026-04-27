@@ -1,8 +1,12 @@
-import Link from 'next/link'
 import { requireAdmin } from '@/lib/auth'
 import { createSupabaseServerClient } from '@/lib/supabase/server'
 import { createSubjectAction, deleteSubjectAction, updateSubjectAction } from '@/app/dashboard/subjects/actions'
 import { ConfirmSubmitButton } from '@/components/ConfirmSubmitButton'
+import { AdminPageHeader } from '@/components/dashboard/AdminPageHeader'
+import { ActionButton, SecondaryButton } from '@/components/dashboard/ActionButton'
+import { dashInput, dashMuted, dashPanelSolid } from '@/components/dashboard/classes'
+import { TableShell } from '@/components/dashboard/TableShell'
+import { EmptyState } from '@/components/ui/EmptyState'
 
 export default async function AdminSubjectsPage(props: { searchParams?: Promise<{ error?: string }> }) {
   await requireAdmin()
@@ -13,86 +17,72 @@ export default async function AdminSubjectsPage(props: { searchParams?: Promise<
   if (error) throw error
 
   return (
-    <div className="grid gap-6">
-      <div className="flex items-end justify-between gap-4">
-        <div>
-          <h1 className="text-2xl font-semibold tracking-tight">Manage subjects</h1>
-          <p className="mt-1 text-sm text-zinc-700">Add, edit, and safely remove subjects.</p>
-        </div>
-        <Link href="/dashboard" className="text-sm text-zinc-700 hover:text-zinc-950">
-          Dashboard
-        </Link>
-      </div>
+    <div className="grid gap-10">
+      <AdminPageHeader
+        eyebrow="Curriculum"
+        title="STEM subjects"
+        description="Keep subject labels aligned with school naming. Safe delete prevents removing subjects tied to resources."
+      />
 
       {errorMessage ? (
-        <div className="rounded-2xl border border-red-200 bg-red-50 p-4 text-sm text-red-900">{errorMessage}</div>
+        <div className="rounded-xl border border-red-200 bg-red-50 px-5 py-4 text-sm text-red-950" role="alert">
+          {errorMessage}
+        </div>
       ) : null}
 
-      <section className="rounded-2xl border bg-white p-6">
-        <h2 className="text-base font-semibold">Add subject</h2>
-        <form action={createSubjectAction} className="mt-4 grid gap-3 sm:grid-cols-3">
-          <input
-            name="name"
-            placeholder="Name"
-            className="rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm shadow-sm outline-none transition focus:border-zinc-900 focus:ring-4 focus:ring-zinc-900/10"
-          />
-          <input
-            name="description"
-            placeholder="Description (optional)"
-            className="rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm shadow-sm outline-none transition focus:border-zinc-900 focus:ring-4 focus:ring-zinc-900/10 sm:col-span-2"
-          />
-          <div className="sm:col-span-3 flex justify-end">
-            <button
-              type="submit"
-              className="rounded-lg bg-zinc-900 px-4 py-2 text-sm font-medium text-white shadow-sm transition hover:bg-zinc-800 focus:outline-none focus:ring-4 focus:ring-zinc-900/20"
-            >
+      <section className={`${dashPanelSolid} p-6 md:p-8`}>
+        <h2 className="text-lg font-semibold text-slate-900">Add a subject</h2>
+        <p className={`mt-1 ${dashMuted}`}>Appears in filters across teacher tools and the public browse experience.</p>
+        <form action={createSubjectAction} className="mt-6 grid gap-4 md:grid-cols-12">
+          <div className="md:col-span-4">
+            <label className="text-xs font-semibold uppercase tracking-wide text-slate-500">Name</label>
+            <input name="name" placeholder="e.g. Biology" required className={`${dashInput} mt-2`} />
+          </div>
+          <div className="md:col-span-7">
+            <label className="text-xs font-semibold uppercase tracking-wide text-slate-500">Description (optional)</label>
+            <input name="description" placeholder="Short helper text" className={`${dashInput} mt-2`} />
+          </div>
+          <div className="flex items-end md:col-span-1">
+            <ActionButton type="submit" className="w-full md:w-auto">
               Add
-            </button>
+            </ActionButton>
           </div>
         </form>
       </section>
 
       {subjects?.length ? (
-        <div className="overflow-hidden rounded-2xl border bg-white">
-          <table className="w-full text-left text-sm">
-            <thead className="bg-zinc-50 text-xs font-medium uppercase tracking-wide text-zinc-600">
-              <tr>
-                <th className="px-4 py-3">Name</th>
-                <th className="px-4 py-3">Description</th>
-                <th className="px-4 py-3">Actions</th>
+        <TableShell>
+          <table className="w-full min-w-[640px] text-left text-sm">
+            <thead className="border-b border-slate-100 bg-gradient-to-r from-teal-50/90 to-white">
+              <tr className="text-xs font-semibold uppercase tracking-wide text-slate-600">
+                <th className="px-4 py-4">Subject</th>
+                <th className="hidden px-4 py-4 md:table-cell">Description snapshot</th>
+                <th className="px-4 py-4">Actions</th>
               </tr>
             </thead>
-            <tbody className="divide-y">
+            <tbody className="divide-y divide-slate-100">
               {subjects.map((s) => (
-                <tr key={s.id} className="hover:bg-zinc-50">
-                  <td className="px-4 py-3">
-                    <form action={updateSubjectAction} className="flex flex-wrap items-center gap-2">
+                <tr key={s.id} className="hover:bg-teal-50/15">
+                  <td className="px-4 py-4 align-top">
+                    <form action={updateSubjectAction} className="flex flex-col gap-3 lg:flex-row lg:flex-wrap lg:items-center">
                       <input type="hidden" name="id" value={s.id} />
-                      <input
-                        name="name"
-                        defaultValue={s.name}
-                        className="w-64 rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm shadow-sm outline-none transition focus:border-zinc-900 focus:ring-4 focus:ring-zinc-900/10"
-                      />
+                      <input name="name" defaultValue={s.name} className={`${dashInput} max-w-xs`} />
                       <input
                         name="description"
                         defaultValue={s.description ?? ''}
-                        className="min-w-[16rem] flex-1 rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm shadow-sm outline-none transition focus:border-zinc-900 focus:ring-4 focus:ring-zinc-900/10"
+                        placeholder="Description"
+                        className={`${dashInput} min-w-[12rem] flex-1`}
                       />
-                      <button
-                        type="submit"
-                        className="rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm font-medium text-zinc-900 shadow-sm transition hover:bg-zinc-50 focus:outline-none focus:ring-4 focus:ring-zinc-900/10"
-                      >
-                        Save
-                      </button>
+                      <SecondaryButton type="submit">Save</SecondaryButton>
                     </form>
                   </td>
-                  <td className="px-4 py-3 text-zinc-700">{s.description ?? '—'}</td>
-                  <td className="px-4 py-3">
+                  <td className="hidden px-4 py-4 text-slate-600 md:table-cell">{s.description ?? '—'}</td>
+                  <td className="px-4 py-4 align-top">
                     <form action={deleteSubjectAction}>
                       <input type="hidden" name="id" value={s.id} />
                       <ConfirmSubmitButton
-                        message="Delete this subject?"
-                        className="rounded-lg border border-red-300 bg-red-50 px-3 py-2 text-sm font-medium text-red-800 shadow-sm transition hover:bg-red-100 focus:outline-none focus:ring-4 focus:ring-red-500/20"
+                        message="Delete this subject? This fails if resources still reference it."
+                        className="rounded-xl border border-red-200 bg-red-50 px-4 py-2 text-sm font-semibold text-red-900 hover:bg-red-100"
                       >
                         Delete
                       </ConfirmSubmitButton>
@@ -102,9 +92,9 @@ export default async function AdminSubjectsPage(props: { searchParams?: Promise<
               ))}
             </tbody>
           </table>
-        </div>
+        </TableShell>
       ) : (
-        <div className="rounded-2xl border bg-white p-6 text-sm text-zinc-700">No subjects found.</div>
+        <EmptyState title="No subjects yet" description="Add Mathematics, Physics, Biology, or other STEM areas your schools use." />
       )}
     </div>
   )

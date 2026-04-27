@@ -3,6 +3,11 @@ import { requireRole } from '@/lib/auth'
 import { getGradeLevels, getSubjects } from '@/lib/queries/publicResources'
 import { createResourceAction } from '@/app/dashboard/resources/new/actions'
 import { RequiredMaterialsEditor } from '@/app/dashboard/resources/new/RequiredMaterialsEditor'
+import { AdminPageHeader } from '@/components/dashboard/AdminPageHeader'
+import { ActionButton } from '@/components/dashboard/ActionButton'
+import { FieldLabel } from '@/components/dashboard/FieldLabel'
+import { FormSection } from '@/components/dashboard/FormSection'
+import { dashCheckbox, dashInput, dashTextarea } from '@/components/dashboard/classes'
 
 export default async function NewResourcePage() {
   await requireRole(['admin', 'teacher'])
@@ -12,102 +17,78 @@ export default async function NewResourcePage() {
   const defaultStatus = 'draft'
 
   return (
-    <div className="grid gap-6">
-      <div className="flex items-end justify-between gap-4">
-        <div>
-          <h1 className="text-2xl font-semibold tracking-tight">Create resource</h1>
-          <p className="mt-1 text-sm text-zinc-700">
-            Add a new physical learning activity or teaching material.
-          </p>
-        </div>
-        <Link href="/dashboard/resources" className="text-sm text-zinc-700 hover:text-zinc-950">
-          ← Back
-        </Link>
-      </div>
+    <div className="grid gap-10">
+      <AdminPageHeader
+        eyebrow="Create"
+        title="New learning activity"
+        description="Describe outcomes, timing, and materials so teachers can run it confidently in class."
+        backHref="/dashboard/resources"
+        backLabel="My resources"
+      />
 
-      <form action={createResourceAction} className="grid gap-6">
-        <section className="rounded-2xl border border-zinc-200 bg-white p-6 shadow-sm">
-          <h2 className="text-base font-semibold">Basic information</h2>
-          <div className="mt-4 grid gap-4">
-            <div className="grid gap-1">
-              <label className="text-sm font-medium">Title</label>
+      <form action={createResourceAction} className="grid gap-8">
+        <FormSection title="Basic information" description="What it is called and what students will achieve.">
+          <div className="grid gap-5">
+            <div>
+              <FieldLabel htmlFor="res-title">Title</FieldLabel>
+              <input id="res-title" name="title" required className={`${dashInput} mt-2`} />
+            </div>
+
+            <div>
+              <FieldLabel htmlFor="res-result" hint="Student-facing outcome in one or two sentences.">
+                Result description
+              </FieldLabel>
+              <textarea id="res-result" name="result_description" rows={2} className={`${dashTextarea} mt-2`} />
+            </div>
+
+            <div>
+              <FieldLabel htmlFor="res-desc">Full description</FieldLabel>
+              <textarea id="res-desc" name="description" rows={4} className={`${dashTextarea} mt-2`} />
+            </div>
+
+            <div>
+              <FieldLabel htmlFor="res-type">Activity type</FieldLabel>
               <input
-                name="title"
-                required
-                className="rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm shadow-sm outline-none transition focus:border-zinc-900 focus:ring-4 focus:ring-zinc-900/10"
-              />
-            </div>
-
-            <div className="grid gap-1">
-              <label className="text-sm font-medium">Result description</label>
-              <textarea
-                name="result_description"
-                rows={2}
-                className="rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm shadow-sm outline-none transition focus:border-zinc-900 focus:ring-4 focus:ring-zinc-900/10"
-              />
-            </div>
-
-            <div className="grid gap-1">
-              <label className="text-sm font-medium">Description</label>
-              <textarea
-                name="description"
-                rows={4}
-                className="rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm shadow-sm outline-none transition focus:border-zinc-900 focus:ring-4 focus:ring-zinc-900/10"
-              />
-            </div>
-
-            <div className="grid gap-1">
-              <label className="text-sm font-medium">Activity type</label>
-              <input
+                id="res-type"
                 name="activity_type"
-                className="rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm shadow-sm outline-none transition focus:border-zinc-900 focus:ring-4 focus:ring-zinc-900/10"
-                placeholder="Flexible text (e.g. printable board game, classroom movement activity)"
+                className={`${dashInput} mt-2`}
+                placeholder="e.g. movement task, printable board game"
               />
             </div>
           </div>
-        </section>
+        </FormSection>
 
-        <section className="rounded-2xl border border-zinc-200 bg-white p-6 shadow-sm">
-          <h2 className="text-base font-semibold">Timing and class setup</h2>
-          <div className="mt-4 grid gap-4 sm:grid-cols-2">
-            <div className="grid gap-1">
-              <label className="text-sm font-medium">Preparation time</label>
+        <FormSection title="Activity setup" description="Timing, grouping, and difficulty for classroom planning.">
+          <div className="grid gap-4 sm:grid-cols-2">
+            <div>
+              <FieldLabel htmlFor="prep">Preparation time</FieldLabel>
               <input
+                id="prep"
                 name="preparation_time"
-                className="rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm shadow-sm outline-none transition focus:border-zinc-900 focus:ring-4 focus:ring-zinc-900/10"
+                className={`${dashInput} mt-2`}
                 placeholder="e.g. 10 minutes"
               />
             </div>
-            <div className="grid gap-1">
-              <label className="text-sm font-medium">Activity duration</label>
+            <div>
+              <FieldLabel htmlFor="dur">Activity duration</FieldLabel>
               <input
+                id="dur"
                 name="activity_duration"
-                className="rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm shadow-sm outline-none transition focus:border-zinc-900 focus:ring-4 focus:ring-zinc-900/10"
+                className={`${dashInput} mt-2`}
                 placeholder="e.g. 45 minutes"
               />
             </div>
-            <div className="grid gap-1">
-              <label className="text-sm font-medium">Group size (min)</label>
-              <input
-                type="number"
-                name="group_size_min"
-                className="rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm shadow-sm outline-none transition focus:border-zinc-900 focus:ring-4 focus:ring-zinc-900/10"
-              />
+            <div>
+              <FieldLabel htmlFor="gmin">Group size (min)</FieldLabel>
+              <input id="gmin" type="number" name="group_size_min" className={`${dashInput} mt-2`} />
             </div>
-            <div className="grid gap-1">
-              <label className="text-sm font-medium">Group size (max)</label>
-              <input
-                type="number"
-                name="group_size_max"
-                className="rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm shadow-sm outline-none transition focus:border-zinc-900 focus:ring-4 focus:ring-zinc-900/10"
-              />
+            <div>
+              <FieldLabel htmlFor="gmax">Group size (max)</FieldLabel>
+              <input id="gmax" type="number" name="group_size_max" className={`${dashInput} mt-2`} />
             </div>
-            <div className="grid gap-1 sm:col-span-2">
-              <label className="text-sm font-medium">Difficulty</label>
-              <select
-                name="difficulty_level"
-                className="rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm shadow-sm outline-none transition focus:border-zinc-900 focus:ring-4 focus:ring-zinc-900/10"
-              >
+            <div className="sm:col-span-2">
+              <FieldLabel htmlFor="diff">Difficulty</FieldLabel>
+              <select id="diff" name="difficulty_level" className={`${dashInput} mt-2`}>
                 <option value="">—</option>
                 <option value="easy">easy</option>
                 <option value="medium">medium</option>
@@ -115,89 +96,16 @@ export default async function NewResourcePage() {
               </select>
             </div>
           </div>
-        </section>
+        </FormSection>
 
-        <section className="rounded-2xl border border-zinc-200 bg-white p-6 shadow-sm">
-          <h2 className="text-base font-semibold">Material requirements</h2>
-          <div className="mt-4 grid gap-3 text-sm">
-            <label className="flex items-center gap-2">
-              <input type="checkbox" name="print_required" className="h-4 w-4 accent-zinc-900" />
-              Print required
-            </label>
-            <label className="flex items-center gap-2">
-              <input type="checkbox" name="cutting_required" className="h-4 w-4 accent-zinc-900" />
-              Cutting required
-            </label>
-            <label className="flex items-center gap-2">
-              <input type="checkbox" name="extra_materials_required" className="h-4 w-4 accent-zinc-900" />
-              Extra materials required
-            </label>
-          </div>
-        </section>
-
-        <section className="rounded-2xl border border-zinc-200 bg-white p-6 shadow-sm">
-          <h2 className="text-base font-semibold">Required materials</h2>
-          <p className="mt-2 text-sm text-zinc-700">
-            Add the physical items needed to run the activity.
-          </p>
-          <RequiredMaterialsEditor />
-        </section>
-
-        <section className="rounded-2xl border border-zinc-200 bg-white p-6 shadow-sm">
-          <h2 className="text-base font-semibold">Resource settings</h2>
-          <div className="mt-4 grid gap-4 sm:grid-cols-2">
-            <div className="grid gap-1">
-              <label className="text-sm font-medium">Resource type</label>
-              <select
-                name="resource_type"
-                className="rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm shadow-sm outline-none transition focus:border-zinc-900 focus:ring-4 focus:ring-zinc-900/10"
-                defaultValue="activity_idea"
-              >
-                <option value="teaching_material">teaching_material</option>
-                <option value="printable_template">printable_template</option>
-                <option value="activity_idea">activity_idea</option>
-                <option value="lesson_activity">lesson_activity</option>
-              </select>
-            </div>
-
-            <div className="grid gap-1">
-              <label className="text-sm font-medium">Visibility</label>
-              <select
-                name="visibility"
-                className="rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm shadow-sm outline-none transition focus:border-zinc-900 focus:ring-4 focus:ring-zinc-900/10"
-                defaultValue="public"
-              >
-                <option value="public">public</option>
-                <option value="teacher_only">teacher_only</option>
-                <option value="logged_in_only">logged_in_only</option>
-                <option value="private">private</option>
-              </select>
-            </div>
-
-            <div className="grid gap-1">
-              <label className="text-sm font-medium">Status</label>
-              <select
-                name="status"
-                className="rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm shadow-sm outline-none transition focus:border-zinc-900 focus:ring-4 focus:ring-zinc-900/10"
-                defaultValue={defaultStatus}
-              >
-                <option value="draft">draft</option>
-                <option value="pending">pending</option>
-                <option value="published">published</option>
-              </select>
-            </div>
-          </div>
-        </section>
-
-        <section className="rounded-2xl border border-zinc-200 bg-white p-6 shadow-sm">
-          <h2 className="text-base font-semibold">Subjects and grade levels</h2>
-          <div className="mt-4 grid gap-6 sm:grid-cols-2">
+        <FormSection title="Grade levels and subjects" description="Tag where this activity fits in your curriculum.">
+          <div className="grid gap-8 sm:grid-cols-2">
             <div>
-              <div className="text-sm font-medium">Subjects</div>
-              <div className="mt-2 grid gap-2">
+              <p className="text-sm font-semibold text-slate-900">Subjects</p>
+              <div className="mt-3 grid gap-2">
                 {subjects.map((s) => (
-                  <label key={s.id} className="flex items-center gap-2 text-sm text-zinc-800">
-                    <input type="checkbox" name="subject_ids" value={s.id} className="h-4 w-4 accent-zinc-900" />
+                  <label key={s.id} className="flex cursor-pointer items-center gap-3 text-sm text-slate-800">
+                    <input type="checkbox" name="subject_ids" value={s.id} className={dashCheckbox} />
                     {s.name}
                   </label>
                 ))}
@@ -205,41 +113,87 @@ export default async function NewResourcePage() {
             </div>
 
             <div>
-              <div className="text-sm font-medium">Grade levels</div>
-              <div className="mt-2 grid gap-2">
+              <p className="text-sm font-semibold text-slate-900">Grade levels</p>
+              <div className="mt-3 grid gap-2">
                 {gradeLevels.map((g) => (
-                  <label key={g.id} className="flex items-center gap-2 text-sm text-zinc-800">
-                    <input
-                      type="checkbox"
-                      name="grade_level_ids"
-                      value={g.id}
-                      className="h-4 w-4 accent-zinc-900"
-                    />
+                  <label key={g.id} className="flex cursor-pointer items-center gap-3 text-sm text-slate-800">
+                    <input type="checkbox" name="grade_level_ids" value={g.id} className={dashCheckbox} />
                     {g.name}
                   </label>
                 ))}
               </div>
             </div>
           </div>
-        </section>
+        </FormSection>
 
-        <section className="rounded-2xl border border-zinc-200 bg-white p-6 shadow-sm">
-          <h2 className="text-base font-semibold">Next steps</h2>
-          <div className="mt-2 text-sm text-zinc-700">
-            Printable uploads and resource editing are coming next.
+        <FormSection title="Material requirements" description="Quick flags before listing concrete items.">
+          <div className="grid gap-3 text-sm">
+            <label className="flex cursor-pointer items-center gap-3">
+              <input type="checkbox" name="print_required" className={dashCheckbox} />
+              <span className="text-slate-800">Print required</span>
+            </label>
+            <label className="flex cursor-pointer items-center gap-3">
+              <input type="checkbox" name="cutting_required" className={dashCheckbox} />
+              <span className="text-slate-800">Cutting required</span>
+            </label>
+            <label className="flex cursor-pointer items-center gap-3">
+              <input type="checkbox" name="extra_materials_required" className={dashCheckbox} />
+              <span className="text-slate-800">Extra materials required beyond paper</span>
+            </label>
           </div>
-        </section>
+        </FormSection>
 
-        <div className="flex items-center justify-end gap-3">
-          <Link href="/dashboard/resources" className="text-sm text-zinc-700 hover:text-zinc-950">
+        <FormSection
+          title="Required materials"
+          description="List quantities so teachers know what to gather before class."
+        >
+          <RequiredMaterialsEditor />
+        </FormSection>
+
+        <FormSection title="Publishing settings" description="Who can see this resource and its initial workflow state.">
+          <div className="grid gap-4 sm:grid-cols-2">
+            <div>
+              <FieldLabel htmlFor="rtype">Resource type</FieldLabel>
+              <select id="rtype" name="resource_type" className={`${dashInput} mt-2`} defaultValue="activity_idea">
+                <option value="teaching_material">teaching_material</option>
+                <option value="printable_template">printable_template</option>
+                <option value="activity_idea">activity_idea</option>
+                <option value="lesson_activity">lesson_activity</option>
+              </select>
+            </div>
+
+            <div>
+              <FieldLabel htmlFor="vis">Visibility</FieldLabel>
+              <select id="vis" name="visibility" className={`${dashInput} mt-2`} defaultValue="public">
+                <option value="public">public</option>
+                <option value="teacher_only">teacher_only</option>
+                <option value="logged_in_only">logged_in_only</option>
+                <option value="private">private</option>
+              </select>
+            </div>
+
+            <div>
+              <FieldLabel htmlFor="st">Status</FieldLabel>
+              <select id="st" name="status" className={`${dashInput} mt-2`} defaultValue={defaultStatus}>
+                <option value="draft">draft</option>
+                <option value="pending">pending</option>
+                <option value="published">published</option>
+              </select>
+            </div>
+          </div>
+        </FormSection>
+
+        <FormSection title="After you save" description="You can attach printable files from the resource detail page once it exists.">
+          <p className="text-sm text-slate-600">
+            Creating saves your draft. Open the resource next to upload PDFs or handouts.
+          </p>
+        </FormSection>
+
+        <div className="flex flex-wrap items-center justify-end gap-3 border-t border-slate-100 pt-6">
+          <Link href="/dashboard/resources" className="rounded-xl px-4 py-2.5 text-sm font-semibold text-slate-700 hover:bg-slate-100">
             Cancel
           </Link>
-          <button
-            type="submit"
-            className="rounded-lg bg-zinc-900 px-4 py-2 text-sm font-medium text-white shadow-sm transition hover:bg-zinc-800 focus:outline-none focus:ring-4 focus:ring-zinc-900/20"
-          >
-            Create
-          </button>
+          <ActionButton type="submit">Create resource</ActionButton>
         </div>
       </form>
     </div>

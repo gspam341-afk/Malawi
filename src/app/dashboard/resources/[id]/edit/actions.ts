@@ -94,11 +94,19 @@ export async function updateResourceAction(resourceId: string, formData: FormDat
       ? existing.published_at ?? new Date().toISOString()
       : null
 
+  const resource_type = String(formData.get('resource_type') ?? 'activity_idea')
+
   const payload = {
     title,
     description: String(formData.get('description') ?? '') || null,
     result_description: String(formData.get('result_description') ?? '') || null,
     activity_type: String(formData.get('activity_type') ?? '') || null,
+    preparation_time: String(formData.get('preparation_time') ?? '') || null,
+    activity_duration: String(formData.get('activity_duration') ?? '') || null,
+    group_size_min: formData.get('group_size_min') ? Number(formData.get('group_size_min')) : null,
+    group_size_max: formData.get('group_size_max') ? Number(formData.get('group_size_max')) : null,
+    difficulty_level: String(formData.get('difficulty_level') ?? '') || null,
+    resource_type,
     print_required: formData.get('print_required') === 'on',
     cutting_required: formData.get('cutting_required') === 'on',
     extra_materials_required: hasNoExtraMaterials ? false : formData.get('extra_materials_required') === 'on',

@@ -1,7 +1,11 @@
-import Link from 'next/link'
 import { requireAdmin } from '@/lib/auth'
 import { createSupabaseServerClient } from '@/lib/supabase/server'
 import { ConfirmSubmitButton } from '@/components/ConfirmSubmitButton'
+import { AdminPageHeader } from '@/components/dashboard/AdminPageHeader'
+import { ActionButton, SecondaryButton } from '@/components/dashboard/ActionButton'
+import { dashInput, dashMuted, dashPanelSolid } from '@/components/dashboard/classes'
+import { TableShell } from '@/components/dashboard/TableShell'
+import { EmptyState } from '@/components/ui/EmptyState'
 import { createGradeLevelAction, deleteGradeLevelAction, updateGradeLevelAction } from '@/app/dashboard/grade-levels/actions'
 
 export default async function AdminGradeLevelsPage(props: { searchParams?: Promise<{ error?: string }> }) {
@@ -17,100 +21,90 @@ export default async function AdminGradeLevelsPage(props: { searchParams?: Promi
   if (error) throw error
 
   return (
-    <div className="grid gap-6">
-      <div className="flex items-end justify-between gap-4">
-        <div>
-          <h1 className="text-2xl font-semibold tracking-tight">Manage grade levels</h1>
-          <p className="mt-1 text-sm text-zinc-700">Add, edit, and safely remove grade levels.</p>
-        </div>
-        <Link href="/dashboard" className="text-sm text-zinc-700 hover:text-zinc-950">
-          Dashboard
-        </Link>
-      </div>
+    <div className="grid gap-10">
+      <AdminPageHeader
+        eyebrow="Curriculum"
+        title="Grade levels"
+        description="Maintain the ladder from Grade 6 through Grade 14 for browsing and tagging resources."
+      />
 
       {errorMessage ? (
-        <div className="rounded-2xl border border-red-200 bg-red-50 p-4 text-sm text-red-900">{errorMessage}</div>
+        <div className="rounded-xl border border-red-200 bg-red-50 px-5 py-4 text-sm text-red-950" role="alert">
+          {errorMessage}
+        </div>
       ) : null}
 
-      <section className="rounded-2xl border bg-white p-6">
-        <h2 className="text-base font-semibold">Add grade level</h2>
-        <form action={createGradeLevelAction} className="mt-4 grid gap-3 sm:grid-cols-4">
-          <input
-            name="name"
-            placeholder="Name (e.g. Grade 6)"
-            className="rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm shadow-sm outline-none transition focus:border-zinc-900 focus:ring-4 focus:ring-zinc-900/10"
-          />
-          <input
-            name="grade_number"
-            type="number"
-            placeholder="Grade #"
-            className="rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm shadow-sm outline-none transition focus:border-zinc-900 focus:ring-4 focus:ring-zinc-900/10"
-          />
-          <input
-            name="description"
-            placeholder="Description (optional)"
-            className="rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm shadow-sm outline-none transition focus:border-zinc-900 focus:ring-4 focus:ring-zinc-900/10 sm:col-span-2"
-          />
-          <div className="sm:col-span-4 flex justify-end">
-            <button
-              type="submit"
-              className="rounded-lg bg-zinc-900 px-4 py-2 text-sm font-medium text-white shadow-sm transition hover:bg-zinc-800 focus:outline-none focus:ring-4 focus:ring-zinc-900/20"
-            >
+      <section className={`${dashPanelSolid} p-6 md:p-8`}>
+        <h2 className="text-lg font-semibold text-slate-900">Add a grade level</h2>
+        <p className={`mt-1 ${dashMuted}`}>Grade number controls ordering in filters and cards.</p>
+        <form action={createGradeLevelAction} className="mt-6 grid gap-4 md:grid-cols-12">
+          <div className="md:col-span-4">
+            <label className="text-xs font-semibold uppercase tracking-wide text-slate-500">Label</label>
+            <input name="name" placeholder="Grade 8" required className={`${dashInput} mt-2`} />
+          </div>
+          <div className="md:col-span-2">
+            <label className="text-xs font-semibold uppercase tracking-wide text-slate-500">Grade #</label>
+            <input name="grade_number" type="number" required className={`${dashInput} mt-2`} />
+          </div>
+          <div className="md:col-span-5">
+            <label className="text-xs font-semibold uppercase tracking-wide text-slate-500">Description (optional)</label>
+            <input name="description" placeholder="Optional context" className={`${dashInput} mt-2`} />
+          </div>
+          <div className="flex items-end md:col-span-1">
+            <ActionButton type="submit" className="w-full md:w-auto">
               Add
-            </button>
+            </ActionButton>
           </div>
         </form>
       </section>
 
       {levels?.length ? (
-        <div className="overflow-hidden rounded-2xl border bg-white">
-          <table className="w-full text-left text-sm">
-            <thead className="bg-zinc-50 text-xs font-medium uppercase tracking-wide text-zinc-600">
-              <tr>
-                <th className="px-4 py-3">Name</th>
-                <th className="px-4 py-3">Grade #</th>
-                <th className="px-4 py-3">Description</th>
-                <th className="px-4 py-3">Actions</th>
+        <TableShell>
+          <table className="w-full min-w-[720px] text-left text-sm">
+            <thead className="border-b border-slate-100 bg-gradient-to-r from-teal-50/90 to-white">
+              <tr className="text-xs font-semibold uppercase tracking-wide text-slate-600">
+                <th className="px-4 py-4">Grade</th>
+                <th className="px-4 py-4">#</th>
+                <th className="hidden px-4 py-4 md:table-cell">Description</th>
+                <th className="px-4 py-4">Actions</th>
               </tr>
             </thead>
-            <tbody className="divide-y">
+            <tbody className="divide-y divide-slate-100">
               {levels.map((g) => (
-                <tr key={g.id} className="hover:bg-zinc-50">
-                  <td className="px-4 py-3">
-                    <form action={updateGradeLevelAction} className="flex flex-wrap items-center gap-2">
+                <tr key={g.id} className="hover:bg-teal-50/15">
+                  <td className="px-4 py-4 align-top">
+                    <form action={updateGradeLevelAction} className="flex flex-col gap-3 xl:flex-row xl:flex-wrap xl:items-center">
                       <input type="hidden" name="id" value={g.id} />
-                      <input
-                        name="name"
-                        defaultValue={g.name}
-                        className="w-56 rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm shadow-sm outline-none transition focus:border-zinc-900 focus:ring-4 focus:ring-zinc-900/10"
-                      />
-                      <input
-                        name="grade_number"
-                        type="number"
-                        defaultValue={g.grade_number}
-                        className="w-28 rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm shadow-sm outline-none transition focus:border-zinc-900 focus:ring-4 focus:ring-zinc-900/10"
-                      />
+                      <input name="name" defaultValue={g.name} className={`${dashInput} max-w-[14rem]`} />
+                      <div className="flex items-center gap-2">
+                        <span className="text-xs font-semibold uppercase text-slate-500">#</span>
+                        <input
+                          name="grade_number"
+                          type="number"
+                          defaultValue={g.grade_number}
+                          className={`${dashInput} w-24`}
+                        />
+                      </div>
                       <input
                         name="description"
                         defaultValue={g.description ?? ''}
-                        className="min-w-[16rem] flex-1 rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm shadow-sm outline-none transition focus:border-zinc-900 focus:ring-4 focus:ring-zinc-900/10"
+                        className={`${dashInput} min-w-[12rem] flex-1`}
                       />
-                      <button
-                        type="submit"
-                        className="rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm font-medium text-zinc-900 shadow-sm transition hover:bg-zinc-50 focus:outline-none focus:ring-4 focus:ring-zinc-900/10"
-                      >
-                        Save
-                      </button>
+                      <SecondaryButton type="submit">Save</SecondaryButton>
                     </form>
                   </td>
-                  <td className="px-4 py-3 text-zinc-700">{g.grade_number}</td>
-                  <td className="px-4 py-3 text-zinc-700">{g.description ?? '—'}</td>
-                  <td className="px-4 py-3">
+                  <td className="px-4 py-4 align-middle">
+                    <span className="inline-flex min-w-[2.5rem] justify-center rounded-full bg-teal-100 px-3 py-1 text-sm font-bold text-teal-900 ring-1 ring-teal-600/15">
+                      {g.grade_number}
+                    </span>
+                  </td>
+                  <td className="hidden px-4 py-4 text-slate-600 md:table-cell">{g.description ?? '—'}</td>
+                  <td className="px-4 py-4 align-top">
                     <form action={deleteGradeLevelAction}>
                       <input type="hidden" name="id" value={g.id} />
                       <ConfirmSubmitButton
-                        message="Delete this grade level?"
-                        className="rounded-lg border border-red-300 bg-red-50 px-3 py-2 text-sm font-medium text-red-800 shadow-sm transition hover:bg-red-100 focus:outline-none focus:ring-4 focus:ring-red-500/20"
+                        message="Delete this grade level? This fails if resources still reference it."
+                        className="rounded-xl border border-red-200 bg-red-50 px-4 py-2 text-sm font-semibold text-red-900 hover:bg-red-100"
                       >
                         Delete
                       </ConfirmSubmitButton>
@@ -120,9 +114,9 @@ export default async function AdminGradeLevelsPage(props: { searchParams?: Promi
               ))}
             </tbody>
           </table>
-        </div>
+        </TableShell>
       ) : (
-        <div className="rounded-2xl border bg-white p-6 text-sm text-zinc-700">No grade levels found.</div>
+        <EmptyState title="No grade levels yet" description="Seed Grade 6–14 to match how teachers filter activities." />
       )}
     </div>
   )
