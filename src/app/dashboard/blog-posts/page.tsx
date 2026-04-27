@@ -1,11 +1,18 @@
 import Link from 'next/link'
-import { requireAdmin } from '@/lib/auth'
+import { requireProfile } from '@/lib/auth'
 import { createSupabaseServerClient } from '@/lib/supabase/server'
+import { setBlogPostStatusAction } from '@/app/dashboard/blog-posts/actions'
 
-export default async function AdminBlogPostsPage(props: {
+export default async function BlogPostsPage(props: {
   searchParams?: Promise<{ q?: string; status?: string }>
 }) {
-  await requireAdmin()
+  const profile = await requireProfile()
+  if (profile.role === 'student_optional') {
+    return (
+      <div className="rounded-2xl border bg-white p-6 text-sm text-zinc-700">This page is not available for students.</div>
+    )
+  }
+
   const { q = '', status = '' } = (await props.searchParams) ?? {}
 
   const supabase = await createSupabaseServerClient()
@@ -14,6 +21,10 @@ export default async function AdminBlogPostsPage(props: {
     .from('blog_posts')
     .select('id,title,status,author_id,created_at,updated_at')
     .order('updated_at', { ascending: false })
+
+  if (profile.role !== 'admin') {
+    query = query.eq('author_id', profile.id)
+  }
 
   if (status) query = query.eq('status', status)
   if (q.trim()) query = query.ilike('title', `%${q.trim()}%`)
@@ -32,8 +43,8 @@ export default async function AdminBlogPostsPage(props: {
     <div className="grid gap-6">
       <div className="flex items-end justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-semibold tracking-tight">Manage blog posts</h1>
-          <p className="mt-1 text-sm text-zinc-700">Create and publish blog posts (admin).</p>
+          <h1 className="text-2xl font-semibold tracking-tight">Blog posts</h1>
+          <p className="mt-1 text-sm text-zinc-700">Create and publish blog posts.</p>
         </div>
         <div className="flex items-center gap-3">
           <Link
@@ -89,10 +100,11 @@ export default async function AdminBlogPostsPage(props: {
             <thead className="bg-zinc-50 text-xs font-medium uppercase tracking-wide text-zinc-600">
               <tr>
                 <th className="px-4 py-3">Title</th>
-                <th className="px-4 py-3">Author</th>
                 <th className="px-4 py-3">Status</th>
+                <th className="px-4 py-3">Author</th>
+                <th className="px-4 py-3">Created</th>
                 <th className="px-4 py-3">Updated</th>
-                <th className="px-4 py-3">Edit</th>
+                <th className="px-4 py-3">Actions</th>
               </tr>
             </thead>
             <tbody className="divide-y">
@@ -100,16 +112,54 @@ export default async function AdminBlogPostsPage(props: {
                 const author = p.author_id ? authorMap.get(p.author_id) : null
                 const authorLabel = author?.name ?? author?.email ?? '—'
 
+                const isAdmin = profile.role === 'admin'
+                const isAuthor = p.author_id === profile.id
+                const canEdit = isAdmin || isAuthor
+                const showPublish =
+                  isAdmin ? p.status !== 'published' : profile.role === 'teacher' && isAuthor && p.status !== 'published'
+                const showArchive =
+                  isAdmin ? p.status !== 'archived' : profile.role === 'teacher' && isAuthor && p.status !== 'archived'
+
                 return (
                   <tr key={p.id} className="hover:bg-zinc-50">
                     <td className="px-4 py-3 font-medium text-zinc-950">{p.title}</td>
-                    <td className="px-4 py-3 text-zinc-700">{authorLabel}</td>
                     <td className="px-4 py-3 text-zinc-700">{p.status}</td>
-                    <td className="px-4 py-3 text-zinc-700">{new Date(p.updated_at).toLocaleDateString()}</td>
+                    <td className="px-4 py-3 text-zinc-700">{authorLabel}</td>
                     <td className="px-4 py-3">
-                      <Link href={`/dashboard/blog-posts/${p.id}/edit`} className="text-sm font-medium text-zinc-900 hover:underline">
-                        Edit
-                      </Link>
+                      <span className="text-zinc-700">{new Date(p.created_at).toLocaleDateString()}</span>
+                    </td>
+                    <td className="px-4 py-3">
+                      <span className="text-zinc-700">{new Date(p.updated_at).toLocaleDateString()}</span>
+                    </td>
+                    <td className="px-4 py-3">
+                      <div className="flex flex-wrap items-center gap-3">
+                        {canEdit ? (
+                          <Link
+                            href={`/dashboard/blog-posts/${p.id}/edit`}
+                            className="text-sm font-medium text-zinc-900 hover:underline"
+                          >
+                            Edit
+                          </Link>
+                        ) : null}
+
+                        {showPublish ? (
+                          <form action={setBlogPostStatusAction.bind(null, p.id)}>
+                            <input type="hidden" name="status" value="published" />
+                            <button type="submit" className="text-sm font-medium text-zinc-900 hover:underline">
+                              Publish
+                            </button>
+                          </form>
+                        ) : null}
+
+                        {showArchive ? (
+                          <form action={setBlogPostStatusAction.bind(null, p.id)}>
+                            <input type="hidden" name="status" value="archived" />
+                            <button type="submit" className="text-sm font-medium text-zinc-900 hover:underline">
+                              Archive
+                            </button>
+                          </form>
+                        ) : null}
+                      </div>
                     </td>
                   </tr>
                 )

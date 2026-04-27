@@ -1,11 +1,17 @@
 import Link from 'next/link'
-import { requireAdmin } from '@/lib/auth'
+import { requireProfile } from '@/lib/auth'
 import { createSupabaseServerClient } from '@/lib/supabase/server'
 
-export default async function AdminSubmissionsPage(props: {
+export default async function SubmissionsPage(props: {
   searchParams?: Promise<{ q?: string; status?: string; type?: string }>
 }) {
-  await requireAdmin()
+  const profile = await requireProfile()
+  if (profile.role === 'student_optional') {
+    return (
+      <div className="rounded-2xl border bg-white p-6 text-sm text-zinc-700">This page is not available for students.</div>
+    )
+  }
+
   const { q = '', status = '', type = '' } = (await props.searchParams) ?? {}
 
   const supabase = await createSupabaseServerClient()
@@ -14,6 +20,10 @@ export default async function AdminSubmissionsPage(props: {
     .from('submissions')
     .select('id,title,submission_type,submitted_by,status,created_at')
     .order('created_at', { ascending: false })
+
+  if (profile.role !== 'admin') {
+    query = query.eq('submitted_by', profile.id)
+  }
 
   if (status) query = query.eq('status', status)
   if (type) query = query.eq('submission_type', type)
@@ -29,16 +39,33 @@ export default async function AdminSubmissionsPage(props: {
 
   const submitterMap = new Map((submitters ?? []).map((p) => [p.id, p]))
 
+  const canCreate =
+    profile.role === 'admin' || profile.role === 'teacher' || profile.role === 'alumni' || profile.role === 'donor'
+
   return (
     <div className="grid gap-6">
       <div className="flex items-end justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-semibold tracking-tight">Manage submissions</h1>
-          <p className="mt-1 text-sm text-zinc-700">Review submitted content and set a status.</p>
+          <h1 className="text-2xl font-semibold tracking-tight">
+            {profile.role === 'admin' ? 'Manage submissions' : 'My submissions'}
+          </h1>
+          <p className="mt-1 text-sm text-zinc-700">
+            {profile.role === 'admin' ? 'Review submitted content and set a status.' : 'Track items you have submitted.'}
+          </p>
         </div>
-        <Link href="/dashboard" className="text-sm text-zinc-700 hover:text-zinc-950">
-          Dashboard
-        </Link>
+        <div className="flex flex-wrap items-center justify-end gap-3">
+          {canCreate ? (
+            <Link
+              href="/dashboard/submissions/new"
+              className="rounded-md bg-zinc-900 px-4 py-2 text-sm font-medium text-white hover:bg-zinc-800"
+            >
+              New submission
+            </Link>
+          ) : null}
+          <Link href="/dashboard" className="text-sm text-zinc-700 hover:text-zinc-950">
+            Dashboard
+          </Link>
+        </div>
       </div>
 
       <form className="grid gap-3 rounded-2xl border bg-white p-4 sm:grid-cols-4" method="get">
@@ -99,9 +126,10 @@ export default async function AdminSubmissionsPage(props: {
               <tr>
                 <th className="px-4 py-3">Title</th>
                 <th className="px-4 py-3">Type</th>
-                <th className="px-4 py-3">Submitted by</th>
                 <th className="px-4 py-3">Status</th>
+                <th className="px-4 py-3">Submitted by</th>
                 <th className="px-4 py-3">Created</th>
+                <th className="px-4 py-3">Actions</th>
               </tr>
             </thead>
             <tbody className="divide-y">
@@ -111,15 +139,16 @@ export default async function AdminSubmissionsPage(props: {
 
                 return (
                   <tr key={s.id} className="hover:bg-zinc-50">
-                    <td className="px-4 py-3 font-medium text-zinc-950">
-                      <Link href={`/dashboard/submissions/${s.id}`} className="hover:underline">
-                        {s.title}
+                    <td className="px-4 py-3 font-medium text-zinc-950">{s.title}</td>
+                    <td className="px-4 py-3 text-zinc-700">{s.submission_type}</td>
+                    <td className="px-4 py-3 text-zinc-700">{s.status}</td>
+                    <td className="px-4 py-3 text-zinc-700">{submitterLabel}</td>
+                    <td className="px-4 py-3 text-zinc-700">{new Date(s.created_at).toLocaleDateString()}</td>
+                    <td className="px-4 py-3">
+                      <Link href={`/dashboard/submissions/${s.id}`} className="text-sm font-medium text-zinc-900 hover:underline">
+                        View
                       </Link>
                     </td>
-                    <td className="px-4 py-3 text-zinc-700">{s.submission_type}</td>
-                    <td className="px-4 py-3 text-zinc-700">{submitterLabel}</td>
-                    <td className="px-4 py-3 text-zinc-700">{s.status}</td>
-                    <td className="px-4 py-3 text-zinc-700">{new Date(s.created_at).toLocaleDateString()}</td>
                   </tr>
                 )
               })}

@@ -1,22 +1,53 @@
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
-import { requireAdmin } from '@/lib/auth'
+import { requireProfile } from '@/lib/auth'
 import { createSupabaseServerClient } from '@/lib/supabase/server'
 import { updateBlogPostAction } from '@/app/dashboard/blog-posts/actions'
+import type { Tables } from '@/types/db'
+
+type BlogStatus = Tables['blog_posts']['Row']['status']
+
+function allowedBlogStatusesForRole(role: Tables['profiles']['Row']['role']): readonly BlogStatus[] {
+  if (role === 'admin') return ['draft', 'pending', 'published', 'rejected', 'archived']
+  if (role === 'teacher') return ['draft', 'pending', 'published', 'archived']
+  if (role === 'alumni' || role === 'donor') return ['draft', 'pending']
+  return []
+}
 
 export default async function EditBlogPostPage(props: { params: Promise<{ id: string }> }) {
-  await requireAdmin()
+  const profile = await requireProfile()
+  if (profile.role === 'student_optional') {
+    return (
+      <div className="rounded-2xl border bg-white p-6 text-sm text-zinc-700">This page is not available for students.</div>
+    )
+  }
+
+  const allowedStatuses = allowedBlogStatusesForRole(profile.role)
+  if (!allowedStatuses.length) {
+    return (
+      <div className="rounded-2xl border bg-white p-6 text-sm text-zinc-700">You do not have access to edit blog posts.</div>
+    )
+  }
+
   const { id } = await props.params
 
   const supabase = await createSupabaseServerClient()
   const { data: post, error } = await supabase
     .from('blog_posts')
-    .select('id,title,slug,excerpt,content,cover_image_url,status')
+    .select('id,title,slug,excerpt,content,cover_image_url,status,author_id')
     .eq('id', id)
     .single()
 
   if (error) throw error
   if (!post) notFound()
+
+  if (profile.role !== 'admin' && post.author_id !== profile.id) {
+    notFound()
+  }
+
+  if ((profile.role === 'alumni' || profile.role === 'donor') && !(post.status === 'draft' || post.status === 'pending' || post.status === 'rejected')) {
+    notFound()
+  }
 
   return (
     <div className="grid gap-6">
@@ -91,11 +122,11 @@ export default async function EditBlogPostPage(props: { params: Promise<{ id: st
                 defaultValue={post.status}
                 className="rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm shadow-sm outline-none transition focus:border-zinc-900 focus:ring-4 focus:ring-zinc-900/10"
               >
-                <option value="draft">draft</option>
-                <option value="pending">pending</option>
-                <option value="published">published</option>
-                <option value="rejected">rejected</option>
-                <option value="archived">archived</option>
+                {allowedStatuses.map((s) => (
+                  <option key={s} value={s}>
+                    {s}
+                  </option>
+                ))}
               </select>
             </div>
           </div>

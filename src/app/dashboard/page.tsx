@@ -68,7 +68,7 @@ export default async function DashboardPage() {
         {profile.role === 'alumni' || profile.role === 'donor' ? (
           <div className="grid gap-3 md:grid-cols-2">
             <DashboardLink href="/dashboard/blog-posts" label="My blog posts" />
-            <DashboardLink href="/dashboard" label="Submit activity idea" />
+            <DashboardLink href="/dashboard/submissions/new" label="Submit activity idea" />
             <DashboardLink href="/dashboard/submissions" label="My submissions" />
           </div>
         ) : null}
