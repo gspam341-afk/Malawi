@@ -16,7 +16,16 @@ export function LoginForm() {
 
     supabase.auth.getSession().then(({ data }) => {
       if (data.session) {
-        router.replace('/dashboard')
+        supabase
+          .from('profiles')
+          .select('id,status')
+          .eq('id', data.session.user.id)
+          .single()
+          .then(({ data: profile }) => {
+            if (profile?.status === 'active') {
+              router.replace('/dashboard')
+            }
+          })
       }
     })
   }, [router])

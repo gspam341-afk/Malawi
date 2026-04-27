@@ -3,6 +3,7 @@
 import { redirect } from 'next/navigation'
 import { requireAdmin } from '@/lib/auth'
 import { createSupabaseServerClient } from '@/lib/supabase/server'
+import { createSupabaseAdminClient } from '@/lib/supabase/admin'
 import type { ProfileRole, ProfileStatus } from '@/types/db'
 
 function clampRole(role: string): ProfileRole {
@@ -39,6 +40,23 @@ export async function updateUserAction(formData: FormData) {
     })
     .eq('id', userId)
 
+  if (error) throw error
+
+  redirect('/dashboard/users')
+}
+
+export async function deleteUserAction(formData: FormData) {
+  const admin = await requireAdmin()
+
+  const userId = String(formData.get('user_id') ?? '')
+  if (!userId) redirect('/dashboard/users')
+
+  if (admin.id === userId) {
+    throw new Error('You cannot delete your own admin account.')
+  }
+
+  const supabaseAdmin = createSupabaseAdminClient()
+  const { error } = await supabaseAdmin.auth.admin.deleteUser(userId)
   if (error) throw error
 
   redirect('/dashboard/users')

@@ -1,7 +1,8 @@
 import Link from 'next/link'
 import { requireAdmin } from '@/lib/auth'
 import { createSupabaseServerClient } from '@/lib/supabase/server'
-import { deactivateUserAction, reactivateUserAction, updateUserAction } from '@/app/dashboard/users/actions'
+import { deactivateUserAction, deleteUserAction, reactivateUserAction, updateUserAction } from '@/app/dashboard/users/actions'
+import { ConfirmSubmitButton } from '@/components/ConfirmSubmitButton'
 import type { ProfileRole, ProfileStatus } from '@/types/db'
 
 function OptionList<T extends string>(props: { options: readonly T[]; value: T }) {
@@ -190,6 +191,16 @@ export default async function AdminUsersPage(props: {
                         >
                           Reactivate
                         </button>
+                      </form>
+
+                      <form action={deleteUserAction}>
+                        <input type="hidden" name="user_id" value={u.id} />
+                        <ConfirmSubmitButton
+                          message="Delete this user? This will delete the auth account."
+                          className="rounded-lg border border-red-300 bg-red-50 px-3 py-2 text-sm font-medium text-red-800 shadow-sm transition hover:bg-red-100 focus:outline-none focus:ring-4 focus:ring-red-500/20"
+                        >
+                          Delete
+                        </ConfirmSubmitButton>
                       </form>
                     </div>
                   </td>
