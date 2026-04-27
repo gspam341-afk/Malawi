@@ -2,9 +2,6 @@
 -- This assumes the bucket exists (create it in the dashboard, or run the insert below if your project permits).
 -- insert into storage.buckets (id, name, public) values ('printable-materials', 'printable-materials', true);
 
--- Enable RLS on storage.objects (usually already enabled)
-alter table storage.objects enable row level security;
-
 -- Public can download files in printable-materials bucket
 create policy "public_read_printable_material_objects"
 on storage.objects

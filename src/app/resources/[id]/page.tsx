@@ -126,7 +126,7 @@ export default async function ResourceDetailPage({ params }: Props) {
                       </div>
                     </div>
                     <a
-                      href={f.file_url}
+                      href={`/api/printable-materials/${f.id}/download`}
                       className="shrink-0 rounded-md bg-zinc-900 px-3 py-1.5 text-xs font-medium text-white hover:bg-zinc-800"
                       target="_blank"
                       rel="noreferrer"

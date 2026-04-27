@@ -16,17 +16,25 @@ export default async function DashboardPage() {
   const profile = await requireProfile()
 
   const nameOrEmail = profile.name ?? profile.email ?? 'Account'
+  const roleLabel =
+    profile.role === 'teacher'
+      ? 'content creator'
+      : profile.role === 'admin'
+        ? 'platform manager'
+        : profile.role
 
   return (
     <div className="grid gap-6">
       <section className="rounded-2xl border bg-white p-6">
-        <h1 className="text-2xl font-semibold tracking-tight">Dashboard</h1>
+        <h1 className="text-2xl font-semibold tracking-tight">
+          {profile.role === 'admin' ? 'Admin Panel' : 'Dashboard'}
+        </h1>
         <div className="mt-3 grid gap-1 text-sm text-zinc-700">
           <div>
             <span className="font-medium text-zinc-900">User:</span> {nameOrEmail}
           </div>
           <div>
-            <span className="font-medium text-zinc-900">Role:</span> {profile.role}
+            <span className="font-medium text-zinc-900">Role:</span> {roleLabel}
           </div>
         </div>
       </section>
@@ -34,11 +42,13 @@ export default async function DashboardPage() {
       <section className="grid gap-3">
         {profile.role === 'admin' ? (
           <div className="grid gap-3 md:grid-cols-2">
+            <DashboardLink href="/dashboard" label="User management" />
+            <DashboardLink href="/dashboard" label="Invite teacher" />
             <DashboardLink href="/dashboard/resources" label="Manage resources" />
-            <DashboardLink href="/dashboard/resources" label="Pending resources" />
-            <DashboardLink href="/dashboard" label="Blog posts" />
-            <DashboardLink href="/dashboard" label="Submissions" />
-            <DashboardLink href="/dashboard" label="Users" />
+            <DashboardLink href="/dashboard" label="Manage blog posts" />
+            <DashboardLink href="/dashboard" label="Manage submissions" />
+            <DashboardLink href="/dashboard" label="Manage subjects" />
+            <DashboardLink href="/dashboard" label="Manage grade levels" />
           </div>
         ) : null}
 

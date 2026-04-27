@@ -76,7 +76,11 @@ export default async function DashboardResourcesPage() {
             <tbody className="divide-y">
               {resources.map((r) => (
                 <tr key={r.id} className="hover:bg-zinc-50">
-                  <td className="px-4 py-3 font-medium text-zinc-950">{r.title}</td>
+                  <td className="px-4 py-3 font-medium text-zinc-950">
+                    <Link href={`/dashboard/resources/${r.id}`} className="hover:underline">
+                      {r.title}
+                    </Link>
+                  </td>
                   <td className="px-4 py-3 text-zinc-700">{r.status}</td>
                   <td className="px-4 py-3 text-zinc-700">{r.visibility}</td>
                   <td className="px-4 py-3 text-zinc-700">
