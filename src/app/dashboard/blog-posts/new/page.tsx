@@ -1,12 +1,23 @@
 import Link from 'next/link'
-import { Eye, FileText, Newspaper, PenLine, Send } from 'lucide-react'
+import {
+  BookOpen,
+  Eye,
+  FileText,
+  Image as ImageIcon,
+  Newspaper,
+  Send,
+  Tags,
+  UploadCloud,
+} from 'lucide-react'
 import { requireProfile } from '@/lib/auth'
+import { createSupabaseServerClient } from '@/lib/supabase/server'
 import { createBlogPostAction } from '@/app/dashboard/blog-posts/actions'
+import { BlogMarkdownEditor } from '@/components/dashboard/BlogMarkdownEditor'
 import { AdminPageHeader } from '@/components/dashboard/AdminPageHeader'
 import { ActionButton } from '@/components/dashboard/ActionButton'
 import { FieldLabel } from '@/components/dashboard/FieldLabel'
 import { FormSection } from '@/components/dashboard/FormSection'
-import { dashInput, dashSelect, dashTextarea } from '@/components/dashboard/classes'
+import { dashCheckbox, dashInput, dashSelect, dashTextarea } from '@/components/dashboard/classes'
 import type { Tables } from '@/types/db'
 
 type BlogStatus = Tables['blog_posts']['Row']['status']
@@ -37,12 +48,15 @@ export default async function NewBlogPostPage() {
     )
   }
 
+  const supabase = await createSupabaseServerClient()
+  const { data: subjects } = await supabase.from('subjects').select('id,name').order('name')
+
   return (
     <div className="grid gap-10">
       <AdminPageHeader
         eyebrow="Editor"
         title="New blog post"
-        description="Share classroom stories, printable tips, or reflections. Save as draft until you are ready."
+        description="Write in Markdown, tag subjects and save as draft until you are ready."
         backHref="/dashboard/blog-posts"
         backLabel="Blog posts"
         titleIcon={Newspaper}
@@ -60,7 +74,7 @@ export default async function NewBlogPostPage() {
               <input id="bp-title" name="title" required className={`${dashInput} mt-2`} />
             </div>
             <div>
-              <FieldLabel htmlFor="bp-slug" hint="Leave blank to auto-generate later if your stack supports it.">
+              <FieldLabel htmlFor="bp-slug" hint="Leave blank if you only use the post ID in links.">
                 Slug (optional)
               </FieldLabel>
               <input id="bp-slug" name="slug" placeholder="my-post-url" className={`${dashInput} mt-2`} />
@@ -73,29 +87,47 @@ export default async function NewBlogPostPage() {
         </FormSection>
 
         <FormSection
-          icon={PenLine}
-          title="Content"
-          description="Long-form writing — readers scan headings and bold text first."
+          icon={Tags}
+          title="Relevant subjects"
+          description="Choose every subject this post connects to."
         >
-          <div>
-            <FieldLabel htmlFor="bp-body">Article body</FieldLabel>
-            <textarea
-              id="bp-body"
-              name="content"
-              rows={14}
-              className={`${dashTextarea} mt-2 font-[family-name:var(--font-geist-sans)] text-base leading-relaxed`}
-              placeholder="Start with why this matters for classrooms…"
-            />
-          </div>
-          <div className="mt-6">
-            <FieldLabel htmlFor="bp-cover">Cover image URL (optional)</FieldLabel>
-            <input id="bp-cover" name="cover_image_url" placeholder="https://..." className={`${dashInput} mt-2`} />
+          <div className="grid gap-3 sm:grid-cols-2">
+            {(subjects ?? []).map((s) => (
+              <label
+                key={s.id}
+                className="flex cursor-pointer items-center gap-3 rounded-xl border border-slate-200 bg-white px-4 py-3 shadow-sm hover:border-teal-200"
+              >
+                <input type="checkbox" name="subject_ids" value={s.id} className={dashCheckbox} />
+                <span className="text-sm font-medium text-slate-900">{s.name}</span>
+              </label>
+            ))}
           </div>
         </FormSection>
 
         <FormSection
+          icon={ImageIcon}
+          title="Cover image"
+          description="Hero image on the blog list and at the top of the article."
+        >
+          <FieldLabel htmlFor="bp-cover">Cover image URL (optional)</FieldLabel>
+          <input id="bp-cover" name="cover_image_url" placeholder="https://..." className={`${dashInput} mt-2`} />
+          <p className="mt-2 flex items-start gap-2 text-xs text-slate-500">
+            <UploadCloud className="mt-0.5 h-4 w-4 shrink-0 text-teal-600" aria-hidden />
+            For images inside the article, use the content builder below (upload inserts Markdown).
+          </p>
+        </FormSection>
+
+        <FormSection
+          icon={BookOpen}
+          title="Content builder"
+          description="Structured Markdown with a live preview."
+        >
+          <BlogMarkdownEditor defaultValue="" name="content" id="bp-content" />
+        </FormSection>
+
+        <FormSection
           icon={Eye}
-          title="Publishing"
+          title="Publishing settings"
           description="Choose whether this stays private, waits for review, or goes live."
         >
           <div className="max-w-md">

@@ -1,5 +1,6 @@
 import Link from 'next/link'
 import { Newspaper, PenLine, PlusCircle, Search } from 'lucide-react'
+import { Badge } from '@/components/ui/Badge'
 import { requireProfile } from '@/lib/auth'
 import { createSupabaseServerClient } from '@/lib/supabase/server'
 import { setBlogPostStatusAction } from '@/app/dashboard/blog-posts/actions'
@@ -28,7 +29,19 @@ export default async function BlogPostsPage(props: {
 
   let query = supabase
     .from('blog_posts')
-    .select('id,title,status,author_id,created_at,updated_at')
+    .select(
+      `
+      id,
+      title,
+      status,
+      author_id,
+      created_at,
+      updated_at,
+      blog_post_subjects (
+        subject:subjects (id, name)
+      )
+    `,
+    )
     .order('updated_at', { ascending: false })
 
   if (profile.role !== 'admin') {
@@ -104,12 +117,13 @@ export default async function BlogPostsPage(props: {
 
       {posts?.length ? (
         <TableShell>
-          <table className="w-full min-w-[760px] text-left text-sm">
+          <table className="w-full min-w-[920px] text-left text-sm">
             <thead className="border-b border-slate-100 bg-gradient-to-r from-teal-50/90 via-white to-amber-50/40">
               <tr className="text-xs font-semibold uppercase tracking-wide text-slate-600">
                 <th className="px-4 py-4">Title</th>
                 <th className="px-4 py-4">Status</th>
                 <th className="px-4 py-4">Author</th>
+                <th className="min-w-[140px] px-4 py-4">Subjects</th>
                 <th className="hidden px-4 py-4 md:table-cell">Created</th>
                 <th className="px-4 py-4">Updated</th>
                 <th className="px-4 py-4">Actions</th>
@@ -117,6 +131,16 @@ export default async function BlogPostsPage(props: {
             </thead>
             <tbody className="divide-y divide-slate-100">
               {posts.map((p) => {
+                const raw = p as typeof p & {
+                  blog_post_subjects?: { subject: { id: string; name: string } | null }[] | null
+                }
+                const subjectRows = (raw.blog_post_subjects ?? []) as {
+                  subject: { id: string; name: string } | null
+                }[]
+                const subjectLabels = subjectRows
+                  .flatMap((r) => (r.subject ? [r.subject] : []))
+                  .sort((a, b) => a.name.localeCompare(b.name))
+
                 const author = p.author_id ? authorMap.get(p.author_id) : null
                 const authorLabel = author?.name ?? author?.email ?? '—'
 
@@ -135,6 +159,19 @@ export default async function BlogPostsPage(props: {
                       <BlogStatusBadge status={p.status} />
                     </td>
                     <td className="px-4 py-4 text-slate-700">{authorLabel}</td>
+                    <td className="px-4 py-4">
+                      <div className="flex max-w-[200px] flex-wrap gap-1">
+                        {subjectLabels.length ? (
+                          subjectLabels.map((s) => (
+                            <Badge key={s.id} variant="subject">
+                              {s.name}
+                            </Badge>
+                          ))
+                        ) : (
+                          <span className="text-slate-400">—</span>
+                        )}
+                      </div>
+                    </td>
                     <td className="hidden px-4 py-4 text-slate-600 md:table-cell">
                       {new Date(p.created_at).toLocaleDateString()}
                     </td>

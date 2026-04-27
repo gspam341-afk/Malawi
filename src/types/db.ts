@@ -159,6 +159,14 @@ export type Tables = {
     Insert: Partial<Tables['blog_posts']['Row']> & Pick<Tables['blog_posts']['Row'], 'title'>
     Update: Partial<Tables['blog_posts']['Row']>
   }
+  blog_post_subjects: {
+    Row: {
+      blog_post_id: string
+      subject_id: string
+    }
+    Insert: { blog_post_id: string; subject_id: string }
+    Update: Partial<{ blog_post_id: string; subject_id: string }>
+  }
   submissions: {
     Row: {
       id: string

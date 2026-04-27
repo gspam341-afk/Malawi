@@ -18,7 +18,38 @@ function allowedBlogStatusesForRole(role: Tables['profiles']['Row']['role']): re
   return []
 }
 
-function canEditBlogPost(profile: Tables['profiles']['Row'], post: Pick<Tables['blog_posts']['Row'], 'author_id' | 'status'>) {
+function parseSubjectIds(formData: FormData): string[] {
+  const raw = formData.getAll('subject_ids')
+  return [...new Set(raw.map((v) => String(v).trim()).filter(Boolean))]
+}
+
+async function syncBlogPostSubjects(
+  supabase: Awaited<ReturnType<typeof createSupabaseServerClient>>,
+  postId: string,
+  formData: FormData,
+) {
+  const subjectIds = parseSubjectIds(formData)
+
+  const { data: subjects, error: subjErr } = await supabase.from('subjects').select('id')
+  if (subjErr) throw subjErr
+  const valid = new Set((subjects ?? []).map((s) => s.id))
+  const filtered = subjectIds.filter((id) => valid.has(id))
+
+  const { error: delErr } = await supabase.from('blog_post_subjects').delete().eq('blog_post_id', postId)
+  if (delErr) throw delErr
+
+  if (!filtered.length) return
+
+  const { error: insErr } = await supabase.from('blog_post_subjects').insert(
+    filtered.map((subject_id) => ({ blog_post_id: postId, subject_id })),
+  )
+  if (insErr) throw insErr
+}
+
+function canEditBlogPost(
+  profile: Tables['profiles']['Row'],
+  post: Pick<Tables['blog_posts']['Row'], 'author_id' | 'status'>,
+) {
   if (profile.role === 'admin') return true
   if (post.author_id !== profile.id) return false
 
@@ -59,6 +90,8 @@ export async function createBlogPostAction(formData: FormData) {
 
   const { data, error } = await supabase.from('blog_posts').insert(payload).select('id').single()
   if (error) throw error
+
+  await syncBlogPostSubjects(supabase, data.id, formData)
 
   redirect(`/dashboard/blog-posts/${data.id}/edit`)
 }
@@ -105,6 +138,8 @@ export async function updateBlogPostAction(postId: string, formData: FormData) {
 
   const { error } = await supabase.from('blog_posts').update(payload).eq('id', postId)
   if (error) throw error
+
+  await syncBlogPostSubjects(supabase, postId, formData)
 
   redirect(`/dashboard/blog-posts/${postId}/edit`)
 }

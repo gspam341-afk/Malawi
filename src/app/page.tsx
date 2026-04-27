@@ -12,10 +12,11 @@ import {
   UploadCloud,
   UserCheck,
 } from 'lucide-react'
+import { LatestBlogSection } from '@/components/public/LatestBlogSection'
 import { StemPathwayGrid } from '@/components/public/StemPathwayGrid'
 import { ButtonLink } from '@/components/ui/Button'
 
-export default function Home() {
+export default async function Home() {
   return (
     <div className="grid w-full gap-20 pb-12">
       {/* Hero */}
@@ -49,6 +50,8 @@ export default function Home() {
           </p>
         </div>
       </section>
+
+      <LatestBlogSection />
 
       {/* STEM pathways */}
       <section className="grid gap-8">
