@@ -12,7 +12,12 @@ export async function GET(_req: NextRequest, ctx: { params: Promise<{ id: string
     .eq('id', id)
     .single()
 
-  if (error || !data) {
+  if (error) {
+    console.error('Download lookup failed', { id, error })
+    return new NextResponse('Failed to lookup printable material', { status: 500 })
+  }
+
+  if (!data) {
     return new NextResponse('Not found', { status: 404 })
   }
 

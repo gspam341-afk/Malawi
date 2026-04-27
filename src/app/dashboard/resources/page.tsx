@@ -1,6 +1,12 @@
 import Link from 'next/link'
 import { requireProfile } from '@/lib/auth'
 import { createSupabaseServerClient } from '@/lib/supabase/server'
+import {
+  bulkDeleteResourcesAction,
+  bulkSetDraftResourcesAction,
+  bulkSetPublishedResourcesAction,
+} from '@/app/dashboard/resources/actions'
+import { BulkResourcesTable } from '@/app/dashboard/resources/BulkResourcesTable'
 
 export default async function DashboardResourcesPage() {
   const profile = await requireProfile()
@@ -62,38 +68,12 @@ export default async function DashboardResourcesPage() {
       </div>
 
       {resources.length ? (
-        <div className="overflow-hidden rounded-2xl border bg-white">
-          <table className="w-full text-left text-sm">
-            <thead className="bg-zinc-50 text-xs font-medium uppercase tracking-wide text-zinc-600">
-              <tr>
-                <th className="px-4 py-3">Title</th>
-                <th className="px-4 py-3">Status</th>
-                <th className="px-4 py-3">Visibility</th>
-                <th className="px-4 py-3">Created</th>
-                <th className="px-4 py-3">Updated</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y">
-              {resources.map((r) => (
-                <tr key={r.id} className="hover:bg-zinc-50">
-                  <td className="px-4 py-3 font-medium text-zinc-950">
-                    <Link href={`/dashboard/resources/${r.id}`} className="hover:underline">
-                      {r.title}
-                    </Link>
-                  </td>
-                  <td className="px-4 py-3 text-zinc-700">{r.status}</td>
-                  <td className="px-4 py-3 text-zinc-700">{r.visibility}</td>
-                  <td className="px-4 py-3 text-zinc-700">
-                    {new Date(r.created_at).toLocaleDateString()}
-                  </td>
-                  <td className="px-4 py-3 text-zinc-700">
-                    {new Date(r.updated_at).toLocaleDateString()}
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+        <BulkResourcesTable
+          resources={resources}
+          bulkDeleteAction={bulkDeleteResourcesAction}
+          bulkSetDraftAction={bulkSetDraftResourcesAction}
+          bulkSetPublishedAction={bulkSetPublishedResourcesAction}
+        />
       ) : (
         <div className="rounded-2xl border bg-white p-6 text-sm text-zinc-700">
           No resources yet.
