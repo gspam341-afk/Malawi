@@ -91,7 +91,16 @@ function AuthConfirmInner() {
     return () => {
       cancelled = true
     }
-  }, [hashData.access_token, hashData.refresh_token, hashData.type, router, searchParams])
+  }, [
+    hashData.access_token,
+    hashData.refresh_token,
+    hashData.type,
+    searchData.access_token,
+    searchData.refresh_token,
+    searchData.type,
+    router,
+    searchParams,
+  ])
 
   return (
     <div className="mx-auto grid max-w-xl gap-6">

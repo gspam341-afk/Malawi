@@ -3,6 +3,7 @@
 import { redirect } from 'next/navigation'
 import { requireAdmin } from '@/lib/auth'
 import { createSupabaseAdminClient } from '@/lib/supabase/admin'
+import type { ProfileRole } from '@/types/db'
 
 function getAppOrigin() {
   const explicit = process.env.NEXT_PUBLIC_SITE_URL
@@ -14,12 +15,17 @@ function getAppOrigin() {
   return ''
 }
 
+function clampRole(role: string): ProfileRole {
+  const allowed: ProfileRole[] = ['admin', 'teacher', 'alumni', 'donor', 'student_optional']
+  return (allowed.includes(role as ProfileRole) ? (role as ProfileRole) : 'teacher')
+}
+
 export async function inviteTeacherAction(formData: FormData) {
   await requireAdmin()
 
   const email = String(formData.get('email') ?? '').trim().toLowerCase()
   const name = String(formData.get('name') ?? '').trim()
-  const role = String(formData.get('role') ?? 'teacher')
+  const role = clampRole(String(formData.get('role') ?? 'teacher'))
 
   if (!email) {
     redirect('/dashboard/users/invite-teacher?error=Email%20is%20required')
@@ -49,7 +55,7 @@ export async function inviteTeacherAction(formData: FormData) {
         id: invitedUserId,
         email,
         name: name || null,
-        role: 'teacher',
+        role,
         status: 'active',
       })
 

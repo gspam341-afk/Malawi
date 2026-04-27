@@ -1,16 +1,19 @@
 import Link from 'next/link'
 import { requireAdmin } from '@/lib/auth'
 import { inviteTeacherAction } from '@/app/dashboard/users/invite-teacher/actions'
+import type { ProfileRole } from '@/types/db'
 
 export default async function InviteTeacherPage(props: { searchParams?: Promise<{ success?: string; error?: string }> }) {
   await requireAdmin()
   const { success, error } = (await props.searchParams) ?? {}
 
+  const roles: readonly ProfileRole[] = ['teacher', 'alumni', 'donor', 'student_optional', 'admin']
+
   return (
     <div className="grid gap-6">
       <div className="flex items-end justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-semibold tracking-tight">Invite teacher</h1>
+          <h1 className="text-2xl font-semibold tracking-tight">Invite user</h1>
           <p className="mt-1 text-sm text-zinc-700">Send an invite email via Supabase Auth admin API.</p>
         </div>
         <div className="flex items-center gap-3">
@@ -49,7 +52,20 @@ export default async function InviteTeacherPage(props: { searchParams?: Promise<
           />
         </div>
 
-        <input type="hidden" name="role" value="teacher" />
+        <div className="grid gap-1">
+          <label className="text-sm font-medium">Role</label>
+          <select
+            name="role"
+            defaultValue="teacher"
+            className="rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm shadow-sm outline-none transition focus:border-zinc-900 focus:ring-4 focus:ring-zinc-900/10"
+          >
+            {roles.map((r) => (
+              <option key={r} value={r}>
+                {r}
+              </option>
+            ))}
+          </select>
+        </div>
 
         <div className="flex items-center justify-end gap-3">
           <Link href="/dashboard/users" className="text-sm text-zinc-700 hover:text-zinc-950">
@@ -66,7 +82,7 @@ export default async function InviteTeacherPage(props: { searchParams?: Promise<
 
       <div className="rounded-2xl border bg-white p-4 text-sm text-zinc-700">
         If inviting fails due to Auth configuration, you can still create the user in Supabase Auth and then set their
-        profile role to <span className="font-medium text-zinc-900">teacher</span> from the user management page.
+        profile role from the user management page.
       </div>
     </div>
   )

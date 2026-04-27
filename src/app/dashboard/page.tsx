@@ -40,6 +40,10 @@ export default async function DashboardPage() {
       </section>
 
       <section className="grid gap-3">
+        <div className="grid gap-3 md:grid-cols-2">
+          <DashboardLink href="/dashboard/account" label="Account settings" />
+        </div>
+
         {profile.role === 'admin' ? (
           <div className="grid gap-3 md:grid-cols-2">
             <DashboardLink href="/dashboard/users" label="User management" />
