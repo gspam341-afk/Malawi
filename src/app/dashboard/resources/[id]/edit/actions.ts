@@ -203,6 +203,41 @@ export async function updatePrintableMaterialAction(input: {
   if (error) throw error
 }
 
+export async function deleteResourceAction(resourceId: string) {
+  const profile = await requireRole(['admin', 'teacher'])
+  const supabase = await createSupabaseServerClient()
+
+  const { data: resource, error: resourceError } = await supabase
+    .from('resources')
+    .select('id, created_by')
+    .eq('id', resourceId)
+    .single()
+
+  if (resourceError) throw resourceError
+
+  if (profile.role === 'teacher' && resource.created_by !== profile.id) {
+    throw new Error('Access denied')
+  }
+
+  const { data: printables, error: printableError } = await supabase
+    .from('printable_materials')
+    .select('file_url')
+    .eq('resource_id', resourceId)
+
+  if (printableError) throw printableError
+
+  const toRemove = (printables ?? []).map((p) => p.file_url).filter(Boolean)
+  if (toRemove.length) {
+    const { error: storageError } = await supabase.storage.from('printable-materials').remove(toRemove)
+    if (storageError) throw storageError
+  }
+
+  const { error: deleteError } = await supabase.from('resources').delete().eq('id', resourceId)
+  if (deleteError) throw deleteError
+
+  redirect('/dashboard/resources')
+}
+
 export async function deletePrintableMaterialAction(input: { resourceId: string; printableId: string }) {
   const profile = await requireRole(['admin', 'teacher'])
   const supabase = await createSupabaseServerClient()

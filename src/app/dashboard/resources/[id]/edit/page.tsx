@@ -3,10 +3,11 @@ import { notFound } from 'next/navigation'
 import { requireRole } from '@/lib/auth'
 import { createSupabaseServerClient } from '@/lib/supabase/server'
 import { getGradeLevels, getSubjects } from '@/lib/queries/publicResources'
-import { updateResourceAction } from '@/app/dashboard/resources/[id]/edit/actions'
+import { deleteResourceAction, updateResourceAction } from '@/app/dashboard/resources/[id]/edit/actions'
 import { RequiredMaterialsEditorEdit } from '@/app/dashboard/resources/[id]/edit/RequiredMaterialsEditorEdit'
 import { PrintableMaterialUploader } from '@/app/dashboard/resources/[id]/PrintableMaterialUploader'
 import { PrintableMaterialsManager } from '@/app/dashboard/resources/[id]/edit/PrintableMaterialsManager'
+import { DeleteResourceForm } from '@/app/dashboard/resources/[id]/edit/DeleteResourceForm'
 
 type PrintableRow = {
   id: string
@@ -294,6 +295,17 @@ export default async function EditResourcePage(props: { params: Promise<{ id: st
           resourceId={id}
           rows={(resource.printable_materials ?? []) as unknown as PrintableRow[]}
         />
+      </section>
+
+      <section className="rounded-2xl border border-red-200 bg-white p-6 shadow-sm">
+        <h2 className="text-base font-semibold text-red-900">Danger zone</h2>
+        <p className="mt-2 text-sm text-zinc-700">
+          Deleting a resource will remove it and all related materials. This cannot be undone.
+        </p>
+
+        <div className="mt-4">
+          <DeleteResourceForm action={deleteResourceAction.bind(null, id)} />
+        </div>
       </section>
     </div>
   )
