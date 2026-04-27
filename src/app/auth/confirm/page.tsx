@@ -16,6 +16,15 @@ function parseHashParams(hash: string) {
   return { access_token, refresh_token, token_type, expires_in, type }
 }
 
+function parseSearchParams(params: URLSearchParams) {
+  const access_token = params.get('access_token')
+  const refresh_token = params.get('refresh_token')
+  const token_type = params.get('token_type')
+  const expires_in = params.get('expires_in')
+  const type = params.get('type')
+  return { access_token, refresh_token, token_type, expires_in, type }
+}
+
 function AuthConfirmInner() {
   const router = useRouter()
   const searchParams = useSearchParams()
@@ -25,6 +34,7 @@ function AuthConfirmInner() {
 
   const hash = typeof window !== 'undefined' ? window.location.hash : ''
   const hashData = useMemo(() => parseHashParams(hash), [hash])
+  const searchData = useMemo(() => parseSearchParams(searchParams), [searchParams])
 
   useEffect(() => {
     let cancelled = false
@@ -35,11 +45,15 @@ function AuthConfirmInner() {
 
         const supabase = createSupabaseBrowserClient()
 
+        const accessToken = hashData.access_token ?? searchData.access_token
+        const refreshToken = hashData.refresh_token ?? searchData.refresh_token
+        const flowType = hashData.type ?? searchData.type
+
         // If coming from invite/reset links, Supabase typically returns tokens in the URL hash.
-        if (hashData.access_token && hashData.refresh_token) {
+        if (accessToken && refreshToken) {
           const { error: sessionError } = await supabase.auth.setSession({
-            access_token: hashData.access_token,
-            refresh_token: hashData.refresh_token,
+            access_token: accessToken,
+            refresh_token: refreshToken,
           })
 
           if (sessionError) throw sessionError
@@ -48,7 +62,7 @@ function AuthConfirmInner() {
           window.history.replaceState({}, document.title, window.location.pathname + window.location.search)
 
           // Route based on type
-          if (hashData.type === 'recovery') {
+          if (flowType === 'recovery') {
             router.replace('/auth/set-password')
             return
           }
