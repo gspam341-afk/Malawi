@@ -1,5 +1,6 @@
 import {
   ArrowRight,
+  BookOpen,
   Clock,
   GraduationCap,
   PackageCheck,
@@ -19,12 +20,24 @@ function materialsSummary(materials: { name: string; quantity: number | null }[]
     .join(', ')
 }
 
-export function ResourceCard({ resource }: { resource: ResourceListItem }) {
+export function ResourceCard({
+  resource,
+  subjectNamesInCategory,
+}: {
+  resource: ResourceListItem
+  /** When set, only subject badges in this pathway are shown (STEM category lists). */
+  subjectNamesInCategory?: string[]
+}) {
   const gradeBadges = resource.grade_levels?.length
     ? resource.grade_levels.slice().sort((a, b) => a.grade_number - b.grade_number)
     : []
 
   const materialsLine = materialsSummary(resource.required_materials ?? [])
+
+  const subjectBadges =
+    resource.subjects?.filter((s) =>
+      subjectNamesInCategory?.length ? subjectNamesInCategory.includes(s.name) : true,
+    ) ?? []
 
   return (
     <div className="flex h-full flex-col rounded-2xl border border-slate-200/90 bg-white p-5 shadow-sm transition hover:border-emerald-200/80 hover:shadow-md">
@@ -75,10 +88,13 @@ export function ResourceCard({ resource }: { resource: ResourceListItem }) {
       </div>
 
       <div className="mt-3 flex flex-wrap gap-2">
-        {resource.subjects?.length
-          ? resource.subjects.map((s) => (
+        {subjectBadges.length
+          ? subjectBadges.map((s) => (
               <Badge key={s.id} variant="subject">
-                {s.name}
+                <span className="inline-flex items-center gap-1">
+                  <BookOpen className="h-3 w-3" aria-hidden />
+                  {s.name}
+                </span>
               </Badge>
             ))
           : null}

@@ -14,9 +14,9 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "STEM Activities — Physical learning for schools",
+  title: "Jacaranda School — STEM learning activities",
   description:
-    "Hands-on STEM activities and printable resources. Browse by category, subject and grade; teachers can publish materials.",
+    "Explore STEM through physical activities, printable materials and classroom challenges. For Jacaranda School students Grade 6 to Grade 14.",
 };
 
 export default function RootLayout({
@@ -31,7 +31,7 @@ export default function RootLayout({
     >
       <body className="flex min-h-full flex-col bg-gradient-to-b from-slate-50 via-teal-50/25 to-slate-100 text-slate-950">
         <SiteHeader />
-        <main className="mx-auto w-full max-w-7xl flex-1 px-4 py-8 md:py-12">{children}</main>
+        <main className="mx-auto w-full max-w-[1400px] flex-1 px-4 py-8 md:px-8 md:py-14">{children}</main>
       </body>
     </html>
   );

@@ -1,169 +1,154 @@
-import Link from 'next/link'
 import {
   ArrowRight,
   BookOpen,
-  Cpu,
-  Download,
-  Filter,
-  Globe,
+  ClipboardList,
+  Compass,
+  Globe2,
   GraduationCap,
-  LayoutDashboard,
-  Shield,
+  Printer,
+  Route,
+  ShieldCheck,
+  Sparkles,
+  UploadCloud,
   UserCheck,
 } from 'lucide-react'
+import { StemPathwayGrid } from '@/components/public/StemPathwayGrid'
 import { ButtonLink } from '@/components/ui/Button'
-import { Card } from '@/components/ui/Card'
-import { STEM_CATEGORY_LIST } from '@/lib/stemCategories'
-import { StemCategoryIcon } from '@/components/stem/StemCategoryIcon'
 
 export default function Home() {
   return (
-    <div className="grid gap-16 pb-8">
-      <section className="relative overflow-hidden rounded-3xl border border-slate-200/90 bg-gradient-to-br from-emerald-50/90 via-white to-sky-50/80 px-6 py-12 shadow-sm md:px-10 md:py-16">
-        <div className="relative max-w-3xl">
-          <p className="inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-emerald-800">
-            <BookOpen className="h-4 w-4" aria-hidden />
-            Classroom STEM
+    <div className="grid w-full gap-20 pb-12">
+      {/* Hero */}
+      <section className="relative overflow-hidden rounded-[2rem] border border-emerald-200/60 bg-gradient-to-br from-emerald-50 via-white to-teal-50/90 px-6 py-14 shadow-lg shadow-emerald-900/5 md:px-14 md:py-20 lg:py-24">
+        <div className="pointer-events-none absolute -right-24 -top-24 h-72 w-72 rounded-full bg-teal-200/35 blur-3xl" />
+        <div className="pointer-events-none absolute -bottom-20 -left-16 h-64 w-64 rounded-full bg-amber-200/30 blur-3xl" />
+        <div className="relative mx-auto max-w-4xl text-center lg:max-w-5xl">
+          <p className="inline-flex items-center justify-center gap-2 text-sm font-semibold uppercase tracking-wider text-emerald-800">
+            <Sparkles className="h-5 w-5" aria-hidden />
+            Jacaranda School
           </p>
-          <h1 className="mt-3 text-3xl font-semibold tracking-tight text-slate-900 md:text-4xl lg:text-5xl">
-            Physical STEM learning activities for the classroom
+          <h1 className="mt-5 text-4xl font-bold tracking-tight text-slate-900 md:text-5xl lg:text-6xl">
+            Explore STEM activities at Jacaranda School
           </h1>
-          <p className="mt-4 text-lg text-slate-700">
-            Find printable, hands-on and movement-based activities organized by STEM category, subject and grade level.
-            Teachers can upload and publish resources; students can browse public activities without an account.
+          <p className="mx-auto mt-6 max-w-3xl text-lg leading-relaxed text-slate-700 md:text-xl">
+            Browse hands-on, printable and movement-based activities for{' '}
+            <span className="font-semibold text-slate-900">Grade 6 to Grade 14</span>. Choose a STEM pathway, discover
+            activities and get curious before class.
           </p>
-          <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
-            <ButtonLink href="/resources" icon={LayoutDashboard} iconRight={ArrowRight}>
-              Browse STEM activities
+          <div className="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row sm:flex-wrap">
+            <ButtonLink href="/subjects" icon={BookOpen} iconRight={ArrowRight}>
+              Explore subjects
             </ButtonLink>
             <ButtonLink href="/login" variant="secondary" icon={GraduationCap}>
               Teacher login
             </ButtonLink>
           </div>
-          <p className="mt-6 inline-flex items-center gap-2 text-sm text-slate-600">
-            <Globe className="h-4 w-4 shrink-0 text-emerald-700" aria-hidden />
-            Students can explore activities without signing in.
+          <p className="mx-auto mt-8 inline-flex max-w-xl flex-wrap items-center justify-center gap-2 text-center text-sm text-slate-600">
+            <Compass className="h-4 w-4 shrink-0 text-emerald-700" aria-hidden />
+            Students can explore public activities without signing in.
           </p>
         </div>
       </section>
 
-      <section className="grid gap-6">
-        <div>
-          <h2 className="text-2xl font-semibold tracking-tight text-slate-900">Explore by STEM</h2>
-          <p className="mt-2 max-w-2xl text-slate-600">
-            Choose a pathway to see activities aligned to science, technology, engineering, or mathematics — then filter
-            by grade and subject.
+      {/* STEM pathways */}
+      <section className="grid gap-8">
+        <div className="mx-auto max-w-3xl text-center">
+          <h2 className="text-3xl font-bold tracking-tight text-slate-900 md:text-4xl">Choose your STEM pathway</h2>
+          <p className="mt-4 text-lg leading-relaxed text-slate-600">
+            Pick a category to explore activities connected to your subjects. Each pathway only shows the activities
+            that belong to that STEM area.
           </p>
         </div>
-
-        <div className="grid gap-5 md:grid-cols-2">
-          {STEM_CATEGORY_LIST.map((cat) => {
-            const href = `/stem/${cat.slug}`
-            const inner = (
-              <>
-                <div className="flex items-start justify-between gap-4">
-                  <span className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-emerald-100 text-emerald-800 ring-1 ring-emerald-600/15">
-                    <StemCategoryIcon slug={cat.slug} className="h-8 w-8" />
-                  </span>
-                  {cat.comingSoon ? (
-                    <span className="inline-flex items-center gap-1 rounded-full bg-amber-50 px-2.5 py-0.5 text-xs font-medium text-amber-900 ring-1 ring-amber-600/20">
-                      <Cpu className="h-3.5 w-3.5" aria-hidden />
-                      Coming soon
-                    </span>
-                  ) : null}
-                </div>
-                <h3 className="mt-4 text-lg font-semibold text-slate-900">{cat.title}</h3>
-                <p className="mt-2 text-sm leading-relaxed text-slate-600">{cat.description}</p>
-                {cat.subjectNames.length ? (
-                  <div className="mt-4 flex flex-wrap gap-2">
-                    {cat.subjectNames.map((n) => (
-                      <span
-                        key={n}
-                        className="rounded-full bg-sky-50 px-2.5 py-0.5 text-xs font-medium text-sky-900 ring-1 ring-sky-600/15"
-                      >
-                        {n}
-                      </span>
-                    ))}
-                  </div>
-                ) : (
-                  <p className="mt-4 text-sm text-slate-500">No subject tags yet — content is planned.</p>
-                )}
-                <span className="mt-6 inline-flex items-center gap-1 text-sm font-medium text-emerald-800 group-hover:underline">
-                  {cat.comingSoon ? 'View Technology page' : `Open ${cat.title}`}
-                  <ArrowRight className="h-4 w-4 transition group-hover:translate-x-0.5" aria-hidden />
-                </span>
-              </>
-            )
-
-            return (
-              <Link
-                key={cat.slug}
-                href={href}
-                className="group block rounded-2xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-600 focus-visible:ring-offset-2"
-              >
-                <Card className="h-full transition group-hover:border-emerald-200 group-hover:shadow-md" padding="p-6">
-                  {inner}
-                </Card>
-              </Link>
-            )
-          })}
-        </div>
+        <StemPathwayGrid />
       </section>
 
-      <section className="grid gap-8 md:grid-cols-2 md:items-start md:gap-10">
+      {/* Student curiosity */}
+      <section className="rounded-[2rem] border border-slate-200/80 bg-white/90 px-6 py-14 shadow-md md:px-12">
+        <div className="mx-auto max-w-3xl text-center">
+          <h2 className="text-3xl font-bold tracking-tight text-slate-900">Learn by exploring</h2>
+          <p className="mt-4 text-lg text-slate-600">
+            Activities help you become curious before class — see what you need, prepare for lessons and connect STEM to
+            the real world.
+          </p>
+        </div>
+        <ul className="mx-auto mt-12 grid max-w-5xl gap-6 md:grid-cols-3">
+          <li className="rounded-2xl border border-emerald-100 bg-gradient-to-b from-emerald-50/80 to-white p-6 shadow-sm">
+            <Compass className="h-10 w-10 text-emerald-800" aria-hidden />
+            <h3 className="mt-4 font-semibold text-slate-900">Explore before class</h3>
+            <p className="mt-2 text-sm leading-relaxed text-slate-600">
+              Skim outcomes and materials so you walk in ready to participate.
+            </p>
+          </li>
+          <li className="rounded-2xl border border-teal-100 bg-gradient-to-b from-teal-50/80 to-white p-6 shadow-sm">
+            <ClipboardList className="h-10 w-10 text-teal-800" aria-hidden />
+            <h3 className="mt-4 font-semibold text-slate-900">Understand what you need</h3>
+            <p className="mt-2 text-sm leading-relaxed text-slate-600">
+              Check timing, group size and supplies before the lesson starts.
+            </p>
+          </li>
+          <li className="rounded-2xl border border-sky-100 bg-gradient-to-b from-sky-50/70 to-white p-6 shadow-sm">
+            <Globe2 className="h-10 w-10 text-sky-800" aria-hidden />
+            <h3 className="mt-4 font-semibold text-slate-900">Connect subjects to real life</h3>
+            <p className="mt-2 text-sm leading-relaxed text-slate-600">
+              See how science, maths, agriculture and more show up beyond the textbook.
+            </p>
+          </li>
+        </ul>
+      </section>
+
+      {/* How it works */}
+      <section className="grid gap-10 lg:grid-cols-2 lg:items-start lg:gap-16">
         <div>
-          <h2 className="text-2xl font-semibold tracking-tight text-slate-900">How it works</h2>
-          <p className="mt-2 text-slate-600">A simple path from browsing to running an activity in class.</p>
+          <h2 className="text-3xl font-bold tracking-tight text-slate-900">How it works</h2>
+          <p className="mt-3 text-lg text-slate-600">Four simple steps from browsing to showing up prepared.</p>
         </div>
         <ol className="grid gap-4">
           {[
-            {
-              Icon: LayoutDashboard,
-              text: 'Choose a STEM category that fits your lesson.',
-            },
-            { Icon: Filter, text: 'Filter by grade level or subject to narrow the list.' },
-            { Icon: BookOpen, text: 'Open an activity to read outcomes, timing, and materials.' },
-            { Icon: Download, text: 'Prepare materials or download printables for students.' },
+            { Icon: Route, text: 'Choose a STEM pathway that matches what you are studying.' },
+            { Icon: GraduationCap, text: 'Pick your grade level to narrow the list.' },
+            { Icon: BookOpen, text: 'Open an activity to read outcomes and materials.' },
+            { Icon: Printer, text: 'Prepare materials or questions for class — or print what you need.' },
           ].map((step, i) => (
-            <li key={step.text} className="flex gap-4 rounded-2xl border border-slate-200/90 bg-white p-4 shadow-sm">
-              <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-emerald-100 text-emerald-800">
-                <step.Icon className="h-5 w-5" aria-hidden />
+            <li
+              key={step.text}
+              className="flex gap-4 rounded-2xl border border-slate-200/90 bg-white p-5 shadow-sm transition hover:border-emerald-200"
+            >
+              <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-emerald-100 text-emerald-900">
+                <step.Icon className="h-6 w-6" aria-hidden />
               </span>
-              <div className="pt-0.5">
-                <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">Step {i + 1}</p>
-                <p className="mt-1 text-sm leading-relaxed text-slate-700">{step.text}</p>
+              <div>
+                <p className="text-xs font-bold uppercase tracking-wide text-slate-500">Step {i + 1}</p>
+                <p className="mt-1 text-base leading-relaxed text-slate-700">{step.text}</p>
               </div>
             </li>
           ))}
         </ol>
       </section>
 
-      <section className="rounded-3xl border border-slate-200/90 bg-white px-6 py-10 shadow-sm md:px-10">
-        <h2 className="text-2xl font-semibold tracking-tight text-slate-900">Built for teachers</h2>
-        <p className="mt-3 max-w-3xl text-slate-600">
-          Teachers create and publish their own resources when they sign in. An admin manages users and platform
-          settings — not every individual activity — so your classroom ideas can go live quickly.
+      {/* Teachers */}
+      <section className="rounded-[2rem] border border-slate-200/90 bg-slate-50/40 px-6 py-12 md:px-12">
+        <h2 className="text-2xl font-bold tracking-tight text-slate-900">For teachers</h2>
+        <p className="mt-3 max-w-2xl text-slate-600">
+          Teachers can log in to create and publish hands-on activities for their classes. Administrators manage users
+          and platform settings so the space stays safe and organised.
         </p>
-        <ul className="mt-6 grid gap-4 sm:grid-cols-3">
-          <li className="flex gap-3 rounded-2xl border border-slate-100 bg-slate-50/60 p-4">
+        <ul className="mt-8 grid gap-4 sm:grid-cols-3">
+          <li className="flex gap-3 rounded-xl bg-white/90 p-4 shadow-sm ring-1 ring-slate-100">
             <UserCheck className="h-6 w-6 shrink-0 text-emerald-800" aria-hidden />
             <span className="text-sm leading-relaxed text-slate-700">
-              <span className="font-semibold text-slate-900">Teachers publish directly</span> — activities go from draft to
-              live when you are ready.
+              <span className="font-semibold text-slate-900">Teachers</span> sign in to add and publish activities.
             </span>
           </li>
-          <li className="flex gap-3 rounded-2xl border border-slate-100 bg-slate-50/60 p-4">
-            <Shield className="h-6 w-6 shrink-0 text-emerald-800" aria-hidden />
+          <li className="flex gap-3 rounded-xl bg-white/90 p-4 shadow-sm ring-1 ring-slate-100">
+            <UploadCloud className="h-6 w-6 shrink-0 text-emerald-800" aria-hidden />
             <span className="text-sm leading-relaxed text-slate-700">
-              <span className="font-semibold text-slate-900">Admin manages platform</span> — users, subjects, and review
-              workflows stay organized.
+              <span className="font-semibold text-slate-900">Publish</span> printable and classroom-ready resources.
             </span>
           </li>
-          <li className="flex gap-3 rounded-2xl border border-slate-100 bg-slate-50/60 p-4">
-            <Globe className="h-6 w-6 shrink-0 text-emerald-800" aria-hidden />
+          <li className="flex gap-3 rounded-xl bg-white/90 p-4 shadow-sm ring-1 ring-slate-100">
+            <ShieldCheck className="h-6 w-6 shrink-0 text-emerald-800" aria-hidden />
             <span className="text-sm leading-relaxed text-slate-700">
-              <span className="font-semibold text-slate-900">Students browse freely</span> — no login required for public
-              activities.
+              <span className="font-semibold text-slate-900">Admins</span> oversee users and settings.
             </span>
           </li>
         </ul>
@@ -171,8 +156,8 @@ export default function Home() {
           <ButtonLink href="/login" icon={GraduationCap}>
             Teacher login
           </ButtonLink>
-          <ButtonLink href="/blog" variant="secondary" icon={BookOpen}>
-            Read the blog
+          <ButtonLink href="/resources" variant="secondary" icon={BookOpen}>
+            All activities
           </ButtonLink>
         </div>
       </section>

@@ -26,12 +26,15 @@ export function PublicResourceFilterForm({
   subjects,
   defaults,
   idPrefix = 'filter',
+  showSubjectFilter = true,
 }: {
   action: string
   gradeLevels: Grade[]
   subjects: Subject[]
   defaults: Defaults
   idPrefix?: string
+  /** Hide when the page scope only has one subject (e.g. Mathematics pathway). */
+  showSubjectFilter?: boolean
 }) {
   return (
     <form
@@ -84,28 +87,30 @@ export function PublicResourceFilterForm({
         </select>
       </div>
 
-      <div>
-        <label
-          htmlFor={`${idPrefix}-subject`}
-          className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wide text-slate-500"
-        >
-          <Filter className="h-3.5 w-3.5 text-slate-400" aria-hidden />
-          Subject
-        </label>
-        <select
-          id={`${idPrefix}-subject`}
-          name="subject"
-          defaultValue={defaults.subject}
-          className="mt-1 w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm shadow-sm outline-none focus:border-emerald-600 focus:ring-2 focus:ring-emerald-600/20"
-        >
-          <option value="">All in category</option>
-          {subjects.map((s) => (
-            <option key={s.id} value={s.id}>
-              {s.name}
-            </option>
-          ))}
-        </select>
-      </div>
+      {showSubjectFilter ? (
+        <div>
+          <label
+            htmlFor={`${idPrefix}-subject`}
+            className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wide text-slate-500"
+          >
+            <Filter className="h-3.5 w-3.5 text-slate-400" aria-hidden />
+            Subject
+          </label>
+          <select
+            id={`${idPrefix}-subject`}
+            name="subject"
+            defaultValue={defaults.subject}
+            className="mt-1 w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm shadow-sm outline-none focus:border-emerald-600 focus:ring-2 focus:ring-emerald-600/20"
+          >
+            <option value="">All in category</option>
+            {subjects.map((s) => (
+              <option key={s.id} value={s.id}>
+                {s.name}
+              </option>
+            ))}
+          </select>
+        </div>
+      ) : null}
 
       <div>
         <label

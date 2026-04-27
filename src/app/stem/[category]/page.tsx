@@ -8,7 +8,13 @@ import { ResourceCard } from '@/components/ResourceCard'
 import { Badge } from '@/components/ui/Badge'
 import { ButtonLink } from '@/components/ui/Button'
 import { getGradeLevels, getPublicResources, getSubjects } from '@/lib/queries/publicResources'
-import { isStemSlug, resolveSubjectIdsForStem, STEM_CATEGORIES, type StemSlug } from '@/lib/stemCategories'
+import {
+  getStemCategoryEmptyCopy,
+  isStemSlug,
+  resolveSubjectIdsForStem,
+  STEM_CATEGORIES,
+  type StemSlug,
+} from '@/lib/stemCategories'
 
 type Props = {
   params: Promise<{ category: string }>
@@ -49,14 +55,14 @@ export default async function StemCategoryPage({ params, searchParams }: Props) 
         <PageHeader
           eyebrow={`STEM · ${meta.letter}`}
           title={meta.title}
-          description={meta.description}
+          description={meta.studentDescription}
           icon={HeaderIcon}
         />
 
         <EmptyState
           icon={Cpu}
           title="Technology activities are coming soon"
-          description="For now, explore Science, Engineering, or Mathematics — or browse all learning activities."
+          description="For now, explore Science, Engineering or Mathematics."
         >
           <ButtonLink href="/stem/science" variant="secondary">
             Science
@@ -76,9 +82,9 @@ export default async function StemCategoryPage({ params, searchParams }: Props) 
   }
 
   const subjectIds = resolveSubjectIdsForStem(meta, subjects)
-  const subjectOptions = subjects.filter((s) => meta.subjectNames.includes(s.name))
+  const subjectOptions = subjects.filter((s) => meta.subjects.includes(s.name))
 
-  const misconfigured = meta.subjectNames.length > 0 && subjectIds.length === 0
+  const misconfigured = meta.subjects.length > 0 && subjectIds.length === 0
 
   const resources = misconfigured
     ? []
@@ -101,12 +107,14 @@ export default async function StemCategoryPage({ params, searchParams }: Props) 
     extra_materials_required: extra_materials_required ?? '',
   }
 
+  const emptyCopy = getStemCategoryEmptyCopy(category)
+
   return (
     <div className="grid gap-8">
       <PageHeader
         eyebrow={`STEM · ${meta.letter}`}
         title={meta.title}
-        description={meta.description}
+        description={meta.studentDescription}
         icon={HeaderIcon}
         actions={
           <Link
@@ -119,7 +127,7 @@ export default async function StemCategoryPage({ params, searchParams }: Props) 
       />
 
       <div className="flex flex-wrap gap-2">
-        {meta.subjectNames.map((name) => (
+        {meta.subjects.map((name) => (
           <Badge key={name} variant="subject">
             {name}
           </Badge>
@@ -132,6 +140,7 @@ export default async function StemCategoryPage({ params, searchParams }: Props) 
         subjects={subjectOptions}
         defaults={defaults}
         idPrefix={`stem-${category}`}
+        showSubjectFilter={meta.subjects.length > 1}
       />
 
       {misconfigured ? (
@@ -143,20 +152,16 @@ export default async function StemCategoryPage({ params, searchParams }: Props) 
       ) : resources.length ? (
         <div className="grid gap-5 md:grid-cols-2">
           {resources.map((r) => (
-            <ResourceCard key={r.id} resource={r} />
+            <ResourceCard key={r.id} resource={r} subjectNamesInCategory={meta.subjects} />
           ))}
         </div>
       ) : (
-        <EmptyState
-          icon={SearchX}
-          title="No activities found"
-          description="Try changing filters, browse all learning activities, or pick another STEM category."
-        >
+        <EmptyState icon={SearchX} title={emptyCopy.title} description={emptyCopy.description}>
           <ButtonLink href="/resources" variant="secondary">
             Browse all activities
           </ButtonLink>
-          <ButtonLink href="/" variant="ghost">
-            Back to home
+          <ButtonLink href="/subjects" variant="ghost">
+            Choose another pathway
           </ButtonLink>
         </EmptyState>
       )}

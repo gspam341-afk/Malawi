@@ -2,16 +2,16 @@ import Link from 'next/link'
 import type { LucideIcon } from 'lucide-react'
 import {
   ArrowLeft,
+  Atom,
   BookOpen,
   Clock,
+  Compass,
   Download,
   GraduationCap,
   Info,
-  Layers,
   PackageCheck,
   Printer,
-  Signal,
-  Tag,
+  Sparkles,
   UsersRound,
 } from 'lucide-react'
 import { Badge } from '@/components/ui/Badge'
@@ -65,14 +65,10 @@ export default async function ResourceDetailPage({ params }: Props) {
           <div className="min-w-0 max-w-3xl">
             <p className="inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-wide text-emerald-800">
               <BookOpen className="h-4 w-4" aria-hidden />
-              Learning activity
+              Jacaranda School · Learning activity
             </p>
             <h1 className="mt-2 text-3xl font-semibold tracking-tight text-slate-900 md:text-4xl">{resource.title}</h1>
-            {resource.result_description ? (
-              <p className="mt-4 text-lg leading-relaxed text-slate-700">{resource.result_description}</p>
-            ) : (
-              <p className="mt-4 text-slate-500">No outcome summary provided.</p>
-            )}
+            <p className="mt-4 text-base font-medium text-emerald-900">Use this activity to prepare for class.</p>
           </div>
           <div className="flex flex-wrap justify-end gap-2">
             {resource.print_required ? (
@@ -95,37 +91,20 @@ export default async function ResourceDetailPage({ params }: Props) {
           </div>
         </div>
 
-        <div className="mt-8 flex flex-wrap gap-2 border-t border-slate-100 pt-8">
-          {resource.subjects?.length ? (
-            resource.subjects.map((s) => (
-              <Badge key={s.id} variant="subject">
-                <span className="inline-flex items-center gap-1">
-                  <Tag className="h-3 w-3" aria-hidden />
-                  {s.name}
-                </span>
-              </Badge>
-            ))
-          ) : (
-            <span className="text-sm text-slate-500">No subjects tagged.</span>
-          )}
-          {resource.grade_levels?.length
-            ? resource.grade_levels
-                .slice()
-                .sort((a, b) => a.grade_number - b.grade_number)
-                .map((g) => (
-                  <Badge key={g.id} variant="outline">
-                    <span className="inline-flex items-center gap-1">
-                      <GraduationCap className="h-3 w-3" aria-hidden />
-                      {g.name}
-                    </span>
-                  </Badge>
-                ))
-            : null}
-        </div>
+        <ul className="mt-8 grid gap-3 border-t border-slate-100 pt-8 text-sm text-slate-700 sm:grid-cols-2">
+          <li className="flex gap-2 rounded-xl bg-white/80 px-3 py-2 ring-1 ring-slate-100">
+            <PackageCheck className="mt-0.5 h-5 w-5 shrink-0 text-emerald-700" aria-hidden />
+            <span>Check what materials are needed before you start.</span>
+          </li>
+          <li className="flex gap-2 rounded-xl bg-white/80 px-3 py-2 ring-1 ring-slate-100">
+            <Info className="mt-0.5 h-5 w-5 shrink-0 text-sky-700" aria-hidden />
+            <span>Students can view public activities without logging in.</span>
+          </li>
+        </ul>
       </Card>
 
       <section className="grid gap-6">
-        <SectionHeader title="Activity details" subtitle="Timing, grouping, and curriculum tags." icon={Layers} />
+        <SectionHeader title="Activity overview" subtitle="What this activity is about." icon={BookOpen} />
         <Card padding="p-6">
           {resource.description ? (
             <div className="whitespace-pre-wrap text-sm leading-relaxed text-slate-800">{resource.description}</div>
@@ -133,31 +112,85 @@ export default async function ResourceDetailPage({ params }: Props) {
             <EmptyState
               icon={BookOpen}
               title="No full description yet"
-              description="Open printable materials below if available."
+              description="Use the outcome summary below to see what you will explore."
             />
           )}
-          <div className="mt-8 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-            <DetailStat Icon={Tag} label="Activity type" value={resource.activity_type} />
+        </Card>
+      </section>
+
+      <section className="grid gap-6">
+        <SectionHeader title="What you will explore" subtitle="Outcomes and ideas to think about." icon={Sparkles} />
+        <Card padding="p-6">
+          {resource.result_description ? (
+            <div className="flex gap-3">
+              <Compass className="mt-1 h-6 w-6 shrink-0 text-emerald-700" aria-hidden />
+              <p className="text-base leading-relaxed text-slate-800">{resource.result_description}</p>
+            </div>
+          ) : (
+            <EmptyState
+              icon={Compass}
+              title="No outcome summary yet"
+              description="Ask your teacher what to focus on, or read the full description above."
+            />
+          )}
+        </Card>
+      </section>
+
+      <section className="grid gap-6">
+        <SectionHeader title="Grade levels and subjects" subtitle="Who this is for and what it connects to." icon={GraduationCap} />
+        <Card padding="p-6">
+          <div className="flex flex-wrap gap-2">
+            {resource.subjects?.length ? (
+              resource.subjects.map((s) => (
+                <Badge key={s.id} variant="subject">
+                  <span className="inline-flex items-center gap-1">
+                    <Atom className="h-3 w-3" aria-hidden />
+                    {s.name}
+                  </span>
+                </Badge>
+              ))
+            ) : (
+              <span className="text-sm text-slate-500">No subjects tagged.</span>
+            )}
+            {resource.grade_levels?.length
+              ? resource.grade_levels
+                  .slice()
+                  .sort((a, b) => a.grade_number - b.grade_number)
+                  .map((g) => (
+                    <Badge key={g.id} variant="outline">
+                      <span className="inline-flex items-center gap-1">
+                        <GraduationCap className="h-3 w-3" aria-hidden />
+                        {g.name}
+                      </span>
+                    </Badge>
+                  ))
+              : null}
+          </div>
+        </Card>
+      </section>
+
+      <section className="grid gap-6">
+        <SectionHeader title="Time and group size" subtitle="Plan your preparation and teamwork." icon={Clock} />
+        <Card padding="p-6">
+          <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
             <DetailStat Icon={Clock} label="Preparation time" value={resource.preparation_time} />
             <DetailStat Icon={Clock} label="Activity duration" value={resource.activity_duration} />
             <DetailStat
               Icon={UsersRound}
               label="Group size"
               value={
-                resource.group_size_min || resource.group_size_max
+                resource.group_size_min != null || resource.group_size_max != null
                   ? `${resource.group_size_min ?? '—'}–${resource.group_size_max ?? '—'}`
                   : null
               }
             />
-            <DetailStat Icon={Signal} label="Difficulty" value={resource.difficulty_level} />
-            <DetailStat Icon={Layers} label="Resource type" value={resource.resource_type} />
           </div>
         </Card>
       </section>
 
       <section className="grid gap-6 lg:grid-cols-2 lg:gap-8">
         <div className="grid gap-4">
-          <SectionHeader title="Required materials" subtitle="What to gather before class." icon={PackageCheck} />
+          <SectionHeader title="Required materials" subtitle="Gather these before you start." icon={PackageCheck} />
           <Card padding="p-6">
             {resource.required_materials?.length ? (
               <ul className="grid gap-3">
@@ -185,7 +218,7 @@ export default async function ResourceDetailPage({ params }: Props) {
         </div>
 
         <div className="grid gap-4">
-          <SectionHeader title="Printable materials" subtitle="Download handouts for your classroom." icon={Printer} />
+          <SectionHeader title="Printable materials" subtitle="Download handouts when available." icon={Printer} />
           <Card padding="p-6">
             {resource.printable_materials?.length ? (
               <ul className="grid gap-4">
@@ -219,7 +252,7 @@ export default async function ResourceDetailPage({ params }: Props) {
               <EmptyState
                 icon={Printer}
                 title="No printable files attached"
-                description="Check the activity description for anything students can reproduce by hand."
+                description="Check the activity description for anything you can copy or sketch by hand."
               />
             )}
           </Card>
@@ -230,8 +263,8 @@ export default async function ResourceDetailPage({ params }: Props) {
         <p className="flex gap-3 text-sm leading-relaxed text-slate-800">
           <Info className="mt-0.5 h-5 w-5 shrink-0 text-sky-800" aria-hidden />
           <span>
-            <span className="font-semibold text-slate-900">Students:</span> you do not need an account to view public
-            activities or download printables shared here.
+            <span className="font-semibold text-slate-900">Note:</span> public activities stay visible without an
+            account. Your teacher may add extra instructions in class.
           </span>
         </p>
       </Card>
