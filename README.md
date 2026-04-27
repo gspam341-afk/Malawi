@@ -1,5 +1,12 @@
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
+## Supabase setup
+
+This app expects a Supabase project with the SQL migrations in `supabase/migrations/` applied.
+
+- **Auth**: A trigger automatically creates a matching `public.profiles` row when a new `auth.users` row is created (see `supabase/migrations/0003_auto_create_profile.sql`).
+- **Storage**: Create a bucket named `printable-materials`.
+
 ## Getting Started
 
 First, run the development server:
