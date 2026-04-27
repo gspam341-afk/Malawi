@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import { Eye, FileText, Newspaper, PenLine, Send } from 'lucide-react'
 import { requireProfile } from '@/lib/auth'
 import { createBlogPostAction } from '@/app/dashboard/blog-posts/actions'
 import { AdminPageHeader } from '@/components/dashboard/AdminPageHeader'
@@ -44,10 +45,15 @@ export default async function NewBlogPostPage() {
         description="Share classroom stories, printable tips, or reflections. Save as draft until you are ready."
         backHref="/dashboard/blog-posts"
         backLabel="Blog posts"
+        titleIcon={Newspaper}
       />
 
       <form action={createBlogPostAction} className="grid gap-8">
-        <FormSection title="Post basics" description="Titles and URLs show up on the public blog listing.">
+        <FormSection
+          icon={FileText}
+          title="Post basics"
+          description="Titles and URLs show up on the public blog listing."
+        >
           <div className="grid gap-5">
             <div>
               <FieldLabel htmlFor="bp-title">Title</FieldLabel>
@@ -66,7 +72,11 @@ export default async function NewBlogPostPage() {
           </div>
         </FormSection>
 
-        <FormSection title="Content" description="Long-form writing — readers scan headings and bold text first.">
+        <FormSection
+          icon={PenLine}
+          title="Content"
+          description="Long-form writing — readers scan headings and bold text first."
+        >
           <div>
             <FieldLabel htmlFor="bp-body">Article body</FieldLabel>
             <textarea
@@ -83,7 +93,11 @@ export default async function NewBlogPostPage() {
           </div>
         </FormSection>
 
-        <FormSection title="Publishing" description="Choose whether this stays private, waits for review, or goes live.">
+        <FormSection
+          icon={Eye}
+          title="Publishing"
+          description="Choose whether this stays private, waits for review, or goes live."
+        >
           <div className="max-w-md">
             <FieldLabel htmlFor="bp-status">Status</FieldLabel>
             <select id="bp-status" name="status" defaultValue={allowedStatuses[0]} className={`${dashSelect} mt-2`}>
@@ -100,7 +114,9 @@ export default async function NewBlogPostPage() {
           <Link href="/dashboard/blog-posts" className="rounded-xl px-4 py-2.5 text-sm font-semibold text-slate-700 hover:bg-slate-100">
             Cancel
           </Link>
-          <ActionButton type="submit">Create draft</ActionButton>
+          <ActionButton type="submit" icon={Send}>
+            Create draft
+          </ActionButton>
         </div>
       </form>
     </div>

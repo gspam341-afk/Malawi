@@ -1,4 +1,16 @@
 import Link from 'next/link'
+import {
+  ListFilter,
+  Save,
+  Search,
+  Shield,
+  SlidersHorizontal,
+  Trash2,
+  UserCheck,
+  UserPlus,
+  Users,
+  UserX,
+} from 'lucide-react'
 import { requireAdmin } from '@/lib/auth'
 import { createSupabaseServerClient } from '@/lib/supabase/server'
 import { deactivateUserAction, deleteUserAction, reactivateUserAction, updateUserAction } from '@/app/dashboard/users/actions'
@@ -57,22 +69,30 @@ export default async function AdminUsersPage(props: {
         eyebrow="Platform"
         title="User management"
         description="Search and update profiles. Your own account is hidden from this list so you cannot lock yourself out by mistake."
+        titleIcon={Users}
         actions={
           <Link
             href="/dashboard/users/invite-teacher"
-            className="inline-flex items-center justify-center rounded-xl bg-gradient-to-r from-teal-600 to-teal-700 px-4 py-2.5 text-sm font-semibold text-white shadow-sm hover:from-teal-700 hover:to-teal-800"
+            className="inline-flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-teal-600 to-teal-700 px-4 py-2.5 text-sm font-semibold text-white shadow-sm hover:from-teal-700 hover:to-teal-800"
           >
+            <UserPlus className="h-4 w-4" aria-hidden />
             Invite teacher
           </Link>
         }
       />
 
       <section className={`${dashPanelSolid} p-5 md:p-6`}>
-        <h2 className="text-sm font-semibold text-slate-900">Filters</h2>
+        <h2 className="flex items-center gap-2 text-sm font-semibold text-slate-900">
+          <SlidersHorizontal className="h-4 w-4 text-teal-700" aria-hidden />
+          Filters
+        </h2>
         <p className={`mt-1 ${dashMuted}`}>Narrow down by name, email, role or status.</p>
         <form className="mt-6 grid gap-4 md:grid-cols-12" method="get">
           <div className="md:col-span-5">
-            <label className="text-xs font-semibold uppercase tracking-wide text-slate-500">Search</label>
+            <label className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wide text-slate-500">
+              <Search className="h-3.5 w-3.5 text-slate-400" aria-hidden />
+              Search
+            </label>
             <input
               name="q"
               defaultValue={q}
@@ -81,21 +101,27 @@ export default async function AdminUsersPage(props: {
             />
           </div>
           <div className="md:col-span-3">
-            <label className="text-xs font-semibold uppercase tracking-wide text-slate-500">Role</label>
+            <label className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wide text-slate-500">
+              <Shield className="h-3.5 w-3.5 text-slate-400" aria-hidden />
+              Role
+            </label>
             <select name="role" defaultValue={role} className={`${dashInput} mt-2`}>
               <option value="">All roles</option>
               <OptionList options={roles} value={roles[0]} />
             </select>
           </div>
           <div className="md:col-span-3">
-            <label className="text-xs font-semibold uppercase tracking-wide text-slate-500">Status</label>
+            <label className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wide text-slate-500">
+              <ListFilter className="h-3.5 w-3.5 text-slate-400" aria-hidden />
+              Status
+            </label>
             <select name="status" defaultValue={status} className={`${dashInput} mt-2`}>
               <option value="">All statuses</option>
               <OptionList options={statuses} value={statuses[0]} />
             </select>
           </div>
           <div className="flex items-end md:col-span-1">
-            <ActionButton type="submit" className="w-full md:w-auto">
+            <ActionButton type="submit" className="w-full md:w-auto" icon={Search}>
               Apply
             </ActionButton>
           </div>
@@ -148,7 +174,9 @@ export default async function AdminUsersPage(props: {
                           </select>
                         </div>
                       </div>
-                      <ActionButton type="submit">Save changes</ActionButton>
+                      <ActionButton type="submit" icon={Save}>
+                        Save changes
+                      </ActionButton>
                     </form>
                   </td>
                   <td className="px-4 py-4 text-slate-700">{u.email ?? '—'}</td>
@@ -169,11 +197,15 @@ export default async function AdminUsersPage(props: {
                       <div className="flex flex-wrap gap-2">
                         <form action={deactivateUserAction}>
                           <input type="hidden" name="user_id" value={u.id} />
-                          <SecondaryButton type="submit">Deactivate</SecondaryButton>
+                          <SecondaryButton type="submit" icon={UserX}>
+                            Deactivate
+                          </SecondaryButton>
                         </form>
                         <form action={reactivateUserAction}>
                           <input type="hidden" name="user_id" value={u.id} />
-                          <SecondaryButton type="submit">Reactivate</SecondaryButton>
+                          <SecondaryButton type="submit" icon={UserCheck}>
+                            Reactivate
+                          </SecondaryButton>
                         </form>
                       </div>
                       <form action={deleteUserAction}>
@@ -182,7 +214,10 @@ export default async function AdminUsersPage(props: {
                           message="Delete this user? This will delete the auth account permanently."
                           className="rounded-xl border border-red-200 bg-red-50 px-4 py-2 text-sm font-semibold text-red-900 hover:bg-red-100"
                         >
-                          Delete user
+                          <span className="inline-flex items-center gap-2">
+                            <Trash2 className="h-4 w-4" aria-hidden />
+                            Delete user
+                          </span>
                         </ConfirmSubmitButton>
                       </form>
                     </div>
@@ -194,13 +229,15 @@ export default async function AdminUsersPage(props: {
         </TableShell>
       ) : (
         <EmptyState
+          icon={Users}
           title="No users match these filters"
           description="Adjust search or filters, or invite someone new to join the platform."
         >
           <Link
             href="/dashboard/users/invite-teacher"
-            className="inline-flex rounded-xl bg-teal-600 px-4 py-2 text-sm font-semibold text-white hover:bg-teal-700"
+            className="inline-flex items-center gap-2 rounded-xl bg-teal-600 px-4 py-2 text-sm font-semibold text-white hover:bg-teal-700"
           >
+            <UserPlus className="h-4 w-4" aria-hidden />
             Invite teacher
           </Link>
         </EmptyState>

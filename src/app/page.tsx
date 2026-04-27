@@ -1,14 +1,30 @@
 import Link from 'next/link'
+import {
+  ArrowRight,
+  BookOpen,
+  Cpu,
+  Download,
+  Filter,
+  Globe,
+  GraduationCap,
+  LayoutDashboard,
+  Shield,
+  UserCheck,
+} from 'lucide-react'
 import { ButtonLink } from '@/components/ui/Button'
 import { Card } from '@/components/ui/Card'
 import { STEM_CATEGORY_LIST } from '@/lib/stemCategories'
+import { StemCategoryIcon } from '@/components/stem/StemCategoryIcon'
 
 export default function Home() {
   return (
     <div className="grid gap-16 pb-8">
       <section className="relative overflow-hidden rounded-3xl border border-slate-200/90 bg-gradient-to-br from-emerald-50/90 via-white to-sky-50/80 px-6 py-12 shadow-sm md:px-10 md:py-16">
         <div className="relative max-w-3xl">
-          <p className="text-xs font-semibold uppercase tracking-wider text-emerald-800">Classroom STEM</p>
+          <p className="inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-emerald-800">
+            <BookOpen className="h-4 w-4" aria-hidden />
+            Classroom STEM
+          </p>
           <h1 className="mt-3 text-3xl font-semibold tracking-tight text-slate-900 md:text-4xl lg:text-5xl">
             Physical STEM learning activities for the classroom
           </h1>
@@ -17,11 +33,17 @@ export default function Home() {
             Teachers can upload and publish resources; students can browse public activities without an account.
           </p>
           <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
-            <ButtonLink href="/resources">Browse STEM activities</ButtonLink>
-            <ButtonLink href="/login" variant="secondary">
+            <ButtonLink href="/resources" icon={LayoutDashboard} iconRight={ArrowRight}>
+              Browse STEM activities
+            </ButtonLink>
+            <ButtonLink href="/login" variant="secondary" icon={GraduationCap}>
               Teacher login
             </ButtonLink>
           </div>
+          <p className="mt-6 inline-flex items-center gap-2 text-sm text-slate-600">
+            <Globe className="h-4 w-4 shrink-0 text-emerald-700" aria-hidden />
+            Students can explore activities without signing in.
+          </p>
         </div>
       </section>
 
@@ -29,7 +51,7 @@ export default function Home() {
         <div>
           <h2 className="text-2xl font-semibold tracking-tight text-slate-900">Explore by STEM</h2>
           <p className="mt-2 max-w-2xl text-slate-600">
-            Choose a letter to see activities aligned to science, technology, engineering, or mathematics — then filter
+            Choose a pathway to see activities aligned to science, technology, engineering, or mathematics — then filter
             by grade and subject.
           </p>
         </div>
@@ -40,11 +62,12 @@ export default function Home() {
             const inner = (
               <>
                 <div className="flex items-start justify-between gap-4">
-                  <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-emerald-100 text-lg font-bold text-emerald-900">
-                    {cat.letter}
+                  <span className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-emerald-100 text-emerald-800 ring-1 ring-emerald-600/15">
+                    <StemCategoryIcon slug={cat.slug} className="h-8 w-8" />
                   </span>
                   {cat.comingSoon ? (
-                    <span className="rounded-full bg-amber-50 px-2.5 py-0.5 text-xs font-medium text-amber-900 ring-1 ring-amber-600/20">
+                    <span className="inline-flex items-center gap-1 rounded-full bg-amber-50 px-2.5 py-0.5 text-xs font-medium text-amber-900 ring-1 ring-amber-600/20">
+                      <Cpu className="h-3.5 w-3.5" aria-hidden />
                       Coming soon
                     </span>
                   ) : null}
@@ -65,8 +88,9 @@ export default function Home() {
                 ) : (
                   <p className="mt-4 text-sm text-slate-500">No subject tags yet — content is planned.</p>
                 )}
-                <span className="mt-6 inline-flex text-sm font-medium text-emerald-800 group-hover:underline">
-                  {cat.comingSoon ? 'View Technology page →' : `Open ${cat.title} →`}
+                <span className="mt-6 inline-flex items-center gap-1 text-sm font-medium text-emerald-800 group-hover:underline">
+                  {cat.comingSoon ? 'View Technology page' : `Open ${cat.title}`}
+                  <ArrowRight className="h-4 w-4 transition group-hover:translate-x-0.5" aria-hidden />
                 </span>
               </>
             )
@@ -86,23 +110,29 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="grid gap-6 md:grid-cols-2 md:items-start md:gap-10">
+      <section className="grid gap-8 md:grid-cols-2 md:items-start md:gap-10">
         <div>
           <h2 className="text-2xl font-semibold tracking-tight text-slate-900">How it works</h2>
           <p className="mt-2 text-slate-600">A simple path from browsing to running an activity in class.</p>
         </div>
         <ol className="grid gap-4">
           {[
-            'Choose a STEM category that fits your lesson.',
-            'Filter by grade level or subject to narrow the list.',
-            'Open an activity to read outcomes, timing, and materials.',
-            'Prepare materials or download printables for students.',
+            {
+              Icon: LayoutDashboard,
+              text: 'Choose a STEM category that fits your lesson.',
+            },
+            { Icon: Filter, text: 'Filter by grade level or subject to narrow the list.' },
+            { Icon: BookOpen, text: 'Open an activity to read outcomes, timing, and materials.' },
+            { Icon: Download, text: 'Prepare materials or download printables for students.' },
           ].map((step, i) => (
-            <li key={step} className="flex gap-4 rounded-2xl border border-slate-200/90 bg-white p-4 shadow-sm">
-              <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-emerald-100 text-sm font-bold text-emerald-900">
-                {i + 1}
+            <li key={step.text} className="flex gap-4 rounded-2xl border border-slate-200/90 bg-white p-4 shadow-sm">
+              <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-emerald-100 text-emerald-800">
+                <step.Icon className="h-5 w-5" aria-hidden />
               </span>
-              <span className="text-sm leading-relaxed text-slate-700">{step}</span>
+              <div className="pt-0.5">
+                <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">Step {i + 1}</p>
+                <p className="mt-1 text-sm leading-relaxed text-slate-700">{step.text}</p>
+              </div>
             </li>
           ))}
         </ol>
@@ -114,9 +144,34 @@ export default function Home() {
           Teachers create and publish their own resources when they sign in. An admin manages users and platform
           settings — not every individual activity — so your classroom ideas can go live quickly.
         </p>
-        <div className="mt-6 flex flex-wrap gap-3">
-          <ButtonLink href="/login">Teacher login</ButtonLink>
-          <ButtonLink href="/blog" variant="secondary">
+        <ul className="mt-6 grid gap-4 sm:grid-cols-3">
+          <li className="flex gap-3 rounded-2xl border border-slate-100 bg-slate-50/60 p-4">
+            <UserCheck className="h-6 w-6 shrink-0 text-emerald-800" aria-hidden />
+            <span className="text-sm leading-relaxed text-slate-700">
+              <span className="font-semibold text-slate-900">Teachers publish directly</span> — activities go from draft to
+              live when you are ready.
+            </span>
+          </li>
+          <li className="flex gap-3 rounded-2xl border border-slate-100 bg-slate-50/60 p-4">
+            <Shield className="h-6 w-6 shrink-0 text-emerald-800" aria-hidden />
+            <span className="text-sm leading-relaxed text-slate-700">
+              <span className="font-semibold text-slate-900">Admin manages platform</span> — users, subjects, and review
+              workflows stay organized.
+            </span>
+          </li>
+          <li className="flex gap-3 rounded-2xl border border-slate-100 bg-slate-50/60 p-4">
+            <Globe className="h-6 w-6 shrink-0 text-emerald-800" aria-hidden />
+            <span className="text-sm leading-relaxed text-slate-700">
+              <span className="font-semibold text-slate-900">Students browse freely</span> — no login required for public
+              activities.
+            </span>
+          </li>
+        </ul>
+        <div className="mt-8 flex flex-wrap gap-3">
+          <ButtonLink href="/login" icon={GraduationCap}>
+            Teacher login
+          </ButtonLink>
+          <ButtonLink href="/blog" variant="secondary" icon={BookOpen}>
             Read the blog
           </ButtonLink>
         </div>

@@ -1,9 +1,12 @@
 import Link from 'next/link'
+import { LibraryBig, SearchX } from 'lucide-react'
 import { EmptyState } from '@/components/ui/EmptyState'
 import { PageHeader } from '@/components/ui/PageHeader'
 import { PublicResourceFilterForm } from '@/components/PublicResourceFilterForm'
 import { ResourceCard } from '@/components/ResourceCard'
+import { ButtonLink } from '@/components/ui/Button'
 import { STEM_CATEGORY_LIST } from '@/lib/stemCategories'
+import { StemCategoryIcon } from '@/components/stem/StemCategoryIcon'
 import { getGradeLevels, getPublicResources, getSubjects } from '@/lib/queries/publicResources'
 
 type Props = {
@@ -53,6 +56,7 @@ export default async function ResourcesPage({ searchParams }: Props) {
         eyebrow="Browse"
         title="All learning activities"
         description="Browse every published physical learning activity. Filter by grade, subject, printables, and materials — or jump into a STEM category."
+        icon={LibraryBig}
       />
 
       <div>
@@ -62,9 +66,10 @@ export default async function ResourcesPage({ searchParams }: Props) {
             <Link
               key={c.slug}
               href={`/stem/${c.slug}`}
-              className="rounded-full bg-white px-3 py-1.5 text-sm font-medium text-emerald-900 shadow-sm ring-1 ring-slate-200 transition hover:bg-emerald-50 hover:ring-emerald-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-600"
+              className="inline-flex items-center gap-2 rounded-full bg-white px-3 py-1.5 text-sm font-medium text-emerald-900 shadow-sm ring-1 ring-slate-200 transition hover:bg-emerald-50 hover:ring-emerald-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-600"
             >
-              {c.letter} · {c.title}
+              <StemCategoryIcon slug={c.slug} className="h-4 w-4 text-emerald-800" />
+              {c.title}
             </Link>
           ))}
         </div>
@@ -80,21 +85,19 @@ export default async function ResourcesPage({ searchParams }: Props) {
         </div>
       ) : (
         <EmptyState
+          icon={SearchX}
           title="No activities match your filters"
           description="Try clearing one filter at a time, browse by STEM category, or check back when more resources are published."
         >
           <Link
             href="/resources"
-            className="inline-flex rounded-lg border border-slate-300 bg-white px-4 py-2 text-sm font-medium text-slate-900 shadow-sm hover:bg-slate-50"
+            className="inline-flex items-center gap-2 rounded-lg border border-slate-300 bg-white px-4 py-2 text-sm font-medium text-slate-900 shadow-sm hover:bg-slate-50"
           >
             Reset filters (reload)
           </Link>
-          <Link
-            href="/stem/science"
-            className="inline-flex rounded-lg bg-emerald-700 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-emerald-800"
-          >
+          <ButtonLink href="/stem/science" variant="primary">
             Explore Science
-          </Link>
+          </ButtonLink>
         </EmptyState>
       )}
     </div>

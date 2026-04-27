@@ -1,3 +1,12 @@
+import {
+  ArrowRight,
+  Clock,
+  GraduationCap,
+  PackageCheck,
+  Printer,
+  Scissors,
+  UsersRound,
+} from 'lucide-react'
 import { Badge } from '@/components/ui/Badge'
 import { ButtonLink } from '@/components/ui/Button'
 import type { ResourceListItem } from '@/types/db'
@@ -22,13 +31,28 @@ export function ResourceCard({ resource }: { resource: ResourceListItem }) {
       <div className="flex flex-wrap gap-2">
         {resource.print_required ? (
           <Badge variant="stem">
-            Printable
+            <span className="inline-flex items-center gap-1">
+              <Printer className="h-3 w-3" aria-hidden />
+              Printable
+            </span>
           </Badge>
         ) : null}
         {!resource.extra_materials_required ? (
-          <Badge variant="outline">No extra materials</Badge>
+          <Badge variant="outline">
+            <span className="inline-flex items-center gap-1">
+              <PackageCheck className="h-3 w-3" aria-hidden />
+              No extra materials
+            </span>
+          </Badge>
         ) : null}
-        {resource.cutting_required ? <Badge variant="neutral">Cutting required</Badge> : null}
+        {resource.cutting_required ? (
+          <Badge variant="neutral">
+            <span className="inline-flex items-center gap-1">
+              <Scissors className="h-3 w-3" aria-hidden />
+              Cutting required
+            </span>
+          </Badge>
+        ) : null}
       </div>
 
       <h3 className="mt-3 text-lg font-semibold tracking-tight text-slate-900">{resource.title}</h3>
@@ -42,7 +66,10 @@ export function ResourceCard({ resource }: { resource: ResourceListItem }) {
       <div className="mt-4 flex flex-wrap gap-2">
         {gradeBadges.map((g) => (
           <Badge key={g.id} variant="outline">
-            {g.name}
+            <span className="inline-flex items-center gap-1">
+              <GraduationCap className="h-3 w-3" aria-hidden />
+              {g.name}
+            </span>
           </Badge>
         ))}
       </div>
@@ -57,15 +84,30 @@ export function ResourceCard({ resource }: { resource: ResourceListItem }) {
           : null}
       </div>
 
-      <div className="mt-4 grid gap-1 border-t border-slate-100 pt-4 text-sm text-slate-600">
+      <div className="mt-4 grid gap-2 border-t border-slate-100 pt-4 text-sm text-slate-600">
         {resource.activity_duration ? (
-          <div>
-            <span className="font-medium text-slate-800">Duration:</span> {resource.activity_duration}
+          <div className="inline-flex items-center gap-2">
+            <Clock className="h-4 w-4 shrink-0 text-emerald-700" aria-hidden />
+            <span>
+              <span className="font-medium text-slate-800">Duration:</span> {resource.activity_duration}
+            </span>
+          </div>
+        ) : null}
+        {resource.group_size_min != null || resource.group_size_max != null ? (
+          <div className="inline-flex items-center gap-2">
+            <UsersRound className="h-4 w-4 shrink-0 text-emerald-700" aria-hidden />
+            <span>
+              <span className="font-medium text-slate-800">Group size:</span>{' '}
+              {resource.group_size_min ?? '—'}–{resource.group_size_max ?? '—'}
+            </span>
           </div>
         ) : null}
         {materialsLine ? (
-          <div>
-            <span className="font-medium text-slate-800">Materials:</span> {materialsLine}
+          <div className="inline-flex items-start gap-2">
+            <PackageCheck className="mt-0.5 h-4 w-4 shrink-0 text-emerald-700" aria-hidden />
+            <span>
+              <span className="font-medium text-slate-800">Materials:</span> {materialsLine}
+            </span>
           </div>
         ) : resource.extra_materials_required ? (
           <div className="text-slate-500">Materials listed on the activity page.</div>
@@ -75,7 +117,7 @@ export function ResourceCard({ resource }: { resource: ResourceListItem }) {
       </div>
 
       <div className="mt-auto pt-5">
-        <ButtonLink href={`/resources/${resource.id}`} variant="accent" className="w-full sm:w-auto">
+        <ButtonLink href={`/resources/${resource.id}`} variant="accent" iconRight={ArrowRight} className="w-full sm:w-auto">
           View activity
         </ButtonLink>
       </div>

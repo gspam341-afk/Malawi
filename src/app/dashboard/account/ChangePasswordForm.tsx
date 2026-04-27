@@ -4,6 +4,7 @@ import type React from 'react'
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { createSupabaseBrowserClient } from '@/lib/supabase/client'
+import { CheckCircle2 } from 'lucide-react'
 import { ActionButton } from '@/components/dashboard/ActionButton'
 import { FieldLabel } from '@/components/dashboard/FieldLabel'
 import { dashInput } from '@/components/dashboard/classes'
@@ -122,7 +123,7 @@ export function ChangePasswordForm() {
       ) : null}
 
       <div className="flex justify-end pt-2">
-        <ActionButton type="submit" disabled={loading}>
+        <ActionButton type="submit" disabled={loading} icon={loading ? undefined : CheckCircle2}>
           {loading ? 'Saving…' : 'Update password'}
         </ActionButton>
       </div>

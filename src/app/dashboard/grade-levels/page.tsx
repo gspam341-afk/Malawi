@@ -1,3 +1,4 @@
+import { GraduationCap, PlusCircle, Save, Trash2 } from 'lucide-react'
 import { requireAdmin } from '@/lib/auth'
 import { createSupabaseServerClient } from '@/lib/supabase/server'
 import { ConfirmSubmitButton } from '@/components/ConfirmSubmitButton'
@@ -26,6 +27,7 @@ export default async function AdminGradeLevelsPage(props: { searchParams?: Promi
         eyebrow="Curriculum"
         title="Grade levels"
         description="Maintain the ladder from Grade 6 through Grade 14 for browsing and tagging resources."
+        titleIcon={GraduationCap}
       />
 
       {errorMessage ? (
@@ -51,7 +53,7 @@ export default async function AdminGradeLevelsPage(props: { searchParams?: Promi
             <input name="description" placeholder="Optional context" className={`${dashInput} mt-2`} />
           </div>
           <div className="flex items-end md:col-span-1">
-            <ActionButton type="submit" className="w-full md:w-auto">
+            <ActionButton type="submit" className="w-full md:w-auto" icon={PlusCircle}>
               Add
             </ActionButton>
           </div>
@@ -90,7 +92,9 @@ export default async function AdminGradeLevelsPage(props: { searchParams?: Promi
                         defaultValue={g.description ?? ''}
                         className={`${dashInput} min-w-[12rem] flex-1`}
                       />
-                      <SecondaryButton type="submit">Save</SecondaryButton>
+                      <SecondaryButton type="submit" icon={Save}>
+                        Save
+                      </SecondaryButton>
                     </form>
                   </td>
                   <td className="px-4 py-4 align-middle">
@@ -106,7 +110,10 @@ export default async function AdminGradeLevelsPage(props: { searchParams?: Promi
                         message="Delete this grade level? This fails if resources still reference it."
                         className="rounded-xl border border-red-200 bg-red-50 px-4 py-2 text-sm font-semibold text-red-900 hover:bg-red-100"
                       >
-                        Delete
+                        <span className="inline-flex items-center gap-2">
+                          <Trash2 className="h-4 w-4" aria-hidden />
+                          Delete
+                        </span>
                       </ConfirmSubmitButton>
                     </form>
                   </td>
@@ -116,7 +123,11 @@ export default async function AdminGradeLevelsPage(props: { searchParams?: Promi
           </table>
         </TableShell>
       ) : (
-        <EmptyState title="No grade levels yet" description="Seed Grade 6–14 to match how teachers filter activities." />
+        <EmptyState
+          icon={GraduationCap}
+          title="No grade levels yet"
+          description="Seed Grade 6–14 to match how teachers filter activities."
+        />
       )}
     </div>
   )

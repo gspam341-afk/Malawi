@@ -1,5 +1,6 @@
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
+import { Atom, Calculator, Cpu, SearchX, Sprout } from 'lucide-react'
 import { EmptyState } from '@/components/ui/EmptyState'
 import { PageHeader } from '@/components/ui/PageHeader'
 import { PublicResourceFilterForm } from '@/components/PublicResourceFilterForm'
@@ -19,11 +20,19 @@ function getParam(sp: Record<string, string | string[] | undefined>, key: string
   return Array.isArray(v) ? v[0] : v
 }
 
+const stemHeaderIcon: Record<StemSlug, typeof Atom> = {
+  science: Atom,
+  technology: Cpu,
+  engineering: Sprout,
+  mathematics: Calculator,
+}
+
 export default async function StemCategoryPage({ params, searchParams }: Props) {
   const raw = (await params).category
   if (!isStemSlug(raw)) notFound()
   const category = raw as StemSlug
   const meta = STEM_CATEGORIES[category]
+  const HeaderIcon = stemHeaderIcon[category]
 
   const sp = await searchParams
   const q = getParam(sp, 'q') ?? ''
@@ -41,9 +50,11 @@ export default async function StemCategoryPage({ params, searchParams }: Props) 
           eyebrow={`STEM · ${meta.letter}`}
           title={meta.title}
           description={meta.description}
+          icon={HeaderIcon}
         />
 
         <EmptyState
+          icon={Cpu}
           title="Technology activities are coming soon"
           description="For now, explore Science, Engineering, or Mathematics — or browse all learning activities."
         >
@@ -96,10 +107,11 @@ export default async function StemCategoryPage({ params, searchParams }: Props) 
         eyebrow={`STEM · ${meta.letter}`}
         title={meta.title}
         description={meta.description}
+        icon={HeaderIcon}
         actions={
           <Link
             href="/resources"
-            className="text-sm font-medium text-emerald-800 underline-offset-4 hover:underline"
+            className="inline-flex items-center gap-2 text-sm font-medium text-emerald-800 underline-offset-4 hover:underline"
           >
             All activities
           </Link>
@@ -124,6 +136,7 @@ export default async function StemCategoryPage({ params, searchParams }: Props) 
 
       {misconfigured ? (
         <EmptyState
+          icon={Atom}
           title="No activities found yet"
           description="Subjects for this category are not linked in the database. Ask an admin to verify subject names match your STEM mapping."
         />
@@ -135,6 +148,7 @@ export default async function StemCategoryPage({ params, searchParams }: Props) 
         </div>
       ) : (
         <EmptyState
+          icon={SearchX}
           title="No activities found"
           description="Try changing filters, browse all learning activities, or pick another STEM category."
         >

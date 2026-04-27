@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import { ArrowLeft } from 'lucide-react'
 import { type ReactNode } from 'react'
 import { dashEyebrow, dashMuted, dashTitle } from '@/components/dashboard/classes'
 
@@ -18,9 +19,10 @@ export function DashboardHeader({
       <div className="max-w-3xl">
         <Link
           href="/dashboard"
-          className="inline-flex text-sm font-medium text-teal-800 underline-offset-4 hover:text-teal-950 hover:underline"
+          className="inline-flex items-center gap-2 text-sm font-medium text-teal-800 underline-offset-4 hover:text-teal-950 hover:underline"
         >
-          ← Dashboard home
+          <ArrowLeft className="h-4 w-4 shrink-0" aria-hidden />
+          Dashboard home
         </Link>
         {eyebrow ? <p className={`mt-4 ${dashEyebrow}`}>{eyebrow}</p> : null}
         <h1 className={`mt-2 ${dashTitle}`}>{title}</h1>

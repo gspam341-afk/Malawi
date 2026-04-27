@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import { Newspaper, PenLine, PlusCircle, Search } from 'lucide-react'
 import { requireProfile } from '@/lib/auth'
 import { createSupabaseServerClient } from '@/lib/supabase/server'
 import { setBlogPostStatusAction } from '@/app/dashboard/blog-posts/actions'
@@ -59,18 +60,23 @@ export default async function BlogPostsPage(props: {
             ? 'Review every story across authors. Publishing here matches the visibility rules you set in actions.'
             : 'Draft ideas, submit for review, or publish when your role allows.'
         }
+        titleIcon={Newspaper}
         actions={
           <Link
             href="/dashboard/blog-posts/new"
-            className="inline-flex rounded-xl bg-gradient-to-r from-teal-600 to-teal-700 px-4 py-2.5 text-sm font-semibold text-white shadow-sm hover:from-teal-700 hover:to-teal-800"
+            className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-teal-600 to-teal-700 px-4 py-2.5 text-sm font-semibold text-white shadow-sm hover:from-teal-700 hover:to-teal-800"
           >
+            <PenLine className="h-4 w-4" aria-hidden />
             New post
           </Link>
         }
       />
 
       <section className={`${dashPanelSolid} p-5 md:p-6`}>
-        <h2 className="text-sm font-semibold text-slate-900">Find a post</h2>
+        <h2 className="flex items-center gap-2 text-sm font-semibold text-slate-900">
+          <Search className="h-4 w-4 text-teal-700" aria-hidden />
+          Find a post
+        </h2>
         <p className={`mt-1 ${dashMuted}`}>Search titles or filter by workflow status.</p>
         <form className="mt-6 grid gap-4 md:grid-cols-12" method="get">
           <div className="md:col-span-8">
@@ -89,7 +95,7 @@ export default async function BlogPostsPage(props: {
             </select>
           </div>
           <div className="flex items-end md:col-span-1">
-            <ActionButton type="submit" className="w-full md:w-auto">
+            <ActionButton type="submit" className="w-full md:w-auto" icon={Search}>
               Apply
             </ActionButton>
           </div>
@@ -177,13 +183,15 @@ export default async function BlogPostsPage(props: {
         </TableShell>
       ) : (
         <EmptyState
+          icon={Newspaper}
           title="No blog posts yet"
           description="Share classroom wins, printable tips, or community updates — start with a draft and refine before publishing."
         >
           <Link
             href="/dashboard/blog-posts/new"
-            className="inline-flex rounded-xl bg-teal-600 px-4 py-2 text-sm font-semibold text-white hover:bg-teal-700"
+            className="inline-flex items-center gap-2 rounded-xl bg-teal-600 px-4 py-2 text-sm font-semibold text-white hover:bg-teal-700"
           >
+            <PlusCircle className="h-4 w-4" aria-hidden />
             Write your first post
           </Link>
         </EmptyState>

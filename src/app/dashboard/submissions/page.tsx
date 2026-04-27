@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import { Inbox, PlusCircle, Search, Send, SlidersHorizontal } from 'lucide-react'
 import { requireProfile } from '@/lib/auth'
 import { createSupabaseServerClient } from '@/lib/supabase/server'
 import { AdminPageHeader } from '@/components/dashboard/AdminPageHeader'
@@ -62,13 +63,15 @@ export default async function SubmissionsPage(props: {
             ? 'Teachers, alumni and donors send printable ideas or materials — triage here before they become formal resources.'
             : 'Ideas stay pending until reviewed. You will see feedback if changes are requested.'
         }
+        titleIcon={Inbox}
         actions={
           <>
             {canCreate ? (
               <Link
                 href="/dashboard/submissions/new"
-                className="inline-flex rounded-xl bg-gradient-to-r from-teal-600 to-teal-700 px-4 py-2.5 text-sm font-semibold text-white shadow-sm hover:from-teal-700 hover:to-teal-800"
+                className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-teal-600 to-teal-700 px-4 py-2.5 text-sm font-semibold text-white shadow-sm hover:from-teal-700 hover:to-teal-800"
               >
+                <PlusCircle className="h-4 w-4" aria-hidden />
                 New submission
               </Link>
             ) : null}
@@ -77,7 +80,10 @@ export default async function SubmissionsPage(props: {
       />
 
       <section className={`${dashPanelSolid} p-5 md:p-6`}>
-        <h2 className="text-sm font-semibold text-slate-900">Filters</h2>
+        <h2 className="flex items-center gap-2 text-sm font-semibold text-slate-900">
+          <SlidersHorizontal className="h-4 w-4 text-teal-700" aria-hidden />
+          Filters
+        </h2>
         <p className={`mt-1 ${dashMuted}`}>Find a submission by title or narrow the queue.</p>
         <form className="mt-6 grid gap-4 md:grid-cols-12" method="get">
           <div className="md:col-span-5">
@@ -105,7 +111,7 @@ export default async function SubmissionsPage(props: {
             </select>
           </div>
           <div className="flex items-end md:col-span-1">
-            <ActionButton type="submit" className="w-full md:w-auto">
+            <ActionButton type="submit" className="w-full md:w-auto" icon={Search}>
               Apply
             </ActionButton>
           </div>
@@ -157,11 +163,16 @@ export default async function SubmissionsPage(props: {
         </TableShell>
       ) : (
         <EmptyState
+          icon={Inbox}
           title="Nothing in this queue yet"
           description="Submissions are informal ideas or files waiting for review — share something when you are ready."
         >
           {canCreate ? (
-            <Link href="/dashboard/submissions/new" className="inline-flex rounded-xl bg-teal-600 px-4 py-2 text-sm font-semibold text-white hover:bg-teal-700">
+            <Link
+              href="/dashboard/submissions/new"
+              className="inline-flex items-center gap-2 rounded-xl bg-teal-600 px-4 py-2 text-sm font-semibold text-white hover:bg-teal-700"
+            >
+              <Send className="h-4 w-4" aria-hidden />
               Submit an idea
             </Link>
           ) : null}

@@ -1,4 +1,13 @@
 import type { Tables } from '@/types/db'
+import {
+  Bookmark,
+  Filter,
+  ListFilter,
+  Printer,
+  Puzzle,
+  Search,
+  SlidersHorizontal,
+} from 'lucide-react'
 
 type Grade = Tables['grade_levels']['Row']
 type Subject = Tables['subjects']['Row']
@@ -26,12 +35,21 @@ export function PublicResourceFilterForm({
 }) {
   return (
     <form
-      className="grid gap-4 rounded-2xl border border-slate-200/90 bg-white p-4 shadow-sm sm:grid-cols-2 lg:grid-cols-6"
+      className="grid gap-4 rounded-2xl border border-slate-200/90 bg-white p-5 shadow-sm sm:grid-cols-2 lg:grid-cols-6"
       method="get"
       action={action}
     >
+      <div className="flex items-center gap-2 border-b border-slate-100 pb-3 lg:col-span-6 lg:border-0 lg:pb-0">
+        <SlidersHorizontal className="h-5 w-5 shrink-0 text-emerald-700" aria-hidden />
+        <span className="text-sm font-semibold text-slate-900">Filters</span>
+      </div>
+
       <div className="sm:col-span-2 lg:col-span-2">
-        <label htmlFor={`${idPrefix}-q`} className="text-xs font-semibold uppercase tracking-wide text-slate-500">
+        <label
+          htmlFor={`${idPrefix}-q`}
+          className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wide text-slate-500"
+        >
+          <Search className="h-3.5 w-3.5 text-slate-400" aria-hidden />
           Search
         </label>
         <input
@@ -44,7 +62,11 @@ export function PublicResourceFilterForm({
       </div>
 
       <div>
-        <label htmlFor={`${idPrefix}-grade`} className="text-xs font-semibold uppercase tracking-wide text-slate-500">
+        <label
+          htmlFor={`${idPrefix}-grade`}
+          className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wide text-slate-500"
+        >
+          <Bookmark className="h-3.5 w-3.5 text-slate-400" aria-hidden />
           Grade level
         </label>
         <select
@@ -63,7 +85,11 @@ export function PublicResourceFilterForm({
       </div>
 
       <div>
-        <label htmlFor={`${idPrefix}-subject`} className="text-xs font-semibold uppercase tracking-wide text-slate-500">
+        <label
+          htmlFor={`${idPrefix}-subject`}
+          className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wide text-slate-500"
+        >
+          <Filter className="h-3.5 w-3.5 text-slate-400" aria-hidden />
           Subject
         </label>
         <select
@@ -82,7 +108,11 @@ export function PublicResourceFilterForm({
       </div>
 
       <div>
-        <label htmlFor={`${idPrefix}-print`} className="text-xs font-semibold uppercase tracking-wide text-slate-500">
+        <label
+          htmlFor={`${idPrefix}-print`}
+          className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wide text-slate-500"
+        >
+          <Printer className="h-3.5 w-3.5 text-slate-400" aria-hidden />
           Printable
         </label>
         <select
@@ -98,7 +128,11 @@ export function PublicResourceFilterForm({
       </div>
 
       <div>
-        <label htmlFor={`${idPrefix}-extra`} className="text-xs font-semibold uppercase tracking-wide text-slate-500">
+        <label
+          htmlFor={`${idPrefix}-extra`}
+          className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wide text-slate-500"
+        >
+          <Puzzle className="h-3.5 w-3.5 text-slate-400" aria-hidden />
           Extra materials
         </label>
         <select
@@ -116,8 +150,9 @@ export function PublicResourceFilterForm({
       <div className="flex items-end lg:col-span-6">
         <button
           type="submit"
-          className="inline-flex w-full items-center justify-center rounded-lg bg-emerald-700 px-4 py-2 text-sm font-medium text-white shadow-sm transition hover:bg-emerald-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-600 focus-visible:ring-offset-2 sm:w-auto"
+          className="inline-flex w-full items-center justify-center gap-2 rounded-lg bg-emerald-700 px-4 py-2 text-sm font-medium text-white shadow-sm transition hover:bg-emerald-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-600 focus-visible:ring-offset-2 sm:w-auto"
         >
+          <ListFilter className="h-4 w-4" aria-hidden />
           Apply filters
         </button>
       </div>

@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import { ArrowLeft, Info, Mail, Send, UserPlus } from 'lucide-react'
 import { requireAdmin } from '@/lib/auth'
 import { inviteTeacherAction } from '@/app/dashboard/users/invite-teacher/actions'
 import { AdminPageHeader } from '@/components/dashboard/AdminPageHeader'
@@ -22,12 +23,14 @@ export default async function InviteTeacherPage(props: {
         eyebrow="People"
         title="Invite someone"
         description="Send an email invitation so they can finish setup and publish physical learning activities. Teachers can upload resources once their account is active."
+        titleIcon={UserPlus}
         actions={
           <Link
             href="/dashboard/users"
-            className="text-sm font-medium text-teal-800 underline-offset-4 hover:text-teal-950 hover:underline"
+            className="inline-flex items-center gap-2 text-sm font-medium text-teal-800 underline-offset-4 hover:text-teal-950 hover:underline"
           >
-            ← User management
+            <ArrowLeft className="h-4 w-4 shrink-0" aria-hidden />
+            User management
           </Link>
         }
       />
@@ -45,6 +48,7 @@ export default async function InviteTeacherPage(props: {
       ) : null}
 
       <FormSection
+        icon={Mail}
         title="Invite details"
         description="We recommend inviting as teacher if they will publish classroom activities."
       >
@@ -80,17 +84,29 @@ export default async function InviteTeacherPage(props: {
           </div>
 
           <div className="flex flex-wrap justify-end gap-3 pt-2">
-            <Link href="/dashboard/users" className="rounded-xl px-4 py-2.5 text-sm font-semibold text-slate-700 hover:bg-slate-100">
+            <Link
+              href="/dashboard/users"
+              className="inline-flex items-center gap-2 rounded-xl px-4 py-2.5 text-sm font-semibold text-slate-700 hover:bg-slate-100"
+            >
+              <ArrowLeft className="h-4 w-4" aria-hidden />
               Cancel
             </Link>
-            <ActionButton type="submit">Send invite</ActionButton>
+            <ActionButton type="submit" icon={Send}>
+              Send invite
+            </ActionButton>
           </div>
         </form>
       </FormSection>
 
       <section className={`${dashPanelSolid} p-6 text-sm leading-relaxed text-slate-700`}>
-        <p className="font-medium text-slate-900">If something goes wrong</p>
-        <p className={`mt-2 ${dashMuted}`}>
+        <p className="flex items-start gap-3 font-medium text-slate-900">
+          <Info className="mt-0.5 h-5 w-5 shrink-0 text-teal-700" aria-hidden />
+          <span>
+            Invited teachers can log in and publish physical learning activities. Students can browse public activities
+            without creating an account.
+          </span>
+        </p>
+        <p className={`mt-4 ${dashMuted}`}>
           Invites rely on Supabase Auth email configuration. If delivery fails, you can still create the account in the
           Supabase dashboard and assign roles from{' '}
           <Link href="/dashboard/users" className="font-medium text-teal-800 underline-offset-4 hover:underline">

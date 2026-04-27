@@ -1,3 +1,9 @@
+import {
+  CheckCircle2,
+  FileText,
+  Inbox,
+  ShieldCheck,
+} from 'lucide-react'
 import { notFound } from 'next/navigation'
 import { requireProfile } from '@/lib/auth'
 import { createSupabaseServerClient } from '@/lib/supabase/server'
@@ -62,6 +68,7 @@ export default async function SubmissionDetailPage(props: { params: Promise<{ id
         }
         backHref="/dashboard/submissions"
         backLabel="Submissions"
+        titleIcon={Inbox}
       />
 
       <section className={`${dashPanelSolid} p-6 md:p-8`}>
@@ -123,6 +130,7 @@ export default async function SubmissionDetailPage(props: { params: Promise<{ id
 
       {canCreatorEdit ? (
         <FormSection
+          icon={FileText}
           title="Update your submission"
           description="You can edit while the status is pending or changes are requested."
         >
@@ -169,7 +177,9 @@ export default async function SubmissionDetailPage(props: { params: Promise<{ id
               />
             </div>
             <div className="flex justify-end pt-2">
-              <ActionButton type="submit">Save updates</ActionButton>
+              <ActionButton type="submit" icon={CheckCircle2}>
+                Save updates
+              </ActionButton>
             </div>
           </form>
         </FormSection>
@@ -177,7 +187,10 @@ export default async function SubmissionDetailPage(props: { params: Promise<{ id
 
       {isAdmin ? (
         <section className="rounded-2xl border-l-4 border-violet-400 bg-gradient-to-br from-violet-50/80 to-white p-6 shadow-md shadow-slate-200/40 md:p-8">
-          <h2 className="text-lg font-semibold text-slate-900">Platform review</h2>
+          <h2 className="flex items-center gap-2 text-lg font-semibold text-slate-900">
+            <ShieldCheck className="h-6 w-6 text-violet-700" aria-hidden />
+            Platform review
+          </h2>
           <p className="mt-1 text-sm text-slate-600">
             Change status for everyone involved. Pair rejections or change requests with clear feedback.
           </p>
@@ -204,7 +217,9 @@ export default async function SubmissionDetailPage(props: { params: Promise<{ id
               />
             </div>
             <div className="flex justify-end">
-              <ActionButton type="submit">Save decision</ActionButton>
+              <ActionButton type="submit" icon={CheckCircle2}>
+                Save decision
+              </ActionButton>
             </div>
           </form>
         </section>

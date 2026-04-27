@@ -1,4 +1,12 @@
 import Link from 'next/link'
+import {
+  Archive,
+  ArrowRight,
+  CheckCircle2,
+  FilePenLine,
+  LibraryBig,
+  Search,
+} from 'lucide-react'
 import { requireAdmin } from '@/lib/auth'
 import { createSupabaseServerClient } from '@/lib/supabase/server'
 import { adminArchiveResourceAction, adminSetResourceStatusAction } from '@/app/dashboard/resources/manage/actions'
@@ -45,9 +53,14 @@ export default async function AdminManageResourcesPage(props: {
         eyebrow="Platform"
         title="Manage resources"
         description="Moderate status and visibility for any activity on the site. Prefer dialogue with teachers before archiving their work."
+        titleIcon={LibraryBig}
         actions={
-          <Link href="/dashboard/resources" className="text-sm font-medium text-teal-800 hover:underline">
-            Teacher view →
+          <Link
+            href="/dashboard/resources"
+            className="inline-flex items-center gap-1 text-sm font-medium text-teal-800 hover:underline"
+          >
+            Teacher view
+            <ArrowRight className="h-4 w-4" aria-hidden />
           </Link>
         }
       />
@@ -82,7 +95,7 @@ export default async function AdminManageResourcesPage(props: {
             </select>
           </div>
           <div className="flex items-end md:col-span-1">
-            <ActionButton type="submit" className="w-full md:w-auto">
+            <ActionButton type="submit" className="w-full md:w-auto" icon={Search}>
               Apply
             </ActionButton>
           </div>
@@ -132,19 +145,24 @@ export default async function AdminManageResourcesPage(props: {
                         <form action={adminSetResourceStatusAction}>
                           <input type="hidden" name="resource_id" value={r.id} />
                           <input type="hidden" name="status" value="draft" />
-                          <SecondaryButton type="submit">Draft</SecondaryButton>
+                          <SecondaryButton type="submit" icon={FilePenLine}>
+                            Draft
+                          </SecondaryButton>
                         </form>
                         <form action={adminSetResourceStatusAction}>
                           <input type="hidden" name="resource_id" value={r.id} />
                           <input type="hidden" name="status" value="published" />
-                          <ActionButton type="submit">Publish</ActionButton>
+                          <ActionButton type="submit" icon={CheckCircle2}>
+                            Publish
+                          </ActionButton>
                         </form>
                         <form action={adminArchiveResourceAction}>
                           <input type="hidden" name="resource_id" value={r.id} />
                           <button
                             type="submit"
-                            className="inline-flex rounded-xl border border-amber-200 bg-amber-50 px-4 py-2.5 text-sm font-semibold text-amber-950 hover:bg-amber-100"
+                            className="inline-flex items-center gap-2 rounded-xl border border-amber-200 bg-amber-50 px-4 py-2.5 text-sm font-semibold text-amber-950 hover:bg-amber-100"
                           >
+                            <Archive className="h-4 w-4" aria-hidden />
                             Archive
                           </button>
                         </form>
@@ -157,7 +175,11 @@ export default async function AdminManageResourcesPage(props: {
           </table>
         </TableShell>
       ) : (
-        <EmptyState title="No resources match" description="Try clearing filters or check another status." />
+        <EmptyState
+          icon={LibraryBig}
+          title="No resources match"
+          description="Try clearing filters or check another status."
+        />
       )}
     </div>
   )

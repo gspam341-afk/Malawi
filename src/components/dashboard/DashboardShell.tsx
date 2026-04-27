@@ -1,3 +1,4 @@
+import { ChevronDown } from 'lucide-react'
 import type { Tables } from '@/types/db'
 import { getDashboardNav } from '@/components/dashboard/navConfig'
 import { DashboardNavLinks } from '@/components/dashboard/DashboardNavLinks'
@@ -21,9 +22,9 @@ export function DashboardShell({
 
       <details className="group rounded-2xl border border-slate-200/90 bg-white p-4 shadow-sm lg:hidden">
         <summary className="cursor-pointer list-none font-semibold text-slate-900 [&::-webkit-details-marker]:hidden">
-          <span className="flex items-center justify-between">
+          <span className="flex items-center justify-between gap-2">
             Dashboard menu
-            <span className="text-slate-400 transition group-open:rotate-180">▼</span>
+            <ChevronDown className="h-5 w-5 shrink-0 text-slate-500 transition group-open:rotate-180" aria-hidden />
           </span>
         </summary>
         <div className="mt-4 border-t border-slate-100 pt-4">

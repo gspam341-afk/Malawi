@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import { CheckCircle2, Eye, FileText, Newspaper, PenLine } from 'lucide-react'
 import { notFound } from 'next/navigation'
 import { requireProfile } from '@/lib/auth'
 import { createSupabaseServerClient } from '@/lib/supabase/server'
@@ -69,10 +70,11 @@ export default async function EditBlogPostPage(props: { params: Promise<{ id: st
         description="Update copy, imagery, or publishing state. Alumni and donors can only edit draft, pending, or rejected posts."
         backHref="/dashboard/blog-posts"
         backLabel="Blog posts"
+        titleIcon={Newspaper}
       />
 
       <form action={updateBlogPostAction.bind(null, id)} className="grid gap-8">
-        <FormSection title="Post basics">
+        <FormSection icon={FileText} title="Post basics">
           <div className="grid gap-5">
             <div>
               <FieldLabel htmlFor="e-title">Title</FieldLabel>
@@ -95,7 +97,7 @@ export default async function EditBlogPostPage(props: { params: Promise<{ id: st
           </div>
         </FormSection>
 
-        <FormSection title="Content">
+        <FormSection icon={PenLine} title="Content">
           <div>
             <FieldLabel htmlFor="e-body">Article body</FieldLabel>
             <textarea
@@ -117,7 +119,7 @@ export default async function EditBlogPostPage(props: { params: Promise<{ id: st
           </div>
         </FormSection>
 
-        <FormSection title="Publishing">
+        <FormSection icon={Eye} title="Publishing">
           <div className="max-w-md">
             <FieldLabel htmlFor="e-status">Status</FieldLabel>
             <select id="e-status" name="status" defaultValue={post.status} className={`${dashSelect} mt-2`}>
@@ -134,7 +136,9 @@ export default async function EditBlogPostPage(props: { params: Promise<{ id: st
           <Link href="/dashboard/blog-posts" className="rounded-xl px-4 py-2.5 text-sm font-semibold text-slate-700 hover:bg-slate-100">
             Cancel
           </Link>
-          <ActionButton type="submit">Save changes</ActionButton>
+          <ActionButton type="submit" icon={CheckCircle2}>
+            Save changes
+          </ActionButton>
         </div>
       </form>
     </div>

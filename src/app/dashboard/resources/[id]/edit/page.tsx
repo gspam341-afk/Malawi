@@ -1,4 +1,15 @@
 import Link from 'next/link'
+import {
+  Activity,
+  CheckCircle2,
+  Eye,
+  FileText,
+  GraduationCap,
+  LibraryBig,
+  ListChecks,
+  PackageCheck,
+  Printer,
+} from 'lucide-react'
 import { notFound } from 'next/navigation'
 import { requireRole } from '@/lib/auth'
 import { createSupabaseServerClient } from '@/lib/supabase/server'
@@ -123,6 +134,7 @@ export default async function EditResourcePage(props: { params: Promise<{ id: st
         description="Update content, materials, and printable files. Changes save to the same public link when published."
         backHref="/dashboard/resources"
         backLabel="My resources"
+        titleIcon={LibraryBig}
         actions={
           <Link
             href={`/dashboard/resources/${id}`}
@@ -134,7 +146,11 @@ export default async function EditResourcePage(props: { params: Promise<{ id: st
       />
 
       <form action={updateResourceAction.bind(null, id)} className="grid gap-8">
-        <FormSection title="Basic information" description="What it is called and what students will achieve.">
+        <FormSection
+          icon={FileText}
+          title="Basic information"
+          description="What it is called and what students will achieve."
+        >
           <div className="grid gap-5">
             <div>
               <FieldLabel htmlFor="edit-title">Title</FieldLabel>
@@ -184,7 +200,11 @@ export default async function EditResourcePage(props: { params: Promise<{ id: st
           </div>
         </FormSection>
 
-        <FormSection title="Activity setup" description="Timing, grouping, and difficulty for classroom planning.">
+        <FormSection
+          icon={Activity}
+          title="Activity setup"
+          description="Timing, grouping, and difficulty for classroom planning."
+        >
           <div className="grid gap-4 sm:grid-cols-2">
             <div>
               <FieldLabel htmlFor="edit-prep">Preparation time</FieldLabel>
@@ -238,7 +258,11 @@ export default async function EditResourcePage(props: { params: Promise<{ id: st
           </div>
         </FormSection>
 
-        <FormSection title="Grade levels and subjects" description="Tag where this activity fits in your curriculum.">
+        <FormSection
+          icon={GraduationCap}
+          title="Grade levels and subjects"
+          description="Tag where this activity fits in your curriculum."
+        >
           <div className="grid gap-8 sm:grid-cols-2">
             <div>
               <p className="text-sm font-semibold text-slate-900">Subjects</p>
@@ -278,7 +302,11 @@ export default async function EditResourcePage(props: { params: Promise<{ id: st
           </div>
         </FormSection>
 
-        <FormSection title="Material requirements" description="Quick flags before listing concrete items.">
+        <FormSection
+          icon={ListChecks}
+          title="Material requirements"
+          description="Quick flags before listing concrete items."
+        >
           <div className="grid gap-3 text-sm">
             <label className="flex cursor-pointer items-center gap-3">
               <input type="checkbox" name="print_required" className={dashCheckbox} defaultChecked={resource.print_required} />
@@ -300,11 +328,19 @@ export default async function EditResourcePage(props: { params: Promise<{ id: st
           </div>
         </FormSection>
 
-        <FormSection title="Required materials" description="List quantities so teachers know what to gather before class.">
+        <FormSection
+          icon={PackageCheck}
+          title="Required materials"
+          description="List quantities so teachers know what to gather before class."
+        >
           <RequiredMaterialsEditorEdit initialItems={requiredMaterialsInitial} />
         </FormSection>
 
-        <FormSection title="Publishing settings" description="Resource type, visibility, and workflow state.">
+        <FormSection
+          icon={Eye}
+          title="Publishing settings"
+          description="Resource type, visibility, and workflow state."
+        >
           <div className="grid gap-4 sm:grid-cols-2">
             <div>
               <FieldLabel htmlFor="edit-rtype">Resource type</FieldLabel>
@@ -344,11 +380,17 @@ export default async function EditResourcePage(props: { params: Promise<{ id: st
           >
             Cancel
           </Link>
-          <ActionButton type="submit">Save changes</ActionButton>
+          <ActionButton type="submit" icon={CheckCircle2}>
+            Save changes
+          </ActionButton>
         </div>
       </form>
 
-      <FormSection title="Printable materials" description="Upload new files and edit metadata on existing handouts.">
+      <FormSection
+        icon={Printer}
+        title="Printable materials"
+        description="Upload new files and edit metadata on existing handouts."
+      >
         <div className="rounded-2xl border border-dashed border-teal-200/80 bg-gradient-to-br from-teal-50/40 to-white p-4 md:p-6">
           <PrintableMaterialUploader resourceId={id} />
         </div>

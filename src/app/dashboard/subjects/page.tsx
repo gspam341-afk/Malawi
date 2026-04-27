@@ -1,3 +1,4 @@
+import { Atom, PlusCircle, Save, Trash2 } from 'lucide-react'
 import { requireAdmin } from '@/lib/auth'
 import { createSupabaseServerClient } from '@/lib/supabase/server'
 import { createSubjectAction, deleteSubjectAction, updateSubjectAction } from '@/app/dashboard/subjects/actions'
@@ -22,6 +23,7 @@ export default async function AdminSubjectsPage(props: { searchParams?: Promise<
         eyebrow="Curriculum"
         title="STEM subjects"
         description="Keep subject labels aligned with school naming. Safe delete prevents removing subjects tied to resources."
+        titleIcon={Atom}
       />
 
       {errorMessage ? (
@@ -43,7 +45,7 @@ export default async function AdminSubjectsPage(props: { searchParams?: Promise<
             <input name="description" placeholder="Short helper text" className={`${dashInput} mt-2`} />
           </div>
           <div className="flex items-end md:col-span-1">
-            <ActionButton type="submit" className="w-full md:w-auto">
+            <ActionButton type="submit" className="w-full md:w-auto" icon={PlusCircle}>
               Add
             </ActionButton>
           </div>
@@ -73,7 +75,9 @@ export default async function AdminSubjectsPage(props: { searchParams?: Promise<
                         placeholder="Description"
                         className={`${dashInput} min-w-[12rem] flex-1`}
                       />
-                      <SecondaryButton type="submit">Save</SecondaryButton>
+                      <SecondaryButton type="submit" icon={Save}>
+                        Save
+                      </SecondaryButton>
                     </form>
                   </td>
                   <td className="hidden px-4 py-4 text-slate-600 md:table-cell">{s.description ?? '—'}</td>
@@ -84,7 +88,10 @@ export default async function AdminSubjectsPage(props: { searchParams?: Promise<
                         message="Delete this subject? This fails if resources still reference it."
                         className="rounded-xl border border-red-200 bg-red-50 px-4 py-2 text-sm font-semibold text-red-900 hover:bg-red-100"
                       >
-                        Delete
+                        <span className="inline-flex items-center gap-2">
+                          <Trash2 className="h-4 w-4" aria-hidden />
+                          Delete
+                        </span>
                       </ConfirmSubmitButton>
                     </form>
                   </td>
@@ -94,7 +101,11 @@ export default async function AdminSubjectsPage(props: { searchParams?: Promise<
           </table>
         </TableShell>
       ) : (
-        <EmptyState title="No subjects yet" description="Add Mathematics, Physics, Biology, or other STEM areas your schools use." />
+        <EmptyState
+          icon={Atom}
+          title="No subjects yet"
+          description="Add Mathematics, Physics, Biology, or other STEM areas your schools use."
+        />
       )}
     </div>
   )

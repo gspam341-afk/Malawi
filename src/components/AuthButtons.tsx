@@ -1,19 +1,20 @@
 'use client'
 
 import type { AuthChangeEvent, Session } from '@supabase/supabase-js'
+import { LayoutDashboard, LogIn, LogOut } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { createSupabaseBrowserClient } from '@/lib/supabase/client'
 
 const btnPrimary =
-  'rounded-lg bg-emerald-700 px-3 py-2 text-sm font-medium text-white shadow-sm transition hover:bg-emerald-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-600 focus-visible:ring-offset-2'
+  'inline-flex items-center justify-center gap-2 rounded-lg bg-emerald-700 px-3 py-2 text-sm font-medium text-white shadow-sm transition hover:bg-emerald-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-600 focus-visible:ring-offset-2 [&_svg]:shrink-0'
 
 const btnOutline =
-  'rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm font-medium text-slate-900 shadow-sm transition hover:border-slate-400 hover:bg-slate-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-600 focus-visible:ring-offset-2'
+  'inline-flex items-center justify-center gap-2 rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm font-medium text-slate-900 shadow-sm transition hover:border-slate-400 hover:bg-slate-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-600 focus-visible:ring-offset-2 [&_svg]:shrink-0'
 
 const linkDash =
-  'rounded-lg px-3 py-2 text-sm font-medium text-slate-700 transition hover:bg-slate-100 hover:text-slate-950 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-600 focus-visible:ring-offset-2'
+  'inline-flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium text-slate-700 transition hover:bg-slate-100 hover:text-slate-950 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-600 focus-visible:ring-offset-2 [&_svg]:shrink-0'
 
 export function AuthButtons() {
   const router = useRouter()
@@ -69,6 +70,7 @@ export function AuthButtons() {
   if (!isAuthed) {
     return (
       <Link href="/login" className={btnPrimary}>
+        <LogIn className="h-4 w-4" aria-hidden />
         Login
       </Link>
     )
@@ -77,9 +79,11 @@ export function AuthButtons() {
   return (
     <div className="flex items-center gap-2">
       <Link href="/dashboard" className={linkDash}>
+        <LayoutDashboard className="h-4 w-4 text-emerald-700" aria-hidden />
         Dashboard
       </Link>
       <button type="button" onClick={onLogout} className={btnOutline}>
+        <LogOut className="h-4 w-4" aria-hidden />
         Logout
       </button>
     </div>

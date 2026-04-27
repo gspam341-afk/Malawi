@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import { ArrowLeft, LibraryBig, PlusCircle } from 'lucide-react'
 import { requireProfile } from '@/lib/auth'
 import { createSupabaseServerClient } from '@/lib/supabase/server'
 import {
@@ -18,8 +19,9 @@ export default async function DashboardResourcesPage() {
       <div className="rounded-2xl border border-amber-100 bg-amber-50/50 p-8 text-center">
         <h1 className="text-lg font-semibold text-slate-900">Restricted</h1>
         <p className="mt-2 text-sm text-slate-600">This library is only for teachers and admins.</p>
-        <Link href="/dashboard" className="mt-6 inline-flex font-medium text-teal-800 hover:underline">
-          ← Dashboard home
+        <Link href="/dashboard" className="mt-6 inline-flex items-center gap-2 font-medium text-teal-800 hover:underline">
+          <ArrowLeft className="h-4 w-4" aria-hidden />
+          Dashboard home
         </Link>
       </div>
     )
@@ -51,11 +53,13 @@ export default async function DashboardResourcesPage() {
             ? 'Browse every draft and published activity on the platform. Bulk actions affect only what you select.'
             : 'Everything you have created lives here — polish drafts until you are ready to publish.'
         }
+        titleIcon={LibraryBig}
         actions={
           <Link
             href="/dashboard/resources/new"
-            className="inline-flex items-center justify-center rounded-xl bg-gradient-to-r from-teal-600 to-teal-700 px-4 py-2.5 text-sm font-semibold text-white shadow-sm hover:from-teal-700 hover:to-teal-800"
+            className="inline-flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-teal-600 to-teal-700 px-4 py-2.5 text-sm font-semibold text-white shadow-sm hover:from-teal-700 hover:to-teal-800"
           >
+            <PlusCircle className="h-4 w-4" aria-hidden />
             Create resource
           </Link>
         }
@@ -70,13 +74,15 @@ export default async function DashboardResourcesPage() {
         />
       ) : (
         <EmptyState
+          icon={LibraryBig}
           title="No resources yet"
           description="Create your first printable or classroom activity — you can save as draft and refine before publishing."
         >
           <Link
             href="/dashboard/resources/new"
-            className="inline-flex rounded-xl bg-teal-600 px-4 py-2 text-sm font-semibold text-white hover:bg-teal-700"
+            className="inline-flex items-center gap-2 rounded-xl bg-teal-600 px-4 py-2 text-sm font-semibold text-white hover:bg-teal-700"
           >
+            <PlusCircle className="h-4 w-4" aria-hidden />
             Create your first resource
           </Link>
         </EmptyState>

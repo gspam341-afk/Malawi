@@ -1,4 +1,15 @@
 import Link from 'next/link'
+import {
+  Activity,
+  ClipboardCheck,
+  Eye,
+  FileText,
+  GraduationCap,
+  LibraryBig,
+  ListChecks,
+  PackageCheck,
+  PlusCircle,
+} from 'lucide-react'
 import { requireRole } from '@/lib/auth'
 import { getGradeLevels, getSubjects } from '@/lib/queries/publicResources'
 import { createResourceAction } from '@/app/dashboard/resources/new/actions'
@@ -24,10 +35,15 @@ export default async function NewResourcePage() {
         description="Describe outcomes, timing, and materials so teachers can run it confidently in class."
         backHref="/dashboard/resources"
         backLabel="My resources"
+        titleIcon={LibraryBig}
       />
 
       <form action={createResourceAction} className="grid gap-8">
-        <FormSection title="Basic information" description="What it is called and what students will achieve.">
+        <FormSection
+          icon={FileText}
+          title="Basic information"
+          description="What it is called and what students will achieve."
+        >
           <div className="grid gap-5">
             <div>
               <FieldLabel htmlFor="res-title">Title</FieldLabel>
@@ -58,7 +74,11 @@ export default async function NewResourcePage() {
           </div>
         </FormSection>
 
-        <FormSection title="Activity setup" description="Timing, grouping, and difficulty for classroom planning.">
+        <FormSection
+          icon={Activity}
+          title="Activity setup"
+          description="Timing, grouping, and difficulty for classroom planning."
+        >
           <div className="grid gap-4 sm:grid-cols-2">
             <div>
               <FieldLabel htmlFor="prep">Preparation time</FieldLabel>
@@ -98,7 +118,11 @@ export default async function NewResourcePage() {
           </div>
         </FormSection>
 
-        <FormSection title="Grade levels and subjects" description="Tag where this activity fits in your curriculum.">
+        <FormSection
+          icon={GraduationCap}
+          title="Grade levels and subjects"
+          description="Tag where this activity fits in your curriculum."
+        >
           <div className="grid gap-8 sm:grid-cols-2">
             <div>
               <p className="text-sm font-semibold text-slate-900">Subjects</p>
@@ -126,7 +150,11 @@ export default async function NewResourcePage() {
           </div>
         </FormSection>
 
-        <FormSection title="Material requirements" description="Quick flags before listing concrete items.">
+        <FormSection
+          icon={ListChecks}
+          title="Material requirements"
+          description="Quick flags before listing concrete items."
+        >
           <div className="grid gap-3 text-sm">
             <label className="flex cursor-pointer items-center gap-3">
               <input type="checkbox" name="print_required" className={dashCheckbox} />
@@ -144,13 +172,18 @@ export default async function NewResourcePage() {
         </FormSection>
 
         <FormSection
+          icon={PackageCheck}
           title="Required materials"
           description="List quantities so teachers know what to gather before class."
         >
           <RequiredMaterialsEditor />
         </FormSection>
 
-        <FormSection title="Publishing settings" description="Who can see this resource and its initial workflow state.">
+        <FormSection
+          icon={Eye}
+          title="Publishing settings"
+          description="Who can see this resource and its initial workflow state."
+        >
           <div className="grid gap-4 sm:grid-cols-2">
             <div>
               <FieldLabel htmlFor="rtype">Resource type</FieldLabel>
@@ -183,7 +216,11 @@ export default async function NewResourcePage() {
           </div>
         </FormSection>
 
-        <FormSection title="After you save" description="You can attach printable files from the resource detail page once it exists.">
+        <FormSection
+          icon={ClipboardCheck}
+          title="After you save"
+          description="You can attach printable files from the resource detail page once it exists."
+        >
           <p className="text-sm text-slate-600">
             Creating saves your draft. Open the resource next to upload PDFs or handouts.
           </p>
@@ -193,7 +230,9 @@ export default async function NewResourcePage() {
           <Link href="/dashboard/resources" className="rounded-xl px-4 py-2.5 text-sm font-semibold text-slate-700 hover:bg-slate-100">
             Cancel
           </Link>
-          <ActionButton type="submit">Create resource</ActionButton>
+          <ActionButton type="submit" icon={PlusCircle}>
+            Create resource
+          </ActionButton>
         </div>
       </form>
     </div>

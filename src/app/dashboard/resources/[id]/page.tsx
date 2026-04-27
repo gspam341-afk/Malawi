@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import { Globe, LibraryBig, Pencil, Printer } from 'lucide-react'
 import { notFound } from 'next/navigation'
 import { requireRole } from '@/lib/auth'
 import { createSupabaseServerClient } from '@/lib/supabase/server'
@@ -33,6 +34,7 @@ export default async function DashboardResourceDetailPage(props: { params: Promi
           description="You do not have access to this activity."
           backHref="/dashboard/resources"
           backLabel="My resources"
+          titleIcon={LibraryBig}
         />
         <div className={`${dashPanelSolid} p-6 md:p-8`}>
           <p className={dashMuted}>Contact your platform manager if you believe this is a mistake.</p>
@@ -59,18 +61,21 @@ export default async function DashboardResourceDetailPage(props: { params: Promi
         description={`Last updated ${updated}`}
         backHref="/dashboard/resources"
         backLabel="My resources"
+        titleIcon={LibraryBig}
         actions={
           <>
             <Link
               href={`/dashboard/resources/${id}/edit`}
-              className="rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm font-semibold text-slate-800 shadow-sm transition hover:border-teal-200 hover:bg-teal-50/40"
+              className="inline-flex items-center gap-2 rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm font-semibold text-slate-800 shadow-sm transition hover:border-teal-200 hover:bg-teal-50/40"
             >
+              <Pencil className="h-4 w-4" aria-hidden />
               Edit activity
             </Link>
             <Link
               href={`/resources/${id}`}
-              className="rounded-xl bg-gradient-to-r from-teal-600 to-teal-700 px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:from-teal-700 hover:to-teal-800"
+              className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-teal-600 to-teal-700 px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:from-teal-700 hover:to-teal-800"
             >
+              <Globe className="h-4 w-4" aria-hidden />
               Public page
             </Link>
           </>
@@ -152,6 +157,7 @@ export default async function DashboardResourceDetailPage(props: { params: Promi
         ) : (
           <div className="mt-6">
             <EmptyState
+              icon={Printer}
               title="No printable files yet"
               description="Upload a PDF or document from the panel above so teachers can print it in class."
             />

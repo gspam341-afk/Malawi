@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import { FileText, Send } from 'lucide-react'
 import { requireProfile } from '@/lib/auth'
 import { createSubmissionAction } from '@/app/dashboard/submissions/actions'
 import { AdminPageHeader } from '@/components/dashboard/AdminPageHeader'
@@ -35,10 +36,11 @@ export default async function NewSubmissionPage() {
         description="Tell us what you tried in class or what teachers could adapt. Attach a link or file URL — the team reviews before anything goes public."
         backHref="/dashboard/submissions"
         backLabel="Submissions"
+        titleIcon={Send}
       />
 
       <form action={createSubmissionAction} className="grid gap-8">
-        <FormSection title="Details">
+        <FormSection icon={FileText} title="Details">
           <div className="grid gap-5">
             <div>
               <FieldLabel htmlFor="sub-title">Title</FieldLabel>
@@ -74,7 +76,9 @@ export default async function NewSubmissionPage() {
           <Link href="/dashboard/submissions" className="rounded-xl px-4 py-2.5 text-sm font-semibold text-slate-700 hover:bg-slate-100">
             Cancel
           </Link>
-          <ActionButton type="submit">Submit for review</ActionButton>
+          <ActionButton type="submit" icon={Send}>
+            Submit for review
+          </ActionButton>
         </div>
       </form>
     </div>

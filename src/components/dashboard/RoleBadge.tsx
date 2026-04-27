@@ -1,3 +1,4 @@
+import { GraduationCap, HeartHandshake, Shield, User } from 'lucide-react'
 import type { ProfileRole } from '@/types/db'
 
 function label(role: ProfileRole): string {
@@ -24,11 +25,21 @@ const styles: Record<ProfileRole, string> = {
   student_optional: 'bg-slate-100 text-slate-800 ring-slate-400/25',
 }
 
+const RoleIcon = {
+  admin: Shield,
+  teacher: GraduationCap,
+  alumni: HeartHandshake,
+  donor: HeartHandshake,
+  student_optional: User,
+} as const satisfies Record<ProfileRole, typeof Shield>
+
 export function RoleBadge({ role }: { role: ProfileRole }) {
+  const Icon = RoleIcon[role]
   return (
     <span
-      className={`inline-flex items-center rounded-full px-3 py-1 text-xs font-semibold ring-1 ring-inset ${styles[role]}`}
+      className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-semibold ring-1 ring-inset ${styles[role]}`}
     >
+      <Icon className="h-3.5 w-3.5 shrink-0 opacity-90" aria-hidden />
       {label(role)}
     </span>
   )
