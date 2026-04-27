@@ -1,5 +1,9 @@
 import Link from 'next/link'
+import { EmptyState } from '@/components/ui/EmptyState'
+import { PageHeader } from '@/components/ui/PageHeader'
+import { PublicResourceFilterForm } from '@/components/PublicResourceFilterForm'
 import { ResourceCard } from '@/components/ResourceCard'
+import { STEM_CATEGORY_LIST } from '@/lib/stemCategories'
 import { getGradeLevels, getPublicResources, getSubjects } from '@/lib/queries/publicResources'
 
 type Props = {
@@ -35,109 +39,63 @@ export default async function ResourcesPage({ searchParams }: Props) {
     }),
   ])
 
+  const defaults = {
+    q,
+    grade,
+    subject,
+    print_required: print_required ?? '',
+    extra_materials_required: extra_materials_required ?? '',
+  }
+
   return (
-    <div className="grid gap-6">
-      <div className="flex items-end justify-between gap-4">
-        <div>
-          <h1 className="text-2xl font-semibold tracking-tight">Resources</h1>
-          <p className="mt-1 text-sm text-zinc-700">
-            Browse published public activities and printable materials.
-          </p>
+    <div className="grid gap-10">
+      <PageHeader
+        eyebrow="Browse"
+        title="All learning activities"
+        description="Browse every published physical learning activity. Filter by grade, subject, printables, and materials — or jump into a STEM category."
+      />
+
+      <div>
+        <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">STEM categories</p>
+        <div className="mt-3 flex flex-wrap gap-2">
+          {STEM_CATEGORY_LIST.map((c) => (
+            <Link
+              key={c.slug}
+              href={`/stem/${c.slug}`}
+              className="rounded-full bg-white px-3 py-1.5 text-sm font-medium text-emerald-900 shadow-sm ring-1 ring-slate-200 transition hover:bg-emerald-50 hover:ring-emerald-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-600"
+            >
+              {c.letter} · {c.title}
+            </Link>
+          ))}
         </div>
-        <Link href="/" className="text-sm text-zinc-700 hover:text-zinc-950">
-          Home
-        </Link>
       </div>
 
-      <form className="grid gap-3 rounded-2xl border bg-white p-4 sm:grid-cols-2 lg:grid-cols-6">
-        <div className="lg:col-span-2">
-          <label className="text-xs font-medium text-zinc-600">Search</label>
-          <input
-            name="q"
-            defaultValue={q}
-            placeholder="Search title or description"
-            className="mt-1 w-full rounded-md border px-3 py-2 text-sm"
-          />
-        </div>
-
-        <div>
-          <label className="text-xs font-medium text-zinc-600">Grade</label>
-          <select
-            name="grade"
-            defaultValue={grade}
-            className="mt-1 w-full rounded-md border px-3 py-2 text-sm"
-          >
-            <option value="">All</option>
-            {gradeLevels.map((g) => (
-              <option key={g.id} value={g.id}>
-                {g.name}
-              </option>
-            ))}
-          </select>
-        </div>
-
-        <div>
-          <label className="text-xs font-medium text-zinc-600">Subject</label>
-          <select
-            name="subject"
-            defaultValue={subject}
-            className="mt-1 w-full rounded-md border px-3 py-2 text-sm"
-          >
-            <option value="">All</option>
-            {subjects.map((s) => (
-              <option key={s.id} value={s.id}>
-                {s.name}
-              </option>
-            ))}
-          </select>
-        </div>
-
-        <div>
-          <label className="text-xs font-medium text-zinc-600">Printable</label>
-          <select
-            name="print_required"
-            defaultValue={print_required ?? ''}
-            className="mt-1 w-full rounded-md border px-3 py-2 text-sm"
-          >
-            <option value="">Any</option>
-            <option value="true">Yes</option>
-            <option value="false">No</option>
-          </select>
-        </div>
-
-        <div>
-          <label className="text-xs font-medium text-zinc-600">Extra materials</label>
-          <select
-            name="extra_materials_required"
-            defaultValue={extra_materials_required ?? ''}
-            className="mt-1 w-full rounded-md border px-3 py-2 text-sm"
-          >
-            <option value="">Any</option>
-            <option value="true">Required</option>
-            <option value="false">Not required</option>
-          </select>
-        </div>
-
-        <div className="flex items-end gap-2">
-          <button
-            type="submit"
-            className="inline-flex w-full items-center justify-center rounded-md bg-zinc-900 px-4 py-2 text-sm font-medium text-white hover:bg-zinc-800"
-          >
-            Apply
-          </button>
-        </div>
-      </form>
+      <PublicResourceFilterForm action="/resources" gradeLevels={gradeLevels} subjects={subjects} defaults={defaults} />
 
       {resources.length ? (
-        <div className="grid gap-4 md:grid-cols-2">
+        <div className="grid gap-5 md:grid-cols-2">
           {resources.map((r) => (
             <ResourceCard key={r.id} resource={r} />
           ))}
         </div>
       ) : (
-        <div className="rounded-2xl border bg-white p-6 text-sm text-zinc-700">
-          No resources found.
-        </div>
+        <EmptyState
+          title="No activities match your filters"
+          description="Try clearing one filter at a time, browse by STEM category, or check back when more resources are published."
+        >
+          <Link
+            href="/resources"
+            className="inline-flex rounded-lg border border-slate-300 bg-white px-4 py-2 text-sm font-medium text-slate-900 shadow-sm hover:bg-slate-50"
+          >
+            Reset filters (reload)
+          </Link>
+          <Link
+            href="/stem/science"
+            className="inline-flex rounded-lg bg-emerald-700 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-emerald-800"
+          >
+            Explore Science
+          </Link>
+        </EmptyState>
       )}
     </div>
   )

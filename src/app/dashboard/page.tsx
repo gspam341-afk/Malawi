@@ -1,11 +1,12 @@
 import Link from 'next/link'
 import { requireProfile } from '@/lib/auth'
+import { Card } from '@/components/ui/Card'
 
 function DashboardLink({ href, label }: { href: string; label: string }) {
   return (
     <Link
       href={href}
-      className="rounded-xl border bg-white px-4 py-3 text-sm font-medium text-zinc-900 hover:bg-zinc-50"
+      className="rounded-2xl border border-slate-200/90 bg-white px-4 py-3.5 text-sm font-medium text-slate-900 shadow-sm transition hover:border-emerald-200/80 hover:shadow-md"
     >
       {label}
     </Link>
@@ -24,20 +25,20 @@ export default async function DashboardPage() {
         : profile.role
 
   return (
-    <div className="grid gap-6">
-      <section className="rounded-2xl border bg-white p-6">
-        <h1 className="text-2xl font-semibold tracking-tight">
+    <div className="grid gap-8">
+      <Card padding="p-6 md:p-8">
+        <h1 className="text-2xl font-semibold tracking-tight text-slate-900">
           {profile.role === 'admin' ? 'Admin Panel' : 'Dashboard'}
         </h1>
-        <div className="mt-3 grid gap-1 text-sm text-zinc-700">
+        <div className="mt-4 grid gap-2 text-sm text-slate-600">
           <div>
-            <span className="font-medium text-zinc-900">User:</span> {nameOrEmail}
+            <span className="font-medium text-slate-900">User:</span> {nameOrEmail}
           </div>
           <div>
-            <span className="font-medium text-zinc-900">Role:</span> {roleLabel}
+            <span className="font-medium text-slate-900">Role:</span> {roleLabel}
           </div>
         </div>
-      </section>
+      </Card>
 
       <section className="grid gap-3">
         <div className="grid gap-3 md:grid-cols-2">
@@ -74,9 +75,11 @@ export default async function DashboardPage() {
         ) : null}
 
         {profile.role === 'student_optional' ? (
-          <div className="rounded-2xl border bg-white p-6 text-sm text-zinc-700">
-            Student accounts are optional. Saved resources will be available later.
-          </div>
+          <Card className="border-dashed border-slate-200 bg-slate-50/50" padding="p-6">
+            <p className="text-sm text-slate-600">
+              Student accounts are optional. Saved resources will be available later.
+            </p>
+          </Card>
         ) : null}
       </section>
     </div>

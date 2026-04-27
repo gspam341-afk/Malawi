@@ -64,12 +64,26 @@ export type PublicResourceFilters = {
   q?: string
   grade?: string
   subject?: string
+  subjectIds?: string[]
   print_required?: boolean
   extra_materials_required?: boolean
 }
 
 export async function getPublicResources(filters: PublicResourceFilters) {
   const supabase = await createSupabaseServerClient()
+
+  let resourceIdFilter: string[] | null = null
+  if (filters.subjectIds?.length) {
+    const { data: rsRows, error: rsErr } = await supabase
+      .from('resource_subjects')
+      .select('resource_id')
+      .in('subject_id', filters.subjectIds)
+    if (rsErr) throw rsErr
+    resourceIdFilter = [...new Set((rsRows ?? []).map((r) => r.resource_id))]
+    if (!resourceIdFilter.length) {
+      return []
+    }
+  }
 
   let query = supabase
     .from('resources')
@@ -106,6 +120,10 @@ export async function getPublicResources(filters: PublicResourceFilters) {
     .eq('visibility', 'public')
     .order('published_at', { ascending: false, nullsFirst: false })
 
+  if (resourceIdFilter) {
+    query = query.in('id', resourceIdFilter)
+  }
+
   if (filters.print_required !== undefined) {
     query = query.eq('print_required', filters.print_required)
   }
@@ -117,7 +135,9 @@ export async function getPublicResources(filters: PublicResourceFilters) {
   if (filters.q) {
     const q = filters.q.trim()
     if (q) {
-      query = query.or(`title.ilike.%${q}%,description.ilike.%${q}%`)
+      query = query.or(
+        `title.ilike.%${q}%,description.ilike.%${q}%,result_description.ilike.%${q}%`,
+      )
     }
   }
 
@@ -125,7 +145,11 @@ export async function getPublicResources(filters: PublicResourceFilters) {
     query = query.eq('resource_grade_levels.grade_level_id', filters.grade)
   }
 
-  if (filters.subject) {
+  if (!resourceIdFilter && filters.subject) {
+    query = query.eq('resource_subjects.subject_id', filters.subject)
+  }
+
+  if (resourceIdFilter && filters.subject) {
     query = query.eq('resource_subjects.subject_id', filters.subject)
   }
 

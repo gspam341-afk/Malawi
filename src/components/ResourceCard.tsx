@@ -1,14 +1,9 @@
-import Link from 'next/link'
 import { Badge } from '@/components/ui/Badge'
+import { ButtonLink } from '@/components/ui/Button'
 import type { ResourceListItem } from '@/types/db'
 
-function formatDuration(value: string | null) {
-  if (!value) return null
-  return value
-}
-
 function materialsSummary(materials: { name: string; quantity: number | null }[]) {
-  if (!materials?.length) return 'No extra materials'
+  if (!materials?.length) return null
   return materials
     .slice(0, 4)
     .map((m) => (m.quantity ? `${m.quantity}× ${m.name}` : m.name))
@@ -16,62 +11,74 @@ function materialsSummary(materials: { name: string; quantity: number | null }[]
 }
 
 export function ResourceCard({ resource }: { resource: ResourceListItem }) {
-  const gradeLabel = resource.grade_levels?.length
-    ? resource.grade_levels
-        .slice()
-        .sort((a, b) => a.grade_number - b.grade_number)
-        .map((g) => g.name)
-        .join(', ')
-    : null
+  const gradeBadges = resource.grade_levels?.length
+    ? resource.grade_levels.slice().sort((a, b) => a.grade_number - b.grade_number)
+    : []
 
-  const subjectsLabel = resource.subjects?.length
-    ? resource.subjects.map((s) => s.name).join(', ')
-    : null
+  const materialsLine = materialsSummary(resource.required_materials ?? [])
 
   return (
-    <Link
-      href={`/resources/${resource.id}`}
-      className="block rounded-xl border bg-white p-4 transition hover:bg-zinc-50"
-    >
-      <div className="flex items-start justify-between gap-4">
-        <div className="min-w-0">
-          <h3 className="truncate text-base font-semibold text-zinc-950">
-            {resource.title}
-          </h3>
-          {resource.result_description ? (
-            <p className="mt-1 line-clamp-2 text-sm text-zinc-700">
-              {resource.result_description}
-            </p>
-          ) : null}
-        </div>
-        <div className="flex flex-wrap justify-end gap-2">
-          {resource.print_required ? <Badge>Printable</Badge> : null}
-          {resource.cutting_required ? <Badge>Cutting required</Badge> : null}
-          {!resource.extra_materials_required ? <Badge>No extra materials</Badge> : null}
-        </div>
+    <div className="flex h-full flex-col rounded-2xl border border-slate-200/90 bg-white p-5 shadow-sm transition hover:border-emerald-200/80 hover:shadow-md">
+      <div className="flex flex-wrap gap-2">
+        {resource.print_required ? (
+          <Badge variant="stem">
+            Printable
+          </Badge>
+        ) : null}
+        {!resource.extra_materials_required ? (
+          <Badge variant="outline">No extra materials</Badge>
+        ) : null}
+        {resource.cutting_required ? <Badge variant="neutral">Cutting required</Badge> : null}
       </div>
 
-      <div className="mt-3 grid gap-2 text-sm text-zinc-700 sm:grid-cols-2">
-        <div>
-          <div className="text-xs font-medium uppercase tracking-wide text-zinc-500">
-            Outcome
-          </div>
-          <div className="line-clamp-2">{resource.result_description ?? '—'}</div>
-        </div>
-        <div>
-          <div className="text-xs font-medium uppercase tracking-wide text-zinc-500">
-            Meta
-          </div>
-          <div className="line-clamp-2">
-            {gradeLabel ? `${gradeLabel}` : 'Grades: —'}
-            {resource.activity_duration ? ` · ${formatDuration(resource.activity_duration)}` : ''}
-            {' · '}Requires: {materialsSummary(resource.required_materials ?? [])}
-          </div>
-          {subjectsLabel ? (
-            <div className="mt-1 line-clamp-1 text-xs text-zinc-600">Subjects: {subjectsLabel}</div>
-          ) : null}
-        </div>
+      <h3 className="mt-3 text-lg font-semibold tracking-tight text-slate-900">{resource.title}</h3>
+
+      {resource.result_description ? (
+        <p className="mt-2 text-sm leading-relaxed text-slate-700 line-clamp-4">{resource.result_description}</p>
+      ) : (
+        <p className="mt-2 text-sm text-slate-500">No outcome summary yet.</p>
+      )}
+
+      <div className="mt-4 flex flex-wrap gap-2">
+        {gradeBadges.map((g) => (
+          <Badge key={g.id} variant="outline">
+            {g.name}
+          </Badge>
+        ))}
       </div>
-    </Link>
+
+      <div className="mt-3 flex flex-wrap gap-2">
+        {resource.subjects?.length
+          ? resource.subjects.map((s) => (
+              <Badge key={s.id} variant="subject">
+                {s.name}
+              </Badge>
+            ))
+          : null}
+      </div>
+
+      <div className="mt-4 grid gap-1 border-t border-slate-100 pt-4 text-sm text-slate-600">
+        {resource.activity_duration ? (
+          <div>
+            <span className="font-medium text-slate-800">Duration:</span> {resource.activity_duration}
+          </div>
+        ) : null}
+        {materialsLine ? (
+          <div>
+            <span className="font-medium text-slate-800">Materials:</span> {materialsLine}
+          </div>
+        ) : resource.extra_materials_required ? (
+          <div className="text-slate-500">Materials listed on the activity page.</div>
+        ) : (
+          <div className="text-slate-500">No extra materials listed.</div>
+        )}
+      </div>
+
+      <div className="mt-auto pt-5">
+        <ButtonLink href={`/resources/${resource.id}`} variant="accent" className="w-full sm:w-auto">
+          View activity
+        </ButtonLink>
+      </div>
+    </div>
   )
 }

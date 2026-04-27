@@ -13,21 +13,28 @@ export function LoginForm() {
 
   useEffect(() => {
     const supabase = createSupabaseBrowserClient()
+    if (!supabase) return
 
-    supabase.auth.getSession().then(({ data }) => {
-      if (data.session) {
-        supabase
-          .from('profiles')
-          .select('id,status')
-          .eq('id', data.session.user.id)
-          .single()
-          .then(({ data: profile }) => {
-            if (profile?.status === 'active') {
-              router.replace('/dashboard')
-            }
-          })
+    let cancelled = false
+
+    void (async () => {
+      const { data } = await supabase.auth.getSession()
+      if (cancelled || !data.session) return
+
+      const { data: profile } = await supabase
+        .from('profiles')
+        .select('id,status')
+        .eq('id', data.session.user.id)
+        .single()
+
+      if (!cancelled && profile?.status === 'active') {
+        router.replace('/dashboard')
       }
-    })
+    })()
+
+    return () => {
+      cancelled = true
+    }
   }, [router])
 
   async function onSubmit(e: React.FormEvent) {
@@ -37,6 +44,12 @@ export function LoginForm() {
 
     try {
       const supabase = createSupabaseBrowserClient()
+      if (!supabase) {
+        setError(
+          'Supabase is not configured. Copy .env.example to .env.local and set NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY.',
+        )
+        return
+      }
       const { error: signInError } = await supabase.auth.signInWithPassword({
         email,
         password,

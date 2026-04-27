@@ -32,6 +32,11 @@ export function ChangePasswordForm() {
     setLoading(true)
     try {
       const supabase = createSupabaseBrowserClient()
+      if (!supabase) {
+        throw new Error(
+          'Supabase is not configured. Add NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY to .env.local.',
+        )
+      }
 
       // Optional: verify current password by re-authing (Supabase requires email for signInWithPassword)
       // We can only do this if the session has an email.

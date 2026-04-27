@@ -14,8 +14,9 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Physical Learning Activities",
-  description: "Hands-on learning activities and printable teaching resources for schools.",
+  title: "STEM Activities — Physical learning for schools",
+  description:
+    "Hands-on STEM activities and printable resources. Browse by category, subject and grade; teachers can publish materials.",
 };
 
 export default function RootLayout({
@@ -28,9 +29,9 @@ export default function RootLayout({
       lang="en"
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col bg-zinc-50 text-zinc-950">
+      <body className="flex min-h-full flex-col bg-slate-100/90 text-slate-950">
         <SiteHeader />
-        <main className="mx-auto w-full max-w-6xl flex-1 px-4 py-8">{children}</main>
+        <main className="mx-auto w-full max-w-6xl flex-1 px-4 py-8 md:py-10">{children}</main>
       </body>
     </html>
   );
