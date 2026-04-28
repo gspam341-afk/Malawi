@@ -15,11 +15,11 @@ export function DashboardHeader({
   rightSlot?: ReactNode
 }) {
   return (
-    <header className="flex flex-wrap items-start justify-between gap-4 border-b border-slate-200/80 pb-8">
+    <header className="flex flex-wrap items-start justify-between gap-4 border-b border-jac-navy/10 pb-8">
       <div className="max-w-3xl">
         <Link
           href="/dashboard"
-          className="inline-flex items-center gap-2 text-sm font-medium text-teal-800 underline-offset-4 hover:text-teal-950 hover:underline"
+          className="inline-flex items-center gap-2 text-sm font-medium text-jac-purple underline-offset-4 hover:text-[#6240b8] hover:underline"
         >
           <ArrowLeft className="h-4 w-4 shrink-0" aria-hidden />
           Dashboard home

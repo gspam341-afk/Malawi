@@ -100,7 +100,7 @@ export default async function SubmissionDetailPage(props: { params: Promise<{ id
           {submission.file_url ? (
             <div>
               <span className="font-semibold text-slate-900">File</span>{' '}
-              <a className="font-medium text-teal-800 underline-offset-4 hover:underline" href={submission.file_url} target="_blank" rel="noreferrer">
+              <a className="font-medium text-jac-purple underline-offset-4 hover:underline" href={submission.file_url} target="_blank" rel="noreferrer">
                 Open link
               </a>
             </div>
@@ -109,7 +109,7 @@ export default async function SubmissionDetailPage(props: { params: Promise<{ id
             <div>
               <span className="font-semibold text-slate-900">External link</span>{' '}
               <a
-                className="font-medium text-teal-800 underline-offset-4 hover:underline"
+                className="font-medium text-jac-purple underline-offset-4 hover:underline"
                 href={submission.external_link}
                 target="_blank"
                 rel="noreferrer"

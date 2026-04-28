@@ -94,7 +94,7 @@ export default async function EditResourcePage(props: { params: Promise<{ id: st
           <p className={dashMuted}>If you need changes, ask your platform manager or duplicate ideas into a new draft.</p>
           <Link
             href="/dashboard/resources"
-            className="mt-6 inline-flex rounded-xl px-4 py-2.5 text-sm font-semibold text-teal-800 underline-offset-4 hover:underline"
+            className="mt-6 inline-flex rounded-jac-md px-4 py-2.5 text-sm font-semibold text-jac-purple underline-offset-4 hover:underline"
           >
             Back to resources
           </Link>
@@ -138,7 +138,7 @@ export default async function EditResourcePage(props: { params: Promise<{ id: st
         actions={
           <Link
             href={`/dashboard/resources/${id}`}
-            className="rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm font-semibold text-slate-800 shadow-sm transition hover:border-teal-200 hover:bg-teal-50/40"
+            className="rounded-jac-md border border-jac-navy/12 bg-white px-4 py-2.5 text-sm font-semibold text-jac-navy shadow-jac-soft transition hover:border-jac-purple/25 hover:bg-jac-purple/8"
           >
             View detail
           </Link>
@@ -391,7 +391,7 @@ export default async function EditResourcePage(props: { params: Promise<{ id: st
         title="Printable materials"
         description="Upload new files and edit metadata on existing handouts."
       >
-        <div className="rounded-2xl border border-dashed border-teal-200/80 bg-gradient-to-br from-teal-50/40 to-white p-4 md:p-6">
+        <div className="rounded-jac-lg border border-dashed border-jac-purple/25 bg-gradient-to-br from-jac-purple/[0.08] to-white p-4 md:p-6">
           <PrintableMaterialUploader resourceId={id} />
         </div>
 

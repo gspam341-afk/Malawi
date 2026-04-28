@@ -19,7 +19,7 @@ export default async function DashboardResourcesPage() {
       <div className="rounded-2xl border border-amber-100 bg-amber-50/50 p-8 text-center">
         <h1 className="text-lg font-semibold text-slate-900">Restricted</h1>
         <p className="mt-2 text-sm text-slate-600">This library is only for teachers and admins.</p>
-        <Link href="/dashboard" className="mt-6 inline-flex items-center gap-2 font-medium text-teal-800 hover:underline">
+        <Link href="/dashboard" className="mt-6 inline-flex items-center gap-2 font-medium text-jac-purple hover:underline">
           <ArrowLeft className="h-4 w-4" aria-hidden />
           Dashboard home
         </Link>
@@ -57,7 +57,7 @@ export default async function DashboardResourcesPage() {
         actions={
           <Link
             href="/dashboard/resources/new"
-            className="inline-flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-teal-600 to-teal-700 px-4 py-2.5 text-sm font-semibold text-white shadow-sm hover:from-teal-700 hover:to-teal-800"
+            className="inline-flex items-center justify-center gap-2 rounded-full bg-jac-purple px-4 py-2.5 text-sm font-semibold text-white shadow-jac-soft hover:bg-[#6240b8]"
           >
             <PlusCircle className="h-4 w-4" aria-hidden />
             Create resource
@@ -80,7 +80,7 @@ export default async function DashboardResourcesPage() {
         >
           <Link
             href="/dashboard/resources/new"
-            className="inline-flex items-center gap-2 rounded-xl bg-teal-600 px-4 py-2 text-sm font-semibold text-white hover:bg-teal-700"
+            className="inline-flex items-center gap-2 rounded-full bg-jac-purple px-4 py-2 text-sm font-semibold text-white hover:bg-[#6240b8]"
           >
             <PlusCircle className="h-4 w-4" aria-hidden />
             Create your first resource

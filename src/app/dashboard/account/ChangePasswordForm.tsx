@@ -117,7 +117,7 @@ export function ChangePasswordForm() {
         </div>
       ) : null}
       {success ? (
-        <div className="rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-900">
+        <div className="rounded-jac-md border border-jac-green/30 bg-jac-green/10 px-4 py-3 text-sm text-jac-green">
           {success}
         </div>
       ) : null}

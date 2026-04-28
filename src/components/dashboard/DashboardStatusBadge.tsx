@@ -21,7 +21,7 @@ export function ResourceStatusBadge({ status }: { status: ResourceStatus | strin
   const map: Record<string, { className: string; Icon: typeof CircleDot }> = {
     draft: { className: `${pill} bg-slate-100 text-slate-800 ring-slate-400/25`, Icon: FilePenLine },
     pending: { className: `${pill} bg-amber-50 text-amber-900 ring-amber-400/35`, Icon: CircleDot },
-    published: { className: `${pill} bg-emerald-50 text-emerald-900 ring-emerald-500/30`, Icon: CheckCircle2 },
+    published: { className: `${pill} bg-jac-green/12 text-jac-green ring-jac-green/35`, Icon: CheckCircle2 },
     rejected: { className: `${pill} bg-red-50 text-red-900 ring-red-400/30`, Icon: XCircle },
     archived: { className: `${pill} bg-slate-50 text-slate-700 ring-slate-300`, Icon: Archive },
   }
@@ -59,7 +59,7 @@ export function BlogStatusBadge({ status }: { status: BlogStatus | string }) {
 export function SubmissionStatusBadge({ status }: { status: SubmissionStatus | string }) {
   const map: Record<string, { className: string; Icon: typeof CircleDot }> = {
     pending: { className: `${pill} bg-amber-50 text-amber-900 ring-amber-400/35`, Icon: CircleDot },
-    approved: { className: `${pill} bg-emerald-50 text-emerald-900 ring-emerald-500/30`, Icon: CheckCircle2 },
+    approved: { className: `${pill} bg-jac-green/12 text-jac-green ring-jac-green/35`, Icon: CheckCircle2 },
     rejected: { className: `${pill} bg-red-50 text-red-900 ring-red-400/30`, Icon: XCircle },
     changes_requested: { className: `${pill} bg-orange-50 text-orange-900 ring-orange-400/30`, Icon: CircleDot },
   }
@@ -76,7 +76,7 @@ export function SubmissionStatusBadge({ status }: { status: SubmissionStatus | s
 
 export function SubmissionTypeBadge({ type }: { type: string }) {
   return (
-    <span className={`${pill} bg-teal-50 text-teal-900 ring-teal-400/25`}>
+    <span className={`${pill} bg-jac-purple/10 text-jac-purple ring-jac-purple/25`}>
       <Tags className="h-3 w-3 shrink-0" aria-hidden />
       {type.replace(/_/g, ' ')}
     </span>
@@ -85,7 +85,7 @@ export function SubmissionTypeBadge({ type }: { type: string }) {
 
 export function UserStatusBadge({ status }: { status: string }) {
   const map: Record<string, { className: string; Icon: typeof CheckCircle2 }> = {
-    active: { className: `${pill} bg-emerald-50 text-emerald-900 ring-emerald-500/25`, Icon: CheckCircle2 },
+    active: { className: `${pill} bg-jac-green/12 text-jac-green ring-jac-green/35`, Icon: CheckCircle2 },
     pending: { className: `${pill} bg-amber-50 text-amber-900 ring-amber-400/35`, Icon: CircleDot },
     inactive: { className: `${pill} bg-slate-100 text-slate-700 ring-slate-400/25`, Icon: CircleDot },
     banned: { className: `${pill} bg-red-50 text-red-900 ring-red-400/30`, Icon: XCircle },

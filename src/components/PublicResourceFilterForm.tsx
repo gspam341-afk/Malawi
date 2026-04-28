@@ -20,6 +20,9 @@ type Defaults = {
   extra_materials_required: string
 }
 
+const inputClass =
+  'mt-1 w-full rounded-jac-md border border-jac-navy/15 bg-white px-3 py-2 text-sm text-jac-navy shadow-jac-soft outline-none transition placeholder:text-jac-navy/45 focus:border-jac-purple focus:ring-2 focus:ring-jac-purple/25'
+
 export function PublicResourceFilterForm({
   action,
   gradeLevels,
@@ -37,22 +40,18 @@ export function PublicResourceFilterForm({
   showSubjectFilter?: boolean
 }) {
   return (
-    <form
-      className="grid gap-4 rounded-2xl border border-slate-200/90 bg-white p-5 shadow-sm sm:grid-cols-2 lg:grid-cols-6"
-      method="get"
-      action={action}
-    >
-      <div className="flex items-center gap-2 border-b border-slate-100 pb-3 lg:col-span-6 lg:border-0 lg:pb-0">
-        <SlidersHorizontal className="h-5 w-5 shrink-0 text-emerald-700" aria-hidden />
-        <span className="text-sm font-semibold text-slate-900">Filters</span>
+    <form className="grid gap-4 rounded-jac-lg border border-jac-purple/12 bg-white p-5 shadow-jac-soft sm:grid-cols-2 lg:grid-cols-6 md:p-6" method="get" action={action}>
+      <div className="flex items-center gap-2 border-b border-jac-purple/10 pb-3 lg:col-span-6 lg:border-0 lg:pb-0">
+        <SlidersHorizontal className="h-5 w-5 shrink-0 text-jac-purple" aria-hidden />
+        <span className="text-sm font-semibold text-jac-navy">Filters</span>
       </div>
 
       <div className="sm:col-span-2 lg:col-span-2">
         <label
           htmlFor={`${idPrefix}-q`}
-          className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wide text-slate-500"
+          className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wide text-jac-navy/55"
         >
-          <Search className="h-3.5 w-3.5 text-slate-400" aria-hidden />
+          <Search className="h-3.5 w-3.5 text-jac-purple/70" aria-hidden />
           Search
         </label>
         <input
@@ -60,24 +59,19 @@ export function PublicResourceFilterForm({
           name="q"
           defaultValue={defaults.q}
           placeholder="Title, description, or outcome"
-          className="mt-1 w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 shadow-sm outline-none transition placeholder:text-slate-400 focus:border-emerald-600 focus:ring-2 focus:ring-emerald-600/20"
+          className={inputClass}
         />
       </div>
 
       <div>
         <label
           htmlFor={`${idPrefix}-grade`}
-          className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wide text-slate-500"
+          className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wide text-jac-navy/55"
         >
-          <Bookmark className="h-3.5 w-3.5 text-slate-400" aria-hidden />
+          <Bookmark className="h-3.5 w-3.5 text-jac-purple/70" aria-hidden />
           Grade level
         </label>
-        <select
-          id={`${idPrefix}-grade`}
-          name="grade"
-          defaultValue={defaults.grade}
-          className="mt-1 w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm shadow-sm outline-none focus:border-emerald-600 focus:ring-2 focus:ring-emerald-600/20"
-        >
+        <select id={`${idPrefix}-grade`} name="grade" defaultValue={defaults.grade} className={inputClass}>
           <option value="">All grades</option>
           {gradeLevels.map((g) => (
             <option key={g.id} value={g.id}>
@@ -91,17 +85,12 @@ export function PublicResourceFilterForm({
         <div>
           <label
             htmlFor={`${idPrefix}-subject`}
-            className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wide text-slate-500"
+            className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wide text-jac-navy/55"
           >
-            <Filter className="h-3.5 w-3.5 text-slate-400" aria-hidden />
+            <Filter className="h-3.5 w-3.5 text-jac-purple/70" aria-hidden />
             Subject
           </label>
-          <select
-            id={`${idPrefix}-subject`}
-            name="subject"
-            defaultValue={defaults.subject}
-            className="mt-1 w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm shadow-sm outline-none focus:border-emerald-600 focus:ring-2 focus:ring-emerald-600/20"
-          >
+          <select id={`${idPrefix}-subject`} name="subject" defaultValue={defaults.subject} className={inputClass}>
             <option value="">All in category</option>
             {subjects.map((s) => (
               <option key={s.id} value={s.id}>
@@ -115,17 +104,12 @@ export function PublicResourceFilterForm({
       <div>
         <label
           htmlFor={`${idPrefix}-print`}
-          className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wide text-slate-500"
+          className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wide text-jac-navy/55"
         >
-          <Printer className="h-3.5 w-3.5 text-slate-400" aria-hidden />
+          <Printer className="h-3.5 w-3.5 text-jac-purple/70" aria-hidden />
           Printable
         </label>
-        <select
-          id={`${idPrefix}-print`}
-          name="print_required"
-          defaultValue={defaults.print_required}
-          className="mt-1 w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm shadow-sm outline-none focus:border-emerald-600 focus:ring-2 focus:ring-emerald-600/20"
-        >
+        <select id={`${idPrefix}-print`} name="print_required" defaultValue={defaults.print_required} className={inputClass}>
           <option value="">Any</option>
           <option value="true">Yes</option>
           <option value="false">No</option>
@@ -135,16 +119,16 @@ export function PublicResourceFilterForm({
       <div>
         <label
           htmlFor={`${idPrefix}-extra`}
-          className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wide text-slate-500"
+          className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wide text-jac-navy/55"
         >
-          <Puzzle className="h-3.5 w-3.5 text-slate-400" aria-hidden />
+          <Puzzle className="h-3.5 w-3.5 text-jac-purple/70" aria-hidden />
           Extra materials
         </label>
         <select
           id={`${idPrefix}-extra`}
           name="extra_materials_required"
           defaultValue={defaults.extra_materials_required}
-          className="mt-1 w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm shadow-sm outline-none focus:border-emerald-600 focus:ring-2 focus:ring-emerald-600/20"
+          className={inputClass}
         >
           <option value="">Any</option>
           <option value="true">Required</option>
@@ -155,7 +139,7 @@ export function PublicResourceFilterForm({
       <div className="flex items-end lg:col-span-6">
         <button
           type="submit"
-          className="inline-flex w-full items-center justify-center gap-2 rounded-lg bg-emerald-700 px-4 py-2 text-sm font-medium text-white shadow-sm transition hover:bg-emerald-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-600 focus-visible:ring-offset-2 sm:w-auto"
+          className="inline-flex w-full items-center justify-center gap-2 rounded-full bg-jac-purple px-5 py-2.5 text-sm font-medium text-white shadow-jac-soft transition hover:bg-[#6240b8] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-jac-purple focus-visible:ring-offset-2 sm:w-auto"
         >
           <ListFilter className="h-4 w-4" aria-hidden />
           Apply filters

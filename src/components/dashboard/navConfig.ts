@@ -1,10 +1,12 @@
 import type { LucideIcon } from 'lucide-react'
 import {
   Atom,
+  BookMarked,
   GraduationCap,
   Inbox,
   LayoutDashboard,
   LibraryBig,
+  ListPlus,
   Lightbulb,
   Newspaper,
   PenLine,
@@ -50,6 +52,8 @@ export function getDashboardNav(role: ProfileRole): NavSection[] {
       {
         title: 'Content tools',
         items: [
+          { href: '/dashboard/courses', label: 'My courses', Icon: BookMarked },
+          { href: '/dashboard/courses/new', label: 'Create course', Icon: ListPlus },
           { href: '/dashboard/resources', label: 'My resources', Icon: LibraryBig },
           { href: '/dashboard/resources/new', label: 'Create resource', Icon: PlusCircle },
           { href: '/dashboard/blog-posts', label: 'Blog posts', Icon: PenLine },

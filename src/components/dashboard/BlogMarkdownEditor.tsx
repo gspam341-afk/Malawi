@@ -61,7 +61,7 @@ export function BlogMarkdownEditor({
   }, [])
 
   const toolbarBtn =
-    `inline-flex h-9 w-9 items-center justify-center rounded-lg border border-slate-200 bg-white text-slate-700 shadow-sm transition hover:border-teal-300 hover:bg-teal-50 hover:text-teal-900 ${dashFocusRing}`
+    `inline-flex h-9 w-9 items-center justify-center rounded-jac-sm border border-jac-navy/12 bg-white text-jac-navy shadow-jac-soft transition hover:border-jac-purple/35 hover:bg-jac-purple/8 hover:text-jac-navy ${dashFocusRing}`
 
   const onUploadFile = async (file: File | null) => {
     if (!file || uploadBusy) return
@@ -174,7 +174,7 @@ export function BlogMarkdownEditor({
           <button
             type="button"
             onClick={() => setTab('edit')}
-            className={`inline-flex items-center gap-1.5 rounded-md px-3 py-1.5 text-xs font-semibold ${tab === 'edit' ? 'bg-teal-600 text-white' : 'text-slate-600 hover:bg-slate-50'}`}
+            className={`inline-flex items-center gap-1.5 rounded-jac-sm px-3 py-1.5 text-xs font-semibold ${tab === 'edit' ? 'bg-jac-purple text-white' : 'text-jac-navy/70 hover:bg-jac-offwhite'}`}
             aria-pressed={tab === 'edit'}
           >
             <PenLine className="h-3.5 w-3.5" aria-hidden />
@@ -183,7 +183,7 @@ export function BlogMarkdownEditor({
           <button
             type="button"
             onClick={() => setTab('preview')}
-            className={`inline-flex items-center gap-1.5 rounded-md px-3 py-1.5 text-xs font-semibold ${tab === 'preview' ? 'bg-teal-600 text-white' : 'text-slate-600 hover:bg-slate-50'}`}
+            className={`inline-flex items-center gap-1.5 rounded-jac-sm px-3 py-1.5 text-xs font-semibold ${tab === 'preview' ? 'bg-jac-purple text-white' : 'text-jac-navy/70 hover:bg-jac-offwhite'}`}
             aria-pressed={tab === 'preview'}
           >
             <Eye className="h-3.5 w-3.5" aria-hidden />

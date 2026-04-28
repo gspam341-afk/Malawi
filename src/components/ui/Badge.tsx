@@ -1,11 +1,14 @@
 import { type ReactNode } from 'react'
 
 const variants = {
-  default: 'bg-slate-100 text-slate-800 ring-slate-600/10',
-  subject: 'bg-sky-50 text-sky-900 ring-sky-600/15',
-  stem: 'bg-emerald-50 text-emerald-900 ring-emerald-600/15',
-  neutral: 'bg-white text-slate-700 ring-slate-300',
-  outline: 'bg-transparent text-slate-700 ring-slate-300',
+  default: 'bg-jac-navy/5 text-jac-navy ring-jac-navy/10',
+  subject: 'bg-jac-blue/10 text-jac-blue ring-jac-blue/20',
+  stem: 'bg-jac-green/12 text-jac-green ring-jac-green/25',
+  neutral: 'bg-white text-jac-navy ring-jac-navy/12',
+  outline: 'bg-transparent text-jac-navy ring-jac-navy/15',
+  orange: 'bg-jac-orange/15 text-[#8a5200] ring-jac-orange/30',
+  purple: 'bg-jac-purple/12 text-jac-purple ring-jac-purple/20',
+  pink: 'bg-jac-pink/35 text-jac-navy ring-jac-pink/40',
 } as const
 
 export type BadgeVariant = keyof typeof variants
@@ -19,7 +22,7 @@ export function Badge({
 }) {
   return (
     <span
-      className={`inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium ring-1 ring-inset ${variants[variant]}`}
+      className={`inline-flex items-center rounded-full px-2.5 py-1 text-xs font-medium ring-1 ring-inset ${variants[variant]}`}
     >
       {children}
     </span>

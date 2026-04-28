@@ -21,22 +21,19 @@ export function SectionHeader({
     <div className="flex flex-wrap items-end justify-between gap-3">
       <div className="flex flex-wrap items-start gap-3">
         {Icon ? (
-          <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-emerald-100 text-emerald-700 ring-1 ring-emerald-600/15">
+          <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-jac-md bg-jac-purple/12 text-jac-purple ring-1 ring-jac-purple/15">
             <Icon className="h-5 w-5" aria-hidden />
           </span>
         ) : null}
         <div>
-          <h2 className="text-xl font-semibold tracking-tight text-slate-900">{title}</h2>
-          {subtitle ? <p className="mt-1 text-sm text-slate-600">{subtitle}</p> : null}
+          <h2 className="text-h4 font-semibold text-jac-navy">{title}</h2>
+          {subtitle ? <p className="mt-1 text-body">{subtitle}</p> : null}
         </div>
       </div>
       <div className="flex items-center gap-3">
         {action}
         {linkHref && linkLabel ? (
-          <Link
-            href={linkHref}
-            className="text-sm font-medium text-emerald-800 underline-offset-4 hover:text-emerald-900 hover:underline"
-          >
+          <Link href={linkHref} className="text-link font-medium text-jac-blue">
             {linkLabel}
           </Link>
         ) : null}

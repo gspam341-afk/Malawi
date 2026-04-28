@@ -6,6 +6,7 @@ import { PublicResourceFilterForm } from '@/components/PublicResourceFilterForm'
 import { ResourceCard } from '@/components/ResourceCard'
 import { ButtonLink } from '@/components/ui/Button'
 import { STEM_CATEGORY_LIST } from '@/lib/stemCategories'
+import type { StemSlug } from '@/lib/stemCategories'
 import { getGradeLevels, getPublicResources, getSubjects } from '@/lib/queries/publicResources'
 
 type Props = {
@@ -23,6 +24,17 @@ const stemChipIcon = {
   engineering: Sprout,
   mathematics: Calculator,
 } as const
+
+const STEM_CHIP_STYLE: Record<StemSlug, string> = {
+  science:
+    'border-jac-purple/25 bg-white text-jac-purple shadow-jac-soft ring-1 ring-jac-purple/15 hover:bg-jac-purple/8',
+  technology:
+    'border-jac-blue/25 bg-white text-jac-blue shadow-jac-soft ring-1 ring-jac-blue/20 hover:bg-jac-blue/8',
+  engineering:
+    'border-jac-green/30 bg-white text-jac-green shadow-jac-soft ring-1 ring-jac-green/20 hover:bg-jac-green/8',
+  mathematics:
+    'border-jac-orange/35 bg-white text-[#8a5200] shadow-jac-soft ring-1 ring-jac-orange/30 hover:bg-jac-orange/10',
+}
 
 export default async function ResourcesPage({ searchParams }: Props) {
   const sp = await searchParams
@@ -57,33 +69,34 @@ export default async function ResourcesPage({ searchParams }: Props) {
   }
 
   return (
-    <div className="grid gap-10">
+    <div className="grid gap-10 md:gap-12">
       <PageHeader
         eyebrow="Jacaranda School"
         title="All Jacaranda STEM activities"
         description="Every published public activity across Science, Engineering, Mathematics and more — filter by grade, subject, printables and materials, or open a STEM pathway for a narrower list."
         icon={LibraryBig}
+        displayTitle
       />
 
-      <div className="rounded-2xl border border-emerald-100/80 bg-gradient-to-br from-emerald-50/50 via-white to-teal-50/40 p-6 md:p-8">
-        <p className="text-base leading-relaxed text-slate-700">
+      <div className="rounded-jac-xl border border-jac-purple/12 bg-gradient-to-br from-white via-jac-offwhite to-jac-pink/15 p-6 shadow-jac-soft md:p-8 lg:rounded-[40px]">
+        <p className="text-base leading-relaxed text-jac-navy/80 md:text-lg">
           This page shows all published activities in one place. When you want to focus on one STEM area only, use a
           pathway so you only see activities for the subjects in that category.
         </p>
-        <p className="mt-3 flex items-center gap-2 text-sm font-semibold uppercase tracking-wide text-slate-500">
-          <SlidersHorizontal className="h-4 w-4 text-emerald-700" aria-hidden />
+        <p className="mt-4 flex items-center gap-2 text-xs font-semibold uppercase tracking-wide text-jac-purple md:text-sm">
+          <SlidersHorizontal className="h-4 w-4" aria-hidden />
           STEM pathways
         </p>
-        <div className="mt-3 flex flex-wrap gap-2">
+        <div className="mt-4 flex flex-wrap gap-2 md:gap-3">
           {STEM_CATEGORY_LIST.map((c) => {
             const ChipIcon = stemChipIcon[c.slug]
             return (
               <Link
                 key={c.slug}
                 href={`/stem/${c.slug}`}
-                className="inline-flex items-center gap-2 rounded-full bg-white px-3 py-1.5 text-sm font-medium text-emerald-900 shadow-sm ring-1 ring-slate-200 transition hover:bg-emerald-50 hover:ring-emerald-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-600"
+                className={`inline-flex items-center gap-2 rounded-full px-4 py-2 text-sm font-medium transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-jac-purple focus-visible:ring-offset-2 ${STEM_CHIP_STYLE[c.slug]}`}
               >
-                <ChipIcon className="h-4 w-4 text-emerald-800" aria-hidden />
+                <ChipIcon className="h-4 w-4 shrink-0" aria-hidden />
                 {c.title}
               </Link>
             )
@@ -94,7 +107,7 @@ export default async function ResourcesPage({ searchParams }: Props) {
       <PublicResourceFilterForm action="/resources" gradeLevels={gradeLevels} subjects={subjects} defaults={defaults} />
 
       {resources.length ? (
-        <div className="grid gap-5 md:grid-cols-2">
+        <div className="grid gap-6 md:grid-cols-2 md:gap-8">
           {resources.map((r) => (
             <ResourceCard key={r.id} resource={r} />
           ))}
@@ -107,7 +120,7 @@ export default async function ResourcesPage({ searchParams }: Props) {
         >
           <Link
             href="/resources"
-            className="inline-flex items-center gap-2 rounded-lg border border-slate-300 bg-white px-4 py-2 text-sm font-medium text-slate-900 shadow-sm hover:bg-slate-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-600"
+            className="inline-flex items-center gap-2 rounded-full border border-jac-navy/15 bg-white px-4 py-2 text-sm font-medium text-jac-navy shadow-jac-soft hover:bg-jac-offwhite focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-jac-purple"
           >
             Reset filters (reload)
           </Link>

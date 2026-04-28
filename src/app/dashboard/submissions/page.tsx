@@ -69,7 +69,7 @@ export default async function SubmissionsPage(props: {
             {canCreate ? (
               <Link
                 href="/dashboard/submissions/new"
-                className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-teal-600 to-teal-700 px-4 py-2.5 text-sm font-semibold text-white shadow-sm hover:from-teal-700 hover:to-teal-800"
+                className="inline-flex items-center gap-2 rounded-full bg-jac-purple px-4 py-2.5 text-sm font-semibold text-white shadow-jac-soft hover:bg-[#6240b8]"
               >
                 <PlusCircle className="h-4 w-4" aria-hidden />
                 New submission
@@ -81,7 +81,7 @@ export default async function SubmissionsPage(props: {
 
       <section className={`${dashPanelSolid} p-5 md:p-6`}>
         <h2 className="flex items-center gap-2 text-sm font-semibold text-slate-900">
-          <SlidersHorizontal className="h-4 w-4 text-teal-700" aria-hidden />
+          <SlidersHorizontal className="h-4 w-4 text-jac-purple" aria-hidden />
           Filters
         </h2>
         <p className={`mt-1 ${dashMuted}`}>Find a submission by title or narrow the queue.</p>
@@ -121,7 +121,7 @@ export default async function SubmissionsPage(props: {
       {submissions?.length ? (
         <TableShell>
           <table className="w-full min-w-[720px] text-left text-sm">
-            <thead className="border-b border-slate-100 bg-gradient-to-r from-teal-50/90 via-white to-amber-50/40">
+            <thead className="border-b border-jac-navy/10 bg-gradient-to-r from-jac-purple/[0.06] via-white to-jac-pink/15">
               <tr className="text-xs font-semibold uppercase tracking-wide text-slate-600">
                 <th className="px-4 py-4">Title</th>
                 <th className="px-4 py-4">Type</th>
@@ -137,7 +137,7 @@ export default async function SubmissionsPage(props: {
                 const submitterLabel = submitter?.name ?? submitter?.email ?? '—'
 
                 return (
-                  <tr key={s.id} className="hover:bg-teal-50/20">
+                  <tr key={s.id} className="hover:bg-jac-purple/[0.06]">
                     <td className="px-4 py-4 font-medium text-slate-900">{s.title}</td>
                     <td className="px-4 py-4">
                       <SubmissionTypeBadge type={s.submission_type} />
@@ -150,7 +150,7 @@ export default async function SubmissionsPage(props: {
                     <td className="px-4 py-4">
                       <Link
                         href={`/dashboard/submissions/${s.id}`}
-                        className="font-semibold text-teal-800 hover:text-teal-950 hover:underline"
+                        className="font-semibold text-jac-purple hover:text-[#6240b8] hover:underline"
                       >
                         View
                       </Link>
@@ -170,7 +170,7 @@ export default async function SubmissionsPage(props: {
           {canCreate ? (
             <Link
               href="/dashboard/submissions/new"
-              className="inline-flex items-center gap-2 rounded-xl bg-teal-600 px-4 py-2 text-sm font-semibold text-white hover:bg-teal-700"
+              className="inline-flex items-center gap-2 rounded-full bg-jac-purple px-4 py-2 text-sm font-semibold text-white hover:bg-[#6240b8]"
             >
               <Send className="h-4 w-4" aria-hidden />
               Submit an idea

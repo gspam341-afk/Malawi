@@ -55,7 +55,7 @@ export default async function AdminSubjectsPage(props: { searchParams?: Promise<
       {subjects?.length ? (
         <TableShell>
           <table className="w-full min-w-[640px] text-left text-sm">
-            <thead className="border-b border-slate-100 bg-gradient-to-r from-teal-50/90 to-white">
+            <thead className="border-b border-jac-navy/10 bg-gradient-to-r from-jac-purple/[0.06] to-white">
               <tr className="text-xs font-semibold uppercase tracking-wide text-slate-600">
                 <th className="px-4 py-4">Subject</th>
                 <th className="hidden px-4 py-4 md:table-cell">Description snapshot</th>
@@ -64,7 +64,7 @@ export default async function AdminSubjectsPage(props: { searchParams?: Promise<
             </thead>
             <tbody className="divide-y divide-slate-100">
               {subjects.map((s) => (
-                <tr key={s.id} className="hover:bg-teal-50/15">
+                <tr key={s.id} className="hover:bg-jac-purple/[0.05]">
                   <td className="px-4 py-4 align-top">
                     <form action={updateSubjectAction} className="flex flex-col gap-3 lg:flex-row lg:flex-wrap lg:items-center">
                       <input type="hidden" name="id" value={s.id} />

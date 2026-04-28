@@ -1,10 +1,12 @@
 import {
   Atom,
+  BookMarked,
   GraduationCap,
   Inbox,
   LayoutDashboard,
   LibraryBig,
   Lightbulb,
+  ListPlus,
   Newspaper,
   PenLine,
   PlusCircle,
@@ -24,9 +26,9 @@ import { dashMuted, dashPanel, dashTitle } from '@/components/dashboard/classes'
 function roleExplanation(role: ProfileRole): string {
   switch (role) {
     case 'admin':
-      return 'You manage users, invitations, subjects, grade levels, and platform-wide review of resources and submissions.'
+      return 'You manage users, invitations, subjects, grade levels, courses, resources, and platform-wide review of submissions.'
     case 'teacher':
-      return 'Create physical learning activities, publish to the public catalog, and share blog posts or ideas for review.'
+      return 'Build courses with units and lessons, publish activities to the public catalog, and share blog posts or ideas for review.'
     case 'alumni':
     case 'donor':
       return 'Contribute blog posts and submit activity ideas; the team may review submissions before they appear publicly.'
@@ -45,17 +47,17 @@ export default async function DashboardPage() {
   return (
     <div className="grid gap-10">
       <section
-        className={`relative overflow-hidden ${dashPanel} bg-gradient-to-br from-teal-50/90 via-[#fdfcfa] to-amber-50/60 p-8 md:p-10`}
+        className={`relative overflow-hidden ${dashPanel} bg-gradient-to-br from-jac-purple/[0.08] via-jac-offwhite to-jac-orange/10 p-8 md:p-10`}
       >
-        <div className="pointer-events-none absolute -right-16 -top-16 h-48 w-48 rounded-full bg-teal-200/40 blur-3xl" />
-        <div className="pointer-events-none absolute -bottom-12 -left-12 h-40 w-40 rounded-full bg-amber-200/40 blur-3xl" />
+        <div className="pointer-events-none absolute -right-16 -top-16 h-48 w-48 rounded-full bg-jac-purple/20 blur-3xl" />
+        <div className="pointer-events-none absolute -bottom-12 -left-12 h-40 w-40 rounded-full bg-jac-pink/30 blur-3xl" />
         <div className="relative">
           <div className="flex flex-wrap items-start gap-4">
-            <span className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-teal-100 text-teal-800 ring-1 ring-teal-600/15">
+            <span className="flex h-14 w-14 shrink-0 items-center justify-center rounded-jac-md bg-jac-purple/12 text-jac-purple ring-1 ring-jac-purple/20">
               <LayoutDashboard className="h-8 w-8" aria-hidden />
             </span>
             <div className="min-w-0">
-              <p className="text-sm font-medium text-teal-800">Welcome back</p>
+              <p className="text-sm font-medium text-jac-purple">Welcome back</p>
               <h1 className={`mt-2 ${dashTitle}`}>{nameOrEmail}</h1>
               <div className="mt-4 flex flex-wrap items-center gap-3">
                 <RoleBadge role={profile.role} />
@@ -68,7 +70,7 @@ export default async function DashboardPage() {
 
       <section className="grid gap-6">
         <div>
-          <h2 className="text-lg font-semibold text-slate-900">Quick actions</h2>
+          <h2 className="text-lg font-semibold text-jac-navy">Quick actions</h2>
           <p className={`mt-1 ${dashMuted}`}>Jump to the tools you use most — everything stays in one place.</p>
         </div>
 
@@ -76,49 +78,55 @@ export default async function DashboardPage() {
           <DashboardGrid>
             <DashboardNavCard
               href="/dashboard/users"
-              icon={<Users className="text-teal-800" aria-hidden />}
+              icon={<Users className="text-jac-purple" aria-hidden />}
               title="User management"
               description="Manage profiles, roles and access."
             />
             <DashboardNavCard
               href="/dashboard/users/invite-teacher"
-              icon={<UserPlus className="text-teal-800" aria-hidden />}
+              icon={<UserPlus className="text-jac-purple" aria-hidden />}
               title="Invite teacher"
               description="Invite new teachers to publish activities."
             />
             <DashboardNavCard
+              href="/dashboard/courses"
+              icon={<BookMarked className="text-jac-purple" aria-hidden />}
+              title="Manage courses"
+              description="Review and publish courses from all teachers."
+            />
+            <DashboardNavCard
               href="/dashboard/resources/manage"
-              icon={<LibraryBig className="text-teal-800" aria-hidden />}
+              icon={<LibraryBig className="text-jac-purple" aria-hidden />}
               title="Manage resources"
               description="Review, edit and organize learning activities."
             />
             <DashboardNavCard
               href="/dashboard/blog-posts"
-              icon={<Newspaper className="text-teal-800" aria-hidden />}
+              icon={<Newspaper className="text-jac-purple" aria-hidden />}
               title="Manage blog posts"
               description="Create and manage stories and updates."
             />
             <DashboardNavCard
               href="/dashboard/submissions"
-              icon={<Inbox className="text-teal-800" aria-hidden />}
+              icon={<Inbox className="text-jac-purple" aria-hidden />}
               title="Manage submissions"
               description="Handle ideas and contributions."
             />
             <DashboardNavCard
               href="/dashboard/subjects"
-              icon={<Atom className="text-teal-800" aria-hidden />}
+              icon={<Atom className="text-jac-purple" aria-hidden />}
               title="Manage subjects"
               description="Edit available STEM subjects."
             />
             <DashboardNavCard
               href="/dashboard/grade-levels"
-              icon={<GraduationCap className="text-teal-800" aria-hidden />}
+              icon={<GraduationCap className="text-jac-purple" aria-hidden />}
               title="Manage grade levels"
               description="Maintain grade levels from Grade 6 to Grade 14."
             />
             <DashboardNavCard
               href="/dashboard/account"
-              icon={<Settings className="text-teal-800" aria-hidden />}
+              icon={<Settings className="text-jac-purple" aria-hidden />}
               title="Account settings"
               description="Update your password and account details."
             />
@@ -128,32 +136,44 @@ export default async function DashboardPage() {
         {profile.role === 'teacher' ? (
           <DashboardGrid>
             <DashboardNavCard
+              href="/dashboard/courses"
+              icon={<BookMarked className="text-jac-purple" aria-hidden />}
+              title="My courses"
+              description="Organise units, lessons and linked activities."
+            />
+            <DashboardNavCard
+              href="/dashboard/courses/new"
+              icon={<ListPlus className="text-jac-purple" aria-hidden />}
+              title="Create course"
+              description="Start a new course for your subject and grade."
+            />
+            <DashboardNavCard
               href="/dashboard/resources"
-              icon={<LibraryBig className="text-teal-800" aria-hidden />}
+              icon={<LibraryBig className="text-jac-purple" aria-hidden />}
               title="My resources"
               description="Create and manage your physical learning activities."
             />
             <DashboardNavCard
               href="/dashboard/resources/new"
-              icon={<PlusCircle className="text-teal-800" aria-hidden />}
+              icon={<PlusCircle className="text-jac-purple" aria-hidden />}
               title="Create new resource"
               description="Add a new printable or hands-on activity."
             />
             <DashboardNavCard
               href="/dashboard/blog-posts"
-              icon={<PenLine className="text-teal-800" aria-hidden />}
+              icon={<PenLine className="text-jac-purple" aria-hidden />}
               title="My blog posts"
               description="Write stories, guides or teaching reflections."
             />
             <DashboardNavCard
               href="/dashboard/submissions"
-              icon={<Send className="text-teal-800" aria-hidden />}
+              icon={<Send className="text-jac-purple" aria-hidden />}
               title="My submissions"
               description="Track your submitted ideas and materials."
             />
             <DashboardNavCard
               href="/dashboard/account"
-              icon={<Settings className="text-teal-800" aria-hidden />}
+              icon={<Settings className="text-jac-purple" aria-hidden />}
               title="Account settings"
               description="Password and profile security."
             />
@@ -164,25 +184,25 @@ export default async function DashboardPage() {
           <DashboardGrid>
             <DashboardNavCard
               href="/dashboard/blog-posts"
-              icon={<PenLine className="text-teal-800" aria-hidden />}
+              icon={<PenLine className="text-jac-purple" aria-hidden />}
               title="My blog posts"
               description="Drafts and posts tied to your account."
             />
             <DashboardNavCard
               href="/dashboard/submissions/new"
-              icon={<Lightbulb className="text-teal-800" aria-hidden />}
+              icon={<Lightbulb className="text-jac-purple" aria-hidden />}
               title="Submit activity idea"
               description="Send an idea or material for the team to review."
             />
             <DashboardNavCard
               href="/dashboard/submissions"
-              icon={<Inbox className="text-teal-800" aria-hidden />}
+              icon={<Inbox className="text-jac-purple" aria-hidden />}
               title="My submissions"
               description="See status and feedback on what you submitted."
             />
             <DashboardNavCard
               href="/dashboard/account"
-              icon={<Settings className="text-teal-800" aria-hidden />}
+              icon={<Settings className="text-jac-purple" aria-hidden />}
               title="Account settings"
               description="Password and profile security."
             />

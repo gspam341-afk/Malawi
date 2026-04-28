@@ -73,7 +73,7 @@ export default async function AdminUsersPage(props: {
         actions={
           <Link
             href="/dashboard/users/invite-teacher"
-            className="inline-flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-teal-600 to-teal-700 px-4 py-2.5 text-sm font-semibold text-white shadow-sm hover:from-teal-700 hover:to-teal-800"
+            className="inline-flex items-center justify-center gap-2 rounded-full bg-jac-purple px-4 py-2.5 text-sm font-semibold text-white shadow-jac-soft hover:bg-[#6240b8]"
           >
             <UserPlus className="h-4 w-4" aria-hidden />
             Invite teacher
@@ -83,7 +83,7 @@ export default async function AdminUsersPage(props: {
 
       <section className={`${dashPanelSolid} p-5 md:p-6`}>
         <h2 className="flex items-center gap-2 text-sm font-semibold text-slate-900">
-          <SlidersHorizontal className="h-4 w-4 text-teal-700" aria-hidden />
+          <SlidersHorizontal className="h-4 w-4 text-jac-purple" aria-hidden />
           Filters
         </h2>
         <p className={`mt-1 ${dashMuted}`}>Narrow down by name, email, role or status.</p>
@@ -131,7 +131,7 @@ export default async function AdminUsersPage(props: {
       {rows.length ? (
         <TableShell>
           <table className="w-full min-w-[640px] text-left text-sm">
-            <thead className="border-b border-slate-100 bg-gradient-to-r from-teal-50/90 via-white to-amber-50/40">
+            <thead className="border-b border-jac-navy/10 bg-gradient-to-r from-jac-purple/[0.06] via-white to-jac-pink/15">
               <tr className="text-xs font-semibold uppercase tracking-wide text-slate-600">
                 <th className="px-4 py-4">User</th>
                 <th className="px-4 py-4">Email</th>
@@ -142,7 +142,7 @@ export default async function AdminUsersPage(props: {
             </thead>
             <tbody className="divide-y divide-slate-100">
               {rows.map((u) => (
-                <tr key={u.id} className="align-top hover:bg-teal-50/20">
+                <tr key={u.id} className="align-top hover:bg-jac-purple/[0.06]">
                   <td className="px-4 py-4">
                     <form action={updateUserAction} className="grid max-w-md gap-3">
                       <input type="hidden" name="user_id" value={u.id} />
@@ -235,7 +235,7 @@ export default async function AdminUsersPage(props: {
         >
           <Link
             href="/dashboard/users/invite-teacher"
-            className="inline-flex items-center gap-2 rounded-xl bg-teal-600 px-4 py-2 text-sm font-semibold text-white hover:bg-teal-700"
+            className="inline-flex items-center gap-2 rounded-full bg-jac-purple px-4 py-2 text-sm font-semibold text-white hover:bg-[#6240b8]"
           >
             <UserPlus className="h-4 w-4" aria-hidden />
             Invite teacher

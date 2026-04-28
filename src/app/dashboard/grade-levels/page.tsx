@@ -63,7 +63,7 @@ export default async function AdminGradeLevelsPage(props: { searchParams?: Promi
       {levels?.length ? (
         <TableShell>
           <table className="w-full min-w-[720px] text-left text-sm">
-            <thead className="border-b border-slate-100 bg-gradient-to-r from-teal-50/90 to-white">
+            <thead className="border-b border-jac-navy/10 bg-gradient-to-r from-jac-purple/[0.06] to-white">
               <tr className="text-xs font-semibold uppercase tracking-wide text-slate-600">
                 <th className="px-4 py-4">Grade</th>
                 <th className="px-4 py-4">#</th>
@@ -73,7 +73,7 @@ export default async function AdminGradeLevelsPage(props: { searchParams?: Promi
             </thead>
             <tbody className="divide-y divide-slate-100">
               {levels.map((g) => (
-                <tr key={g.id} className="hover:bg-teal-50/15">
+                <tr key={g.id} className="hover:bg-jac-purple/[0.05]">
                   <td className="px-4 py-4 align-top">
                     <form action={updateGradeLevelAction} className="flex flex-col gap-3 xl:flex-row xl:flex-wrap xl:items-center">
                       <input type="hidden" name="id" value={g.id} />
@@ -98,7 +98,7 @@ export default async function AdminGradeLevelsPage(props: { searchParams?: Promi
                     </form>
                   </td>
                   <td className="px-4 py-4 align-middle">
-                    <span className="inline-flex min-w-[2.5rem] justify-center rounded-full bg-teal-100 px-3 py-1 text-sm font-bold text-teal-900 ring-1 ring-teal-600/15">
+                    <span className="inline-flex min-w-[2.5rem] justify-center rounded-full bg-jac-purple/12 px-3 py-1 text-sm font-bold text-jac-purple ring-1 ring-jac-purple/20">
                       {g.grade_number}
                     </span>
                   </td>

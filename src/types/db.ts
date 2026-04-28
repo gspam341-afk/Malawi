@@ -15,6 +15,11 @@ export type ResourceStatus =
   | 'rejected'
   | 'archived'
 
+export type CourseStatus = 'draft' | 'published' | 'archived'
+export type CourseVisibility = 'public' | 'logged_in_only' | 'private'
+export type LessonType = 'article' | 'video' | 'activity' | 'worksheet' | 'mixed'
+export type LessonStatus = 'draft' | 'published' | 'archived'
+
 export type Tables = {
   profiles: {
     Row: {
@@ -184,6 +189,67 @@ export type Tables = {
     }
     Insert: Partial<Tables['submissions']['Row']> & Pick<Tables['submissions']['Row'], 'title' | 'submission_type'>
     Update: Partial<Tables['submissions']['Row']>
+  }
+  courses: {
+    Row: {
+      id: string
+      title: string
+      slug: string
+      description: string | null
+      subject_id: string
+      grade_level_id: string
+      status: CourseStatus
+      visibility: CourseVisibility
+      created_by: string | null
+      created_at: string
+      updated_at: string
+      published_at: string | null
+    }
+    Insert: Partial<Tables['courses']['Row']> &
+      Pick<Tables['courses']['Row'], 'title' | 'slug' | 'subject_id' | 'grade_level_id'>
+    Update: Partial<Tables['courses']['Row']>
+  }
+  course_units: {
+    Row: {
+      id: string
+      course_id: string
+      title: string
+      description: string | null
+      sort_order: number
+      created_at: string
+      updated_at: string
+    }
+    Insert: Partial<Tables['course_units']['Row']> & Pick<Tables['course_units']['Row'], 'course_id' | 'title'>
+    Update: Partial<Tables['course_units']['Row']>
+  }
+  lessons: {
+    Row: {
+      id: string
+      unit_id: string
+      course_id: string
+      title: string
+      slug: string | null
+      description: string | null
+      content: string | null
+      lesson_type: LessonType
+      sort_order: number
+      status: LessonStatus
+      created_by: string | null
+      created_at: string
+      updated_at: string
+      published_at: string | null
+    }
+    Insert: Partial<Tables['lessons']['Row']> & Pick<Tables['lessons']['Row'], 'unit_id' | 'title'>
+    Update: Partial<Tables['lessons']['Row']>
+  }
+  lesson_resources: {
+    Row: {
+      lesson_id: string
+      resource_id: string
+      sort_order: number
+    }
+    Insert: Tables['lesson_resources']['Row']
+    Update: Partial<Tables['lesson_resources']['Row']>
   }
 }
 

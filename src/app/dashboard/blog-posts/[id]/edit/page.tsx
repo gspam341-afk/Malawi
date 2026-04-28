@@ -119,7 +119,7 @@ export default async function EditBlogPostPage(props: { params: Promise<{ id: st
             {(subjects ?? []).map((s) => (
               <label
                 key={s.id}
-                className="flex cursor-pointer items-center gap-3 rounded-xl border border-slate-200 bg-white px-4 py-3 shadow-sm hover:border-teal-200"
+                className="flex cursor-pointer items-center gap-3 rounded-jac-md border border-jac-navy/12 bg-white px-4 py-3 shadow-jac-soft hover:border-jac-purple/25"
               >
                 <input
                   type="checkbox"
@@ -143,7 +143,7 @@ export default async function EditBlogPostPage(props: { params: Promise<{ id: st
             className={`${dashInput} mt-2`}
           />
           <p className="mt-2 flex items-start gap-2 text-xs text-slate-500">
-            <UploadCloud className="mt-0.5 h-4 w-4 shrink-0 text-teal-600" aria-hidden />
+            <UploadCloud className="mt-0.5 h-4 w-4 shrink-0 text-jac-purple" aria-hidden />
             Upload images for the body from the content builder (stored in Supabase and inserted as Markdown).
           </p>
         </FormSection>

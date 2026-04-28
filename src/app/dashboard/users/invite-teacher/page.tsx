@@ -27,7 +27,7 @@ export default async function InviteTeacherPage(props: {
         actions={
           <Link
             href="/dashboard/users"
-            className="inline-flex items-center gap-2 text-sm font-medium text-teal-800 underline-offset-4 hover:text-teal-950 hover:underline"
+            className="inline-flex items-center gap-2 text-sm font-medium text-jac-purple underline-offset-4 hover:text-[#6240b8] hover:underline"
           >
             <ArrowLeft className="h-4 w-4 shrink-0" aria-hidden />
             User management
@@ -36,7 +36,7 @@ export default async function InviteTeacherPage(props: {
       />
 
       {success ? (
-        <div className="rounded-xl border border-emerald-200 bg-emerald-50 px-5 py-4 text-sm font-medium text-emerald-950">
+        <div className="rounded-jac-md border border-jac-green/30 bg-jac-green/10 px-5 py-4 text-sm font-medium text-jac-green">
           Invite queued successfully. They should receive an email shortly.
         </div>
       ) : null}
@@ -100,7 +100,7 @@ export default async function InviteTeacherPage(props: {
 
       <section className={`${dashPanelSolid} p-6 text-sm leading-relaxed text-slate-700`}>
         <p className="flex items-start gap-3 font-medium text-slate-900">
-          <Info className="mt-0.5 h-5 w-5 shrink-0 text-teal-700" aria-hidden />
+          <Info className="mt-0.5 h-5 w-5 shrink-0 text-jac-purple" aria-hidden />
           <span>
             Invited teachers can log in and publish physical learning activities. Students can browse public activities
             without creating an account.
@@ -109,7 +109,7 @@ export default async function InviteTeacherPage(props: {
         <p className={`mt-4 ${dashMuted}`}>
           Invites rely on Supabase Auth email configuration. If delivery fails, you can still create the account in the
           Supabase dashboard and assign roles from{' '}
-          <Link href="/dashboard/users" className="font-medium text-teal-800 underline-offset-4 hover:underline">
+          <Link href="/dashboard/users" className="font-medium text-jac-purple underline-offset-4 hover:underline">
             User management
           </Link>
           .

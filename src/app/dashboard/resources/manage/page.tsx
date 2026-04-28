@@ -57,7 +57,7 @@ export default async function AdminManageResourcesPage(props: {
         actions={
           <Link
             href="/dashboard/resources"
-            className="inline-flex items-center gap-1 text-sm font-medium text-teal-800 hover:underline"
+            className="inline-flex items-center gap-1 text-sm font-medium text-jac-purple hover:underline"
           >
             Teacher view
             <ArrowRight className="h-4 w-4" aria-hidden />
@@ -105,7 +105,7 @@ export default async function AdminManageResourcesPage(props: {
       {resources?.length ? (
         <TableShell>
           <table className="w-full min-w-[900px] text-left text-sm">
-            <thead className="border-b border-slate-100 bg-gradient-to-r from-teal-50/90 via-white to-amber-50/40">
+            <thead className="border-b border-jac-navy/10 bg-gradient-to-r from-jac-purple/[0.06] via-white to-jac-pink/15">
               <tr className="text-xs font-semibold uppercase tracking-wide text-slate-600">
                 <th className="px-4 py-4">Activity</th>
                 <th className="px-4 py-4">Creator</th>
@@ -121,13 +121,13 @@ export default async function AdminManageResourcesPage(props: {
                 const creatorLabel = creator?.name ?? creator?.email ?? (r.created_by ? r.created_by.slice(0, 8) : '—')
 
                 return (
-                  <tr key={r.id} className="align-top hover:bg-teal-50/20">
+                  <tr key={r.id} className="align-top hover:bg-jac-purple/[0.06]">
                     <td className="px-4 py-4">
-                      <Link href={`/dashboard/resources/${r.id}`} className="font-semibold text-slate-900 hover:text-teal-800 hover:underline">
+                      <Link href={`/dashboard/resources/${r.id}`} className="font-semibold text-slate-900 hover:text-jac-purple hover:underline">
                         {r.title}
                       </Link>
                       <div className="mt-1 text-xs">
-                        <Link href={`/dashboard/resources/${r.id}/edit`} className="font-medium text-teal-800 hover:underline">
+                        <Link href={`/dashboard/resources/${r.id}/edit`} className="font-medium text-jac-purple hover:underline">
                           Edit resource →
                         </Link>
                       </div>

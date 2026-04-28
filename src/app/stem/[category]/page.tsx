@@ -7,7 +7,10 @@ import { PublicResourceFilterForm } from '@/components/PublicResourceFilterForm'
 import { ResourceCard } from '@/components/ResourceCard'
 import { Badge } from '@/components/ui/Badge'
 import { ButtonLink } from '@/components/ui/Button'
+import { CourseCard } from '@/components/public/CourseCard'
 import { getGradeLevels, getPublicResources, getSubjects } from '@/lib/queries/publicResources'
+import { getPublicCoursesForSubjectIds } from '@/lib/queries/publicCourses'
+import { subjectBadgeVariant } from '@/lib/subjectBadgeVariant'
 import {
   getStemCategoryEmptyCopy,
   isStemSlug,
@@ -57,6 +60,7 @@ export default async function StemCategoryPage({ params, searchParams }: Props) 
           title={meta.title}
           description={meta.studentDescription}
           icon={HeaderIcon}
+          displayTitle
         />
 
         <EmptyState
@@ -86,9 +90,14 @@ export default async function StemCategoryPage({ params, searchParams }: Props) 
 
   const misconfigured = meta.subjects.length > 0 && subjectIds.length === 0
 
-  const resources = misconfigured
-    ? []
-    : await getPublicResources({
+  let resources: Awaited<ReturnType<typeof getPublicResources>>
+  let courses: Awaited<ReturnType<typeof getPublicCoursesForSubjectIds>>
+  if (misconfigured) {
+    resources = []
+    courses = []
+  } else {
+    ;[resources, courses] = await Promise.all([
+      getPublicResources({
         q: q || undefined,
         grade: grade || undefined,
         subject: subject || undefined,
@@ -97,7 +106,10 @@ export default async function StemCategoryPage({ params, searchParams }: Props) 
         extra_materials_required: extra_materials_required
           ? extra_materials_required === 'true'
           : undefined,
-      })
+      }),
+      getPublicCoursesForSubjectIds(subjectIds),
+    ])
+  }
 
   const defaults = {
     q,
@@ -110,16 +122,17 @@ export default async function StemCategoryPage({ params, searchParams }: Props) 
   const emptyCopy = getStemCategoryEmptyCopy(category)
 
   return (
-    <div className="grid gap-8">
+    <div className="grid gap-10 md:gap-12">
       <PageHeader
         eyebrow={`STEM · ${meta.letter}`}
         title={meta.title}
         description={meta.studentDescription}
         icon={HeaderIcon}
+        displayTitle
         actions={
           <Link
             href="/resources"
-            className="inline-flex items-center gap-2 text-sm font-medium text-emerald-800 underline-offset-4 hover:underline"
+            className="inline-flex items-center gap-2 text-sm font-medium text-jac-purple underline-offset-4 hover:underline"
           >
             All activities
           </Link>
@@ -128,7 +141,7 @@ export default async function StemCategoryPage({ params, searchParams }: Props) 
 
       <div className="flex flex-wrap gap-2">
         {meta.subjects.map((name) => (
-          <Badge key={name} variant="subject">
+          <Badge key={name} variant={subjectBadgeVariant(name)}>
             {name}
           </Badge>
         ))}
@@ -143,6 +156,22 @@ export default async function StemCategoryPage({ params, searchParams }: Props) 
         showSubjectFilter={meta.subjects.length > 1}
       />
 
+      {courses.length ? (
+        <section className="grid gap-6">
+          <h2 className="text-h3 font-semibold text-jac-navy">Courses in this pathway</h2>
+          <p className="max-w-3xl text-body md:text-base">
+            Structured units and lessons for this STEM area. Open a course to follow lessons in order.
+          </p>
+          <ul className="grid gap-6 md:grid-cols-2 md:gap-8 xl:grid-cols-3">
+            {courses.map((c) => (
+              <li key={c.id}>
+                <CourseCard course={c} />
+              </li>
+            ))}
+          </ul>
+        </section>
+      ) : null}
+
       {misconfigured ? (
         <EmptyState
           icon={Atom}
@@ -150,7 +179,7 @@ export default async function StemCategoryPage({ params, searchParams }: Props) 
           description="Subjects for this category are not linked in the database. Ask an admin to verify subject names match your STEM mapping."
         />
       ) : resources.length ? (
-        <div className="grid gap-5 md:grid-cols-2">
+        <div className="grid gap-6 md:grid-cols-2 md:gap-8">
           {resources.map((r) => (
             <ResourceCard key={r.id} resource={r} subjectNamesInCategory={meta.subjects} />
           ))}
@@ -160,7 +189,7 @@ export default async function StemCategoryPage({ params, searchParams }: Props) 
           <ButtonLink href="/resources" variant="secondary">
             Browse all activities
           </ButtonLink>
-          <ButtonLink href="/subjects" variant="ghost">
+          <ButtonLink href="/subjects" variant="outline">
             Choose another pathway
           </ButtonLink>
         </EmptyState>

@@ -66,14 +66,14 @@ export default async function DashboardResourceDetailPage(props: { params: Promi
           <>
             <Link
               href={`/dashboard/resources/${id}/edit`}
-              className="inline-flex items-center gap-2 rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm font-semibold text-slate-800 shadow-sm transition hover:border-teal-200 hover:bg-teal-50/40"
+              className="inline-flex items-center gap-2 rounded-jac-md border border-jac-navy/12 bg-white px-4 py-2.5 text-sm font-semibold text-jac-navy shadow-jac-soft transition hover:border-jac-purple/25 hover:bg-jac-purple/8"
             >
               <Pencil className="h-4 w-4" aria-hidden />
               Edit activity
             </Link>
             <Link
               href={`/resources/${id}`}
-              className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-teal-600 to-teal-700 px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:from-teal-700 hover:to-teal-800"
+              className="inline-flex items-center gap-2 rounded-full bg-jac-purple px-4 py-2.5 text-sm font-semibold text-white shadow-jac-soft transition hover:bg-[#6240b8]"
             >
               <Globe className="h-4 w-4" aria-hidden />
               Public page
@@ -96,7 +96,7 @@ export default async function DashboardResourceDetailPage(props: { params: Promi
       <section className={`${dashPanelSolid} p-6 md:p-8`}>
         <h2 className="text-lg font-semibold text-slate-900">Upload printable material</h2>
         <p className={`mt-1 ${dashMuted}`}>Add PDFs or handouts teachers can download and print.</p>
-        <div className="mt-6 rounded-2xl border border-dashed border-teal-200/80 bg-gradient-to-br from-teal-50/40 to-white p-4 md:p-6">
+        <div className="mt-6 rounded-jac-lg border border-dashed border-jac-purple/25 bg-gradient-to-br from-jac-purple/[0.08] to-white p-4 md:p-6">
           <PrintableMaterialUploader resourceId={id} />
         </div>
       </section>
@@ -109,7 +109,7 @@ export default async function DashboardResourceDetailPage(props: { params: Promi
           </div>
           <Link
             href={`/resources/${id}`}
-            className="text-sm font-semibold text-teal-800 underline-offset-4 hover:underline"
+            className="text-sm font-semibold text-jac-purple underline-offset-4 hover:underline"
           >
             Preview on public page
           </Link>
@@ -118,17 +118,17 @@ export default async function DashboardResourceDetailPage(props: { params: Promi
         {printables?.length ? (
           <TableShell className="mt-6">
             <table className="w-full min-w-[640px] text-left text-sm">
-              <thead className="border-b border-slate-100 bg-gradient-to-r from-teal-50/90 to-white">
-                <tr className="text-xs font-semibold uppercase tracking-wide text-slate-600">
+              <thead className="border-b border-jac-navy/10 bg-gradient-to-r from-jac-purple/[0.06] to-white">
+                <tr className="text-xs font-semibold uppercase tracking-wide text-jac-navy/55">
                   <th className="px-4 py-4">Title</th>
                   <th className="px-4 py-4">Details</th>
                   <th className="px-4 py-4">Uploaded</th>
                   <th className="px-4 py-4">Download</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-100">
+              <tbody className="divide-y divide-jac-navy/8">
                 {printables.map((p) => (
-                  <tr key={p.id} className="hover:bg-teal-50/15">
+                  <tr key={p.id} className="hover:bg-jac-purple/[0.05]">
                     <td className="px-4 py-4 font-medium text-slate-900">{p.title}</td>
                     <td className="px-4 py-4 text-slate-700">
                       <div className="grid gap-1">
@@ -144,7 +144,7 @@ export default async function DashboardResourceDetailPage(props: { params: Promi
                     <td className="px-4 py-4">
                       <a
                         href={`/api/printable-materials/${p.id}/download`}
-                        className="text-sm font-semibold text-teal-800 underline-offset-4 hover:underline"
+                        className="text-sm font-semibold text-jac-purple underline-offset-4 hover:underline"
                       >
                         Download
                       </a>

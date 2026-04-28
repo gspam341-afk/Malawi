@@ -95,7 +95,7 @@ export default async function NewBlogPostPage() {
             {(subjects ?? []).map((s) => (
               <label
                 key={s.id}
-                className="flex cursor-pointer items-center gap-3 rounded-xl border border-slate-200 bg-white px-4 py-3 shadow-sm hover:border-teal-200"
+                className="flex cursor-pointer items-center gap-3 rounded-xl border border-slate-200 bg-white px-4 py-3 shadow-sm hover:border-jac-purple/25"
               >
                 <input type="checkbox" name="subject_ids" value={s.id} className={dashCheckbox} />
                 <span className="text-sm font-medium text-slate-900">{s.name}</span>
@@ -112,7 +112,7 @@ export default async function NewBlogPostPage() {
           <FieldLabel htmlFor="bp-cover">Cover image URL (optional)</FieldLabel>
           <input id="bp-cover" name="cover_image_url" placeholder="https://..." className={`${dashInput} mt-2`} />
           <p className="mt-2 flex items-start gap-2 text-xs text-slate-500">
-            <UploadCloud className="mt-0.5 h-4 w-4 shrink-0 text-teal-600" aria-hidden />
+            <UploadCloud className="mt-0.5 h-4 w-4 shrink-0 text-jac-purple" aria-hidden />
             For images inside the article, use the content builder below (upload inserts Markdown).
           </p>
         </FormSection>

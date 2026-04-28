@@ -18,7 +18,7 @@ export function TableShell({
 
 export function TableTitleRow({ children }: { children: ReactNode }) {
   return (
-    <thead className="border-b border-slate-100 bg-gradient-to-r from-teal-50/80 via-white to-amber-50/50">
+    <thead className="border-b border-jac-navy/10 bg-gradient-to-r from-jac-purple/[0.06] via-white to-jac-pink/12">
       <tr className="text-left text-xs font-semibold uppercase tracking-wide text-slate-600">{children}</tr>
     </thead>
   )

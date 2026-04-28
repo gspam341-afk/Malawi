@@ -7,6 +7,7 @@ import {
   VisibilityBadge,
 } from '@/components/dashboard/DashboardStatusBadge'
 import { SecondaryButton } from '@/components/dashboard/ActionButton'
+import { dashCheckbox } from '@/components/dashboard/classes'
 
 type ResourceRow = {
   id: string
@@ -39,20 +40,20 @@ export function BulkResourcesTable(props: {
   }
 
   return (
-    <div className="overflow-hidden rounded-2xl border border-slate-200/90 bg-white shadow-md shadow-slate-200/40">
-      <div className="flex flex-wrap items-center justify-between gap-4 border-b border-slate-100 bg-gradient-to-r from-teal-50/80 to-amber-50/40 px-4 py-4">
+    <div className="overflow-hidden rounded-jac-lg border border-jac-navy/10 bg-white shadow-jac-medium">
+      <div className="flex flex-wrap items-center justify-between gap-4 border-b border-jac-navy/10 bg-gradient-to-r from-jac-purple/[0.06] to-jac-pink/12 px-4 py-4">
         <div className="flex flex-wrap items-center gap-4">
-          <label className="flex cursor-pointer items-center gap-2 text-sm font-medium text-slate-800">
+          <label className="flex cursor-pointer items-center gap-2 text-sm font-medium text-jac-navy">
             <input
               type="checkbox"
-              className="h-4 w-4 rounded border-slate-300 text-teal-600 focus:ring-teal-500"
+              className={dashCheckbox}
               checked={allSelected}
               onChange={(e) => toggleAll(e.target.checked)}
               aria-label="Select all resources"
             />
             Select all
           </label>
-          <span className="rounded-full bg-white px-3 py-1 text-xs font-semibold text-slate-700 ring-1 ring-slate-200">
+          <span className="rounded-full bg-white px-3 py-1 text-xs font-semibold text-jac-navy/80 ring-1 ring-jac-navy/12">
             Selected: {selectedIds.length}
           </span>
         </div>
@@ -102,8 +103,8 @@ export function BulkResourcesTable(props: {
 
       <div className="overflow-x-auto">
         <table className="w-full min-w-[720px] text-left text-sm">
-          <thead className="border-b border-slate-100 bg-white">
-            <tr className="text-xs font-semibold uppercase tracking-wide text-slate-500">
+          <thead className="border-b border-jac-navy/10 bg-white">
+            <tr className="text-xs font-semibold uppercase tracking-wide text-jac-navy/45">
               <th className="w-12 px-4 py-3"> </th>
               <th className="px-4 py-3">Title</th>
               <th className="px-4 py-3">Status</th>
@@ -112,13 +113,13 @@ export function BulkResourcesTable(props: {
               <th className="px-4 py-3">Updated</th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-slate-100">
+          <tbody className="divide-y divide-jac-navy/8">
             {props.resources.map((r) => (
-              <tr key={r.id} className="hover:bg-teal-50/25">
+              <tr key={r.id} className="hover:bg-jac-purple/[0.04]">
                 <td className="px-4 py-4 align-middle">
                   <input
                     type="checkbox"
-                    className="h-4 w-4 rounded border-slate-300 text-teal-600 focus:ring-teal-500"
+                    className={dashCheckbox}
                     checked={Boolean(selected[r.id])}
                     onChange={(e) => setSelected((prev) => ({ ...prev, [r.id]: e.target.checked }))}
                     aria-label={`Select ${r.title}`}
@@ -127,12 +128,12 @@ export function BulkResourcesTable(props: {
                 <td className="px-4 py-4 align-middle">
                   <Link
                     href={`/dashboard/resources/${r.id}`}
-                    className="font-semibold text-slate-900 hover:text-teal-800 hover:underline"
+                    className="font-semibold text-jac-navy hover:text-jac-purple hover:underline"
                   >
                     {r.title}
                   </Link>
-                  <div className="mt-1 text-xs text-slate-500">
-                    <Link href={`/dashboard/resources/${r.id}/edit`} className="font-medium text-teal-800 hover:underline">
+                  <div className="mt-1 text-xs text-jac-navy/50">
+                    <Link href={`/dashboard/resources/${r.id}/edit`} className="font-medium text-jac-purple hover:underline">
                       Edit →
                     </Link>
                   </div>
@@ -143,10 +144,10 @@ export function BulkResourcesTable(props: {
                 <td className="px-4 py-4 align-middle">
                   <VisibilityBadge visibility={r.visibility} />
                 </td>
-                <td className="hidden px-4 py-4 align-middle text-slate-600 md:table-cell">
+                <td className="hidden px-4 py-4 align-middle text-jac-navy/65 md:table-cell">
                   {new Date(r.created_at).toLocaleDateString()}
                 </td>
-                <td className="px-4 py-4 align-middle text-slate-600">
+                <td className="px-4 py-4 align-middle text-jac-navy/65">
                   {new Date(r.updated_at).toLocaleDateString()}
                 </td>
               </tr>

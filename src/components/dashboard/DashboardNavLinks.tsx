@@ -7,7 +7,7 @@ export function DashboardNavLinks({ sections }: { sections: NavSection[] }) {
     <div className="space-y-6">
       {sections.map((section) => (
         <div key={section.title}>
-          <p className="mb-2 px-1 text-[11px] font-bold uppercase tracking-wider text-slate-500">
+          <p className="mb-2 px-1 text-[11px] font-bold uppercase tracking-wider text-jac-navy/45">
             {section.title}
           </p>
           <ul className="space-y-0.5">
@@ -17,9 +17,9 @@ export function DashboardNavLinks({ sections }: { sections: NavSection[] }) {
                 <li key={item.href}>
                   <Link
                     href={item.href}
-                    className="flex items-center gap-2 rounded-xl px-3 py-2 text-sm font-medium text-slate-700 transition hover:bg-teal-50 hover:text-teal-900"
+                    className="flex items-center gap-2 rounded-jac-md px-3 py-2 text-sm font-medium text-jac-navy/80 transition hover:bg-jac-purple/10 hover:text-jac-navy"
                   >
-                    <Icon className="h-4 w-4 shrink-0 text-teal-700/90" aria-hidden />
+                    <Icon className="h-4 w-4 shrink-0 text-jac-purple/90" aria-hidden />
                     {item.label}
                   </Link>
                 </li>
@@ -28,10 +28,10 @@ export function DashboardNavLinks({ sections }: { sections: NavSection[] }) {
           </ul>
         </div>
       ))}
-      <div className="border-t border-slate-100 pt-4">
+      <div className="border-t border-jac-navy/10 pt-4">
         <Link
           href="/"
-          className="flex items-center gap-2 rounded-xl px-3 py-2 text-sm font-medium text-teal-800 hover:bg-teal-50"
+          className="flex items-center gap-2 rounded-jac-md px-3 py-2 text-sm font-medium text-jac-purple hover:bg-jac-purple/10"
         >
           <Globe className="h-4 w-4 shrink-0" aria-hidden />
           Public site

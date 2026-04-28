@@ -10,45 +10,54 @@ export const metadata: Metadata = {
 
 export default function AboutPage() {
   return (
-    <div className="mx-auto grid w-full max-w-4xl gap-12 pb-8">
+    <div className="mx-auto grid w-full max-w-4xl gap-12 pb-12 md:gap-16">
       <header className="text-center">
-        <h1 className="text-4xl font-bold tracking-tight text-slate-900 md:text-5xl">About us</h1>
-        <p className="mx-auto mt-6 max-w-3xl text-lg leading-relaxed text-slate-600">
+        <h1 className="font-display text-[32px] leading-tight text-jac-navy md:text-[48px]">About us</h1>
+        <p className="mx-auto mt-6 max-w-3xl text-base leading-relaxed text-jac-navy/75 md:text-lg">
           This learning space is built for Jacaranda School students to explore STEM activities, prepare for class and
           become more curious about science, technology, engineering and mathematics.
         </p>
       </header>
 
-      <div className="grid gap-6 md:grid-cols-3">
-        <Card className="border-emerald-100 bg-gradient-to-b from-emerald-50/60 to-white" padding="p-6">
-          <Users className="h-10 w-10 text-emerald-800" aria-hidden />
-          <h2 className="mt-4 text-lg font-semibold text-slate-900">For students</h2>
-          <p className="mt-2 text-sm leading-relaxed text-slate-600">
+      <div className="grid gap-6 md:grid-cols-3 md:gap-8">
+        <Card
+          className="border border-jac-pink/30 bg-gradient-to-b from-jac-pink/25 to-white shadow-jac-soft"
+          padding="p-6 md:p-8"
+        >
+          <Users className="h-10 w-10 text-jac-purple" aria-hidden />
+          <h2 className="mt-4 text-h4 font-normal text-jac-navy">For students</h2>
+          <p className="mt-2 text-body leading-relaxed text-jac-navy/75">
             Browse public activities without logging in. Explore pathways, filter by grade and get ready for lessons.
           </p>
         </Card>
-        <Card className="border-teal-100 bg-gradient-to-b from-teal-50/60 to-white" padding="p-6">
-          <GraduationCap className="h-10 w-10 text-teal-800" aria-hidden />
-          <h2 className="mt-4 text-lg font-semibold text-slate-900">For teachers</h2>
-          <p className="mt-2 text-sm leading-relaxed text-slate-600">
+        <Card
+          className="border border-jac-purple/15 bg-gradient-to-b from-jac-purple/8 to-white shadow-jac-soft"
+          padding="p-6 md:p-8"
+        >
+          <GraduationCap className="h-10 w-10 text-jac-purple" aria-hidden />
+          <h2 className="mt-4 text-h4 font-normal text-jac-navy">For teachers</h2>
+          <p className="mt-2 text-body leading-relaxed text-jac-navy/75">
             Sign in to create and publish hands-on activities for your classes.
           </p>
         </Card>
-        <Card className="border-sky-100 bg-gradient-to-b from-sky-50/60 to-white" padding="p-6">
-          <Sparkles className="h-10 w-10 text-sky-800" aria-hidden />
-          <h2 className="mt-4 text-lg font-semibold text-slate-900">For Jacaranda School</h2>
-          <p className="mt-2 text-sm leading-relaxed text-slate-600">
+        <Card
+          className="border border-jac-green/20 bg-gradient-to-b from-jac-green/10 to-white shadow-jac-soft"
+          padding="p-6 md:p-8"
+        >
+          <Sparkles className="h-10 w-10 text-jac-green" aria-hidden />
+          <h2 className="mt-4 text-h4 font-normal text-jac-navy">For Jacaranda School</h2>
+          <p className="mt-2 text-body leading-relaxed text-jac-navy/75">
             A shared space for learning, preparation and curiosity across STEM subjects.
           </p>
         </Card>
       </div>
 
-      <Card className="border-slate-200 bg-white/95" padding="p-8">
+      <Card className="border border-jac-purple/12 bg-white shadow-jac-soft" padding="p-8 md:p-10">
         <div className="flex flex-wrap items-start gap-4">
-          <BookOpen className="h-8 w-8 shrink-0 text-emerald-800" aria-hidden />
+          <BookOpen className="h-8 w-8 shrink-0 text-jac-blue" aria-hidden />
           <div>
-            <h2 className="text-lg font-semibold text-slate-900">Explore STEM through doing</h2>
-            <p className="mt-2 text-slate-600">
+            <h2 className="text-h4 font-normal text-jac-navy">Explore STEM through doing</h2>
+            <p className="mt-2 text-body leading-relaxed text-jac-navy/75">
               We focus on physical activities, printable materials and classroom challenges — so learning feels concrete,
               engaging and connected to your school day.
             </p>

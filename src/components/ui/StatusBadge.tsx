@@ -5,7 +5,7 @@ export function StatusBadge({
 }) {
   const styles =
     status === 'published'
-      ? 'bg-emerald-50 text-emerald-900 ring-emerald-600/20'
+      ? 'bg-jac-green/12 text-jac-green ring-jac-green/35'
       : status === 'pending'
         ? 'bg-amber-50 text-amber-900 ring-amber-600/20'
         : status === 'draft'

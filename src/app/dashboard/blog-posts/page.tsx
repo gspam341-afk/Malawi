@@ -77,7 +77,7 @@ export default async function BlogPostsPage(props: {
         actions={
           <Link
             href="/dashboard/blog-posts/new"
-            className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-teal-600 to-teal-700 px-4 py-2.5 text-sm font-semibold text-white shadow-sm hover:from-teal-700 hover:to-teal-800"
+            className="inline-flex items-center gap-2 rounded-full bg-jac-purple px-4 py-2.5 text-sm font-semibold text-white shadow-jac-soft hover:bg-[#6240b8]"
           >
             <PenLine className="h-4 w-4" aria-hidden />
             New post
@@ -87,7 +87,7 @@ export default async function BlogPostsPage(props: {
 
       <section className={`${dashPanelSolid} p-5 md:p-6`}>
         <h2 className="flex items-center gap-2 text-sm font-semibold text-slate-900">
-          <Search className="h-4 w-4 text-teal-700" aria-hidden />
+          <Search className="h-4 w-4 text-jac-purple" aria-hidden />
           Find a post
         </h2>
         <p className={`mt-1 ${dashMuted}`}>Search titles or filter by workflow status.</p>
@@ -118,7 +118,7 @@ export default async function BlogPostsPage(props: {
       {posts?.length ? (
         <TableShell>
           <table className="w-full min-w-[920px] text-left text-sm">
-            <thead className="border-b border-slate-100 bg-gradient-to-r from-teal-50/90 via-white to-amber-50/40">
+            <thead className="border-b border-jac-navy/10 bg-gradient-to-r from-jac-purple/[0.06] via-white to-jac-pink/15">
               <tr className="text-xs font-semibold uppercase tracking-wide text-slate-600">
                 <th className="px-4 py-4">Title</th>
                 <th className="px-4 py-4">Status</th>
@@ -153,7 +153,7 @@ export default async function BlogPostsPage(props: {
                   isAdmin ? p.status !== 'archived' : profile.role === 'teacher' && isAuthor && p.status !== 'archived'
 
                 return (
-                  <tr key={p.id} className="hover:bg-teal-50/20">
+                  <tr key={p.id} className="hover:bg-jac-purple/[0.06]">
                     <td className="px-4 py-4 font-medium text-slate-900">{p.title}</td>
                     <td className="px-4 py-4">
                       <BlogStatusBadge status={p.status} />
@@ -181,7 +181,7 @@ export default async function BlogPostsPage(props: {
                         {canEdit ? (
                           <Link
                             href={`/dashboard/blog-posts/${p.id}/edit`}
-                            className="rounded-lg px-2 py-1 text-sm font-semibold text-teal-800 hover:bg-teal-50"
+                            className="rounded-jac-sm px-2 py-1 text-sm font-semibold text-jac-purple hover:bg-jac-purple/10"
                           >
                             Edit
                           </Link>
@@ -192,7 +192,7 @@ export default async function BlogPostsPage(props: {
                             <input type="hidden" name="status" value="published" />
                             <button
                               type="submit"
-                              className="rounded-lg px-2 py-1 text-sm font-semibold text-emerald-800 hover:bg-emerald-50"
+                              className="rounded-jac-sm px-2 py-1 text-sm font-semibold text-jac-green hover:bg-jac-green/12"
                             >
                               Publish
                             </button>
@@ -226,7 +226,7 @@ export default async function BlogPostsPage(props: {
         >
           <Link
             href="/dashboard/blog-posts/new"
-            className="inline-flex items-center gap-2 rounded-xl bg-teal-600 px-4 py-2 text-sm font-semibold text-white hover:bg-teal-700"
+            className="inline-flex items-center gap-2 rounded-full bg-jac-purple px-4 py-2 text-sm font-semibold text-white hover:bg-[#6240b8]"
           >
             <PlusCircle className="h-4 w-4" aria-hidden />
             Write your first post

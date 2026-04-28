@@ -8,13 +8,13 @@ import Link from 'next/link'
 import { createSupabaseBrowserClient } from '@/lib/supabase/client'
 
 const btnPrimary =
-  'inline-flex items-center justify-center gap-2 rounded-lg bg-emerald-700 px-3 py-2 text-sm font-medium text-white shadow-sm transition hover:bg-emerald-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-600 focus-visible:ring-offset-2 [&_svg]:shrink-0'
+  'inline-flex items-center justify-center gap-2 rounded-full border border-transparent bg-jac-purple px-4 py-2 text-sm font-semibold text-white no-underline shadow-[0_6px_20px_-4px_rgba(115,72,206,0.45)] transition hover:bg-[#6240b8] hover:text-white visited:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-jac-purple focus-visible:ring-offset-2 [&_svg]:shrink-0'
 
 const btnOutline =
-  'inline-flex items-center justify-center gap-2 rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm font-medium text-slate-900 shadow-sm transition hover:border-slate-400 hover:bg-slate-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-600 focus-visible:ring-offset-2 [&_svg]:shrink-0'
+  'inline-flex items-center justify-center gap-2 rounded-full border border-jac-navy/18 bg-white px-4 py-2 text-sm font-semibold text-jac-navy no-underline shadow-jac-soft transition hover:border-jac-purple/35 hover:bg-jac-purple/8 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-jac-purple focus-visible:ring-offset-2 [&_svg]:shrink-0'
 
 const linkDash =
-  'inline-flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium text-slate-700 transition hover:bg-slate-100 hover:text-slate-950 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-600 focus-visible:ring-offset-2 [&_svg]:shrink-0'
+  'inline-flex items-center gap-2 rounded-full px-3 py-2 text-sm font-medium text-jac-navy transition hover:bg-jac-purple/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-jac-purple focus-visible:ring-offset-2 [&_svg]:shrink-0'
 
 export function AuthButtons() {
   const router = useRouter()
@@ -63,7 +63,7 @@ export function AuthButtons() {
 
   if (loading) {
     return (
-      <div className="h-9 w-[140px] rounded-lg bg-slate-100" aria-hidden="true" />
+      <div className="h-9 w-[140px] rounded-full bg-jac-navy/10" aria-hidden="true" />
     )
   }
 
@@ -79,7 +79,7 @@ export function AuthButtons() {
   return (
     <div className="flex items-center gap-2">
       <Link href="/dashboard" className={linkDash}>
-        <LayoutDashboard className="h-4 w-4 text-emerald-700" aria-hidden />
+        <LayoutDashboard className="h-4 w-4 text-jac-purple" aria-hidden />
         Dashboard
       </Link>
       <button type="button" onClick={onLogout} className={btnOutline}>

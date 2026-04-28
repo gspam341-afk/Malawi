@@ -23,7 +23,7 @@ export default async function AccountPage() {
 
       <section className={`${dashPanelSolid} p-6 md:p-8`}>
         <div className="flex flex-wrap items-start gap-4">
-          <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-teal-100 text-teal-800 ring-1 ring-teal-600/15">
+          <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-jac-md bg-jac-purple/12 text-jac-purple ring-1 ring-jac-purple/20">
             <UserCircle className="h-7 w-7" aria-hidden />
           </span>
           <div className="min-w-0 flex-1">
@@ -62,7 +62,7 @@ export default async function AccountPage() {
       <p className="text-center text-sm text-slate-500">
         <Link
           href="/dashboard"
-          className="inline-flex items-center justify-center gap-2 font-medium text-teal-800 hover:text-teal-950 hover:underline"
+          className="inline-flex items-center justify-center gap-2 font-medium text-jac-purple hover:text-[#6240b8] hover:underline"
         >
           <ArrowLeft className="h-4 w-4 shrink-0" aria-hidden />
           Back to dashboard home

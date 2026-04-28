@@ -25,14 +25,14 @@ export function AdminPageHeader({
       <div className="max-w-3xl">
         <Link
           href={backHref}
-          className="inline-flex items-center gap-2 text-sm font-medium text-teal-800 underline-offset-4 hover:text-teal-950 hover:underline"
+          className="inline-flex items-center gap-2 text-sm font-medium text-jac-purple underline-offset-4 hover:text-jac-navy hover:underline"
         >
           <ArrowLeft className="h-4 w-4 shrink-0" aria-hidden />
           {backLabel}
         </Link>
         <div className="mt-4 flex flex-wrap items-start gap-4">
           {TitleIcon ? (
-            <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-teal-100 text-teal-800 ring-1 ring-teal-600/15">
+            <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-jac-md bg-jac-purple/10 text-jac-purple ring-1 ring-jac-purple/15">
               <TitleIcon className="h-7 w-7" aria-hidden />
             </span>
           ) : null}
