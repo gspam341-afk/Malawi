@@ -109,8 +109,8 @@ function calculateScore(result: ReturnType<typeof calculateForces>, goal: string
 export function BuoyancyLabGame() {
   const [gameState, setGameState] = useState<GameState>('start')
   const [levelIndex, setLevelIndex] = useState(0)
-  const [mass, setMass] = useState(LEVELS[0].startMass)
-  const [volume, setVolume] = useState(LEVELS[0].startVolume)
+  const [mass, setMass] = useState<number>(LEVELS[0].startMass)
+  const [volume, setVolume] = useState<number>(LEVELS[0].startVolume)
   const [score, setScore] = useState(0)
   const [attempts, setAttempts] = useState(0)
   const [lastTest, setLastTest] = useState<ReturnType<typeof calculateForces> | null>(null)

@@ -109,7 +109,7 @@ export function MoleculeCatcherGame() {
 
   function handleCatch(atom: AtomItem) {
     if (gameState !== 'playing') return
-    const needed = level.recipe[atom.symbol] ?? 0
+    const needed = (level.recipe as Partial<Record<AtomSymbol, number>>)[atom.symbol] ?? 0
     const current = counts[atom.symbol] ?? 0
     const isUseful = current < needed
     setAtoms((prev) => prev.filter((item) => item.id !== atom.id))
