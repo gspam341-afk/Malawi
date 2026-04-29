@@ -47,7 +47,9 @@ const SUBJECT_META: Record<
 export default async function SubjectsPage() {
   const subjects = await getSubjects()
   const byName = new Map(subjects.map((s) => [s.name, s]))
-  const orderedSubjects = SUBJECT_ORDER.map((name) => byName.get(name)).filter((s) => Boolean(s))
+  const orderedSubjects = SUBJECT_ORDER.map((name) => byName.get(name)).filter(
+    (s): s is (typeof subjects)[number] => Boolean(s),
+  )
 
   return (
     <div className="mx-auto grid w-full max-w-6xl gap-12 pb-12 md:gap-16">
@@ -82,8 +84,8 @@ export default async function SubjectsPage() {
 
       <section className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
         {orderedSubjects.map((subject) => {
+          if (!(subject.name in SUBJECT_META)) return null
           const meta = SUBJECT_META[subject.name as keyof typeof SUBJECT_META]
-          if (!meta) return null
           const Icon = meta.icon
 
           return (
