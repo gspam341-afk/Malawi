@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import { Geist_Mono } from 'next/font/google'
 import './globals.css'
 import { SiteHeader } from '@/components/SiteHeader'
+import { SiteFooter } from '@/components/SiteFooter'
 
 const geistMono = Geist_Mono({
   variable: '--font-geist-mono',
@@ -29,6 +30,7 @@ export default function RootLayout({
       <body className="flex min-h-full flex-col bg-jac-offwhite text-jac-navy">
         <SiteHeader />
         <main className="mx-auto w-full max-w-[1400px] flex-1 px-4 py-8 md:px-8 md:py-14">{children}</main>
+        <SiteFooter />
       </body>
     </html>
   )

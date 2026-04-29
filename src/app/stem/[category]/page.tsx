@@ -8,6 +8,7 @@ import { ResourceCard } from '@/components/ResourceCard'
 import { Badge } from '@/components/ui/Badge'
 import { ButtonLink } from '@/components/ui/Button'
 import { CourseCard } from '@/components/public/CourseCard'
+import { MathQuickfireGame } from '@/components/public/MathQuickfireGame'
 import { getGradeLevels, getPublicResources, getSubjects } from '@/lib/queries/publicResources'
 import { getPublicCoursesForSubjectIds } from '@/lib/queries/publicCourses'
 import { subjectBadgeVariant } from '@/lib/subjectBadgeVariant'
@@ -155,6 +156,16 @@ export default async function StemCategoryPage({ params, searchParams }: Props) 
         idPrefix={`stem-${category}`}
         showSubjectFilter={meta.subjects.length > 1}
       />
+
+      {category === 'mathematics' ? (
+        <section className="grid gap-4">
+          <h2 className="text-h3 font-semibold text-jac-navy">Gaming section</h2>
+          <p className="max-w-3xl text-body md:text-base">
+            Try this quickfire math game to build speed with arithmetic, percentages, algebra, and powers.
+          </p>
+          <MathQuickfireGame />
+        </section>
+      ) : null}
 
       {courses.length ? (
         <section className="grid gap-6">

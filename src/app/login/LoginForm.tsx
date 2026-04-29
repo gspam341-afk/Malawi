@@ -3,6 +3,8 @@
 import { LogIn } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
+import { Button } from '@/components/ui/Button'
+import { dashInput } from '@/components/dashboard/classes'
 import { createSupabaseBrowserClient } from '@/lib/supabase/client'
 
 export function LoginForm() {
@@ -69,45 +71,42 @@ export function LoginForm() {
   }
 
   return (
-    <form onSubmit={onSubmit} className="mt-6 grid gap-4">
-      <div className="grid gap-1">
-        <label className="text-sm font-medium text-zinc-900">Email</label>
+    <form onSubmit={onSubmit} className="grid gap-5">
+      <div className="grid gap-1.5">
+        <label className="text-sm font-semibold text-jac-navy">Email</label>
         <input
           type="email"
           required
           value={email}
           onChange={(e) => setEmail(e.target.value)}
-          className="w-full rounded-md border px-3 py-2 text-sm"
+          className={dashInput}
           autoComplete="email"
+          placeholder="name@school.org"
         />
       </div>
 
-      <div className="grid gap-1">
-        <label className="text-sm font-medium text-zinc-900">Password</label>
+      <div className="grid gap-1.5">
+        <label className="text-sm font-semibold text-jac-navy">Password</label>
         <input
           type="password"
           required
           value={password}
           onChange={(e) => setPassword(e.target.value)}
-          className="w-full rounded-md border px-3 py-2 text-sm"
+          className={dashInput}
           autoComplete="current-password"
+          placeholder="Enter your password"
         />
       </div>
 
       {error ? (
-        <div className="rounded-md border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700">
+        <div className="rounded-jac-md border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700">
           {error}
         </div>
       ) : null}
 
-      <button
-        type="submit"
-        disabled={loading}
-        className="inline-flex items-center justify-center gap-2 rounded-md bg-zinc-900 px-4 py-2 text-sm font-medium text-white hover:bg-zinc-800 disabled:opacity-60"
-      >
-        {loading ? null : <LogIn className="h-4 w-4" aria-hidden />}
-        {loading ? 'Signing in…' : 'Sign in'}
-      </button>
+      <Button type="submit" disabled={loading} className="w-full py-3" icon={loading ? undefined : LogIn}>
+        {loading ? 'Signing in...' : 'Sign in'}
+      </Button>
     </form>
   )
 }

@@ -82,14 +82,11 @@ html {
 body {
   font-family: var(--font-ui);
   color: var(--foreground);
-  /* Layered washes so the shell is never flat white-on-white */
+  /* Keep a calm base instead of a vivid multi-gradient wash */
   background-color: var(--color-offwhite);
   background-image:
-    radial-gradient(ellipse 130% 90% at 100% -15%, rgba(115, 72, 206, 0.11), transparent 52%),
-    radial-gradient(ellipse 90% 70% at -5% 35%, rgba(238, 185, 195, 0.45), transparent 48%),
-    radial-gradient(ellipse 70% 55% at 72% 105%, rgba(79, 122, 58, 0.07), transparent 42%),
-    linear-gradient(180deg, #f5f2ed 0%, #faf7f3 45%, #f3eef8 100%);
-  background-attachment: fixed;
+    radial-gradient(ellipse 110% 75% at 100% -10%, rgba(115, 72, 206, 0.07), transparent 56%),
+    linear-gradient(180deg, #f5f2ed 0%, #f8f5f1 100%);
 }
 
 ::selection {
@@ -130,10 +127,10 @@ body {
 }
 
 @utility text-link {
-  @apply text-xs font-normal underline decoration-jac-purple/40 underline-offset-4 transition hover:text-jac-purple md:text-sm;
+  @apply text-xs font-normal underline decoration-jac-purple/35 underline-offset-4 hover:text-jac-purple md:text-sm;
 }
 
-/* Soft decorative blob for public cards — slightly stronger so colour reads on real screens */
+/* Decorative blob, intentionally subtle */
 @utility jac-blob {
-  @apply pointer-events-none absolute rounded-full opacity-[0.52] blur-3xl;
+  @apply pointer-events-none absolute rounded-full opacity-30 blur-3xl;
 }

@@ -22,10 +22,9 @@ export default async function Home() {
   return (
     <div className="grid w-full gap-16 pb-16 md:gap-[var(--space-2xl)] lg:gap-[112px]">
       {/* Hero */}
-      <section className="relative overflow-hidden rounded-jac-xl border-[length:var(--border-regular)] border-jac-purple/30 bg-gradient-to-br from-white via-jac-purple/[0.06] to-jac-pink/25 px-6 py-14 shadow-[0_14px_52px_-14px_rgba(28,24,48,0.22)] ring-1 ring-white/70 md:px-14 md:py-20 lg:rounded-[40px] lg:py-24">
-        <div className="jac-blob bg-jac-purple/35 -right-16 -top-16 h-72 w-72 md:right-0 md:top-0" aria-hidden />
-        <div className="jac-blob bg-jac-pink/45 -bottom-12 left-0 h-64 w-64" aria-hidden />
-        <div className="jac-blob bg-jac-blue/25 bottom-8 right-1/4 hidden h-40 w-40 md:block" aria-hidden />
+      <section className="relative overflow-hidden rounded-jac-xl border border-jac-purple/22 bg-white px-6 py-14 shadow-[0_3px_12px_rgba(28,24,48,0.08)] md:px-14 md:py-20 lg:rounded-[40px] lg:py-24">
+        <div className="jac-blob bg-jac-purple/16 -right-16 -top-16 h-72 w-72 md:right-0 md:top-0" aria-hidden />
+        <div className="jac-blob bg-jac-pink/18 -bottom-12 left-0 h-64 w-64" aria-hidden />
 
         <div className="relative mx-auto max-w-4xl text-center lg:max-w-5xl">
           <p className="inline-flex items-center justify-center gap-2 rounded-full bg-jac-purple/10 px-4 py-2 text-xs font-semibold uppercase tracking-wider text-jac-purple ring-1 ring-jac-purple/25 md:text-sm">
@@ -76,7 +75,7 @@ export default async function Home() {
       </section>
 
       {/* Student curiosity */}
-      <section className="rounded-jac-xl border-2 border-jac-pink/40 bg-gradient-to-br from-jac-pink/35 via-white to-jac-orange/15 px-6 py-14 shadow-[0_12px_44px_-12px_rgba(238,185,195,0.55)] md:px-12 lg:rounded-[40px]">
+      <section className="rounded-jac-xl border border-jac-pink/26 bg-white px-6 py-14 shadow-[0_3px_12px_rgba(28,24,48,0.08)] md:px-12 lg:rounded-[40px]">
         <div className="mx-auto max-w-3xl text-center">
           <h2 className="text-h2">Learn by exploring</h2>
           <p className="mt-6 text-base text-jac-navy/80 md:text-lg">
@@ -85,21 +84,21 @@ export default async function Home() {
           </p>
         </div>
         <ul className="mx-auto mt-12 grid max-w-5xl gap-6 md:grid-cols-3 md:gap-8">
-          <li className="rounded-jac-lg border-2 border-jac-purple/20 bg-white p-6 shadow-[0_8px_28px_-8px_rgba(28,24,48,0.12)] md:p-8">
+          <li className="rounded-jac-lg border border-jac-purple/20 bg-white p-6 shadow-[0_2px_10px_rgba(28,24,48,0.08)] md:p-8">
             <Compass className="h-10 w-10 text-jac-purple" aria-hidden />
             <h3 className="mt-5 text-h4 font-semibold text-jac-navy">Explore before class</h3>
             <p className="mt-3 text-body">
               Skim outcomes and materials so you walk in ready to participate.
             </p>
           </li>
-          <li className="rounded-jac-lg border-2 border-jac-blue/28 bg-white p-6 shadow-[0_8px_28px_-8px_rgba(46,122,168,0.14)] md:p-8">
+          <li className="rounded-jac-lg border border-jac-blue/24 bg-white p-6 shadow-[0_2px_10px_rgba(28,24,48,0.08)] md:p-8">
             <ClipboardList className="h-10 w-10 text-jac-blue" aria-hidden />
             <h3 className="mt-5 text-h4 font-semibold text-jac-navy">Understand what you need</h3>
             <p className="mt-3 text-body">
               Check timing, group size and supplies before the lesson starts.
             </p>
           </li>
-          <li className="rounded-jac-lg border-2 border-jac-green/30 bg-white p-6 shadow-[0_8px_28px_-8px_rgba(79,122,58,0.15)] md:p-8">
+          <li className="rounded-jac-lg border border-jac-green/24 bg-white p-6 shadow-[0_2px_10px_rgba(28,24,48,0.08)] md:p-8">
             <Globe2 className="h-10 w-10 text-jac-green" aria-hidden />
             <h3 className="mt-5 text-h4 font-semibold text-jac-navy">Connect subjects to real life</h3>
             <p className="mt-3 text-body">
@@ -124,7 +123,7 @@ export default async function Home() {
           ].map((step, i) => (
             <li
               key={step.text}
-              className="flex gap-4 rounded-jac-lg border border-jac-purple/10 bg-white p-5 shadow-jac-soft transition hover:border-jac-purple/25 md:p-6"
+              className="flex gap-4 rounded-jac-lg border border-jac-purple/12 bg-white p-5 shadow-[0_2px_8px_rgba(28,24,48,0.08)] hover:border-jac-purple/22 md:p-6"
             >
               <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-jac-md bg-jac-purple/12 text-jac-purple ring-1 ring-jac-purple/15">
                 <step.Icon className="h-6 w-6" aria-hidden />
@@ -139,7 +138,7 @@ export default async function Home() {
       </section>
 
       {/* Teachers */}
-      <section className="rounded-jac-xl border-2 border-jac-navy/12 bg-gradient-to-br from-white via-jac-offwhite to-jac-purple/[0.05] px-6 py-12 shadow-[0_12px_40px_-14px_rgba(28,24,48,0.14)] md:px-12 lg:rounded-[40px]">
+      <section className="rounded-jac-xl border border-jac-navy/12 bg-jac-offwhite/75 px-6 py-12 shadow-[0_3px_12px_rgba(28,24,48,0.08)] md:px-12 lg:rounded-[40px]">
         <h2 className="text-h3 font-semibold text-jac-navy">For teachers</h2>
         <p className="mt-4 max-w-2xl text-body md:text-base">
           Teachers can log in to create and publish hands-on activities for their classes. Administrators manage users

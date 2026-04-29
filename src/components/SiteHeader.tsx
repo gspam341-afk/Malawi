@@ -3,11 +3,11 @@ import { AuthButtons } from '@/components/AuthButtons'
 import { BookMarked, BookOpen, Briefcase, Info } from 'lucide-react'
 
 const navLink =
-  'inline-flex items-center gap-2 rounded-full px-3 py-2 text-sm font-medium text-jac-navy transition hover:bg-jac-purple/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-jac-purple focus-visible:ring-offset-2 [&_svg]:shrink-0'
+  'inline-flex items-center gap-2 rounded-full px-3 py-2 text-sm font-medium text-jac-navy hover:bg-jac-purple/8 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-jac-purple focus-visible:ring-offset-2 [&_svg]:shrink-0'
 
 export function SiteHeader() {
   return (
-    <header className="sticky top-0 z-40 border-b-2 border-jac-purple/18 bg-white/92 shadow-[0_4px_24px_-6px_rgba(28,24,48,0.12)] backdrop-blur-md">
+    <header className="sticky top-0 z-40 border-b border-jac-purple/15 bg-white/96 shadow-[0_1px_6px_rgba(28,24,48,0.08)]">
       <div className="mx-auto flex w-full max-w-7xl flex-wrap items-center justify-between gap-4 px-4 py-3 md:px-6">
         <Link
           href="/"
